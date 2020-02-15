@@ -19,9 +19,11 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.ViewGroup;
 
 import com.android.myapplication.coldpod.databinding.ActivityMainBinding;
+import com.google.android.material.navigation.NavigationView;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -76,5 +78,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onSupportNavigateUp() {
         return NavigationUI.navigateUp(navController,mAppBarConfiguration) | super.onSupportNavigateUp();
+    }
+
+
+
+
+
+    private boolean isValidDestination(int destination){
+        return destination != Navigation.findNavController(this, R.id.nav_host_fragment).getCurrentDestination().getId();
     }
 }

@@ -14,4 +14,14 @@
         android:name="com.android.myapplication.coldpod.AddFragment"
         android:label="fragment_add"
         tools:layout="@layout/fragment_add" />
+    <fragment
+        android:id="@+id/downloadsFragment"
+        android:name="com.android.myapplication.coldpod.ui.DownloadsFragment"
+        android:label="fragment_downloads"
+        tools:layout="@layout/fragment_downloads" />
+    <fragment
+        android:id="@+id/favoritesFragment"
+        android:name="com.android.myapplication.coldpod.ui.FavoritesFragment"
+        android:label="fragment_favorites"
+        tools:layout="@layout/fragment_favorites" />
 </navigation>

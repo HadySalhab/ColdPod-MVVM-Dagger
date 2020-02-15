@@ -2,15 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/drawer_nav_podcasts"
+            android:id="@+id/homeFragment"
             android:icon="@drawable/ic_home"
             android:title="@string/drawer_nav_podcasts" />
         <item
-            android:id="@+id/drawer_nav_favorites"
+            android:id="@+id/favoritesFragment"
             android:icon="@drawable/ic_favorite"
             android:title="@string/drawer_nav_favorite" />
         <item
-            android:id="@+id/drawer_nav_downloads"
+            android:id="@+id/downloadsFragment"
             android:icon="@drawable/ic_file_download"
             android:title="@string/drawer_nav_downloads" />
     </group>
