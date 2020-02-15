@@ -19,6 +19,9 @@ android {
         }
 
     }
+    dataBinding {
+        enabled = true
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -69,6 +72,8 @@ dependencies {
     androidTestImplementation "androidx.test.ext:truth:$truth_ext_version"
 
 
+    // logging
+    implementation 'com.jakewharton.timber:timber:4.7.1'
 
     // Mockito
     def mockito_core = "2.25.0"
