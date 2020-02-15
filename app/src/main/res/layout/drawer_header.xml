@@ -1,35 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/drawerheader_height"
-    android:background="@color/primary_color"
-    android:gravity="bottom"
-    android:padding="@dimen/medium_padding"
-    android:theme="@style/ThemeOverlay.MaterialComponents.Dark"
-    >
-    <ImageView
-        android:layout_width="@dimen/drawerheader_img_width"
-        android:layout_height="@dimen/drawerheader_img_height"
-        android:src="@drawable/logo"
-        android:contentDescription="@string/drawerheader_image_description" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/lato"
-        android:paddingTop="@dimen/small_padding"
-        android:paddingBottom="@dimen/small_padding"
-        android:text="@string/drawerheader_title"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-        android:textColor="@android:color/black"
-        android:textStyle="bold" />
-    <TextView
-        android:textColor="@android:color/black"
-        android:textStyle="bold"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/headline_size"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-        android:text="@string/drawerheader_headline"/>
-</LinearLayout>
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/drawer_header_root"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/drawerheader_height"
+        android:background="@color/primary_color"
+        android:gravity="bottom"
+        android:padding="@dimen/medium_padding"
+        android:theme="@style/ThemeOverlay.MaterialComponents.Dark">
+
+        <ImageView
+            android:layout_width="@dimen/drawerheader_img_width"
+            android:layout_height="@dimen/drawerheader_img_height"
+            android:src="@drawable/logo"
+            android:contentDescription="@string/drawerheader_image_description" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/lato"
+            android:paddingTop="@dimen/small_padding"
+            android:paddingBottom="@dimen/small_padding"
+            android:text="@string/drawerheader_title"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+            android:textColor="@android:color/black"
+            android:textStyle="bold" />
+
+        <TextView
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/headline_size"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+            android:text="@string/drawerheader_headline" />
+    </LinearLayout>

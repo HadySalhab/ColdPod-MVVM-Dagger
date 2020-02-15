@@ -12,12 +12,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
-        tools:openDrawer="start">
+       >
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".MainActivity">
+      >
 
             <com.google.android.material.appbar.AppBarLayout
                 android:layout_width="match_parent"
@@ -46,21 +46,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:srcCompat="@drawable/ic_add"
+                app:backgroundTint="@color/secondary_color"
                 android:layout_gravity="end|bottom"
                 android:layout_marginEnd="@dimen/medium_margin"
                 android:layout_marginBottom="@dimen/medium_margin" />
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
             <com.google.android.material.navigation.NavigationView
-                android:id="@+id/nav_view"
+                android:id="@+id/navView"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_gravity="start"
                 android:fitsSystemWindows="true"
+                android:layout_gravity="start"
                 app:headerLayout="@layout/drawer_header"
                 app:menu="@menu/drawer_menu" />
 
 
-        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
 
     </androidx.drawerlayout.widget.DrawerLayout>
 </layout>
