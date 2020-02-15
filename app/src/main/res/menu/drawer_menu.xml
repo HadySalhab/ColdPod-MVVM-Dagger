@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/drawer_nav_podcasts"
+            android:icon="@drawable/ic_home"
+            android:title="@string/drawer_nav_podcasts" />
+        <item
+            android:id="@+id/drawer_nav_favorites"
+            android:icon="@drawable/ic_favorite"
+            android:title="@string/drawer_nav_favorite" />
+        <item
+            android:id="@+id/drawer_nav_downloads"
+            android:icon="@drawable/ic_file_download"
+            android:title="@string/drawer_nav_downloads" />
+    </group>
+</menu>

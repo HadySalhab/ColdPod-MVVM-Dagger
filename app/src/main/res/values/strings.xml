@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">ColdPod</string>
+    <string name="drawerheader_image_description">Navigation Bar Header Image</string>
+    <string name="drawerheader_title">ColdPod</string>
+    <string name="drawerheader_headline">Enjoy The latest Pocasts with ColdPod</string>
+    <string name="drawer_nav_podcasts">Podcasts</string>
+    <string name="drawer_nav_favorite">Favorite</string>
+    <string name="drawer_nav_downloads">Downloads</string>
 </resources>
