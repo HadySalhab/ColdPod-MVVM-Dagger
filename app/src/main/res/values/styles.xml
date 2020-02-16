@@ -10,6 +10,7 @@
         <item name="colorOnSurface">@android:color/black</item>
         <item name="colorAccent">@color/accent_color</item>
         <item name="toolbarStyle">@style/ColdPod.Toolbar</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
     <style name="ColdPod" parent="AppTheme"/>
