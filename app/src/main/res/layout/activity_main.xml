@@ -47,6 +47,7 @@
                 android:onClick="@{()->viewModel.onFabClicked()}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:layout_gravity="end|bottom"
                 android:layout_marginEnd="@dimen/medium_margin"
                 android:layout_marginBottom="@dimen/medium_margin"
