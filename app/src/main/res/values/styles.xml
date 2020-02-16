@@ -4,6 +4,7 @@
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/primary_color</item>
+        <item name="colorPrimaryDark">@color/primary_dark_color</item>
         <item name="colorSecondary">@color/secondary_color</item>
         <item name="colorOnSecondary">#000</item>
         <item name="colorOnSurface">@android:color/black</item>

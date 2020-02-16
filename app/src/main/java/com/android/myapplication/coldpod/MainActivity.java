@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -16,12 +17,17 @@ import androidx.core.view.GravityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.android.myapplication.coldpod.databinding.ActivityMainBinding;
+import com.android.myapplication.coldpod.ui.AddFragment;
 import com.android.myapplication.coldpod.ui.DownloadsFragment;
 import com.android.myapplication.coldpod.ui.FavoritesFragment;
 import com.android.myapplication.coldpod.ui.HomeFragment;
 import com.google.android.material.navigation.NavigationView;
+
+import javax.inject.Inject;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -29,25 +35,56 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     DrawerLayout drawerLayout;
     Toolbar mToolbar;
     SpannableString mSpannableString;
-   ForegroundColorSpan mForegroundColorSpan;
+    ForegroundColorSpan mForegroundColorSpan;
     NavigationView mNavigationView;
+    MainActivityViewModel mViewModel;
+
+
+    @Inject
+    ViewModelProviderFactory providerFactory;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setUpDagger();
         initializeMemberVariables();
-       setupSpannableTitle();
+        setupSpannableTitle();
         setupToolbarAndNavDrawer(savedInstanceState);
+    }
+    private void setUpDagger(){
+        ((BaseApplication)getApplication()).getAppComponent().getMainComponent().inject(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        subscribeObserver();
+    }
+
+    private void subscribeObserver() {
+        mViewModel.getNavToAddFragment().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if (aBoolean) {
+                    getSupportFragmentManager().beginTransaction().add(R.id.fragments_container,new AddFragment()).addToBackStack("add").commit();
+                    showHideFab(View.GONE);
+                    mViewModel.setNavToAddFragment(false);
+                }
+            }
+        });
     }
 
     private void initializeMemberVariables() {
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        mBinding.setLifecycleOwner(this);
         drawerLayout = mBinding.drawerLayout;
         mToolbar = mBinding.toolbar;
         mNavigationView = mBinding.navView;
         mSpannableString = new SpannableString(getString(R.string.app_name));
-       mForegroundColorSpan = new ForegroundColorSpan(ContextCompat.getColor(this, (R.color.primary_color)));
+        mForegroundColorSpan = new ForegroundColorSpan(ContextCompat.getColor(this, (R.color.primary_color)));
+        mViewModel = new ViewModelProvider(this, providerFactory).get(MainActivityViewModel.class);
+        mBinding.setViewModel(mViewModel);
     }
 
     private void setupSpannableTitle() {
@@ -60,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
-        mNavigationView.setNavigationItemSelectedListener (this);
+        mNavigationView.setNavigationItemSelectedListener(this);
         if (savedInstanceState == null) {
             performTransaction(new HomeFragment());
             mNavigationView.setCheckedItem(R.id.drawer_nav_podcasts);
@@ -87,28 +124,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
     private void performTransaction(Fragment fragment) {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragments_container, fragment).commit();
-        if(fragment instanceof HomeFragment){
+        if (fragment instanceof HomeFragment) {
             showHideFab(View.VISIBLE);
-        }else{
+        } else {
             showHideFab(View.GONE);
         }
     }
 
-    private void showHideFab(int visibility){
+    private void showHideFab(int visibility) {
         mBinding.mainFab.setVisibility(visibility);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(getSupportFragmentManager().findFragmentById(R.id.fragments_container)instanceof AddFragment){
+            showHideFab(View.VISIBLE);
+        }
+        if(drawerLayout.isDrawerOpen(GravityCompat.START)){
+            drawerLayout.closeDrawer(GravityCompat.START);
+        }else{
+            super.onBackPressed();
+        }
     }
 
 }
