@@ -1,90 +1,106 @@
 package com.android.myapplication.coldpod;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
-import androidx.databinding.DataBindingUtil;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.navigation.NavController;
-import androidx.navigation.NavDestination;
-import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
-
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.databinding.DataBindingUtil;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 
 import com.android.myapplication.coldpod.databinding.ActivityMainBinding;
+import com.android.myapplication.coldpod.ui.DownloadsFragment;
+import com.android.myapplication.coldpod.ui.FavoritesFragment;
+import com.android.myapplication.coldpod.ui.HomeFragment;
 import com.google.android.material.navigation.NavigationView;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     ActivityMainBinding mBinding;
     DrawerLayout drawerLayout;
-    NavController navController;
-    AppBarConfiguration mAppBarConfiguration;
     Toolbar mToolbar;
     SpannableString mSpannableString;
-    ForegroundColorSpan mForegroundColorSpan;
-
+   ForegroundColorSpan mForegroundColorSpan;
+    NavigationView mNavigationView;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initializeMemberVariables();
+       setupSpannableTitle();
+        setupToolbarAndNavDrawer(savedInstanceState);
+    }
+
+    private void initializeMemberVariables() {
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-
-        setupSpannableTitle();
-
-        setupToolbarAndNavDrawer();
+        drawerLayout = mBinding.drawerLayout;
+        mToolbar = mBinding.toolbar;
+        mNavigationView = mBinding.navView;
+        mSpannableString = new SpannableString(getString(R.string.app_name));
+       mForegroundColorSpan = new ForegroundColorSpan(ContextCompat.getColor(this, (R.color.primary_color)));
     }
 
     private void setupSpannableTitle() {
-        mSpannableString = new SpannableString(getString(R.string.app_name));
-        mForegroundColorSpan = new ForegroundColorSpan(ContextCompat.getColor(this,(R.color.secondary_color)));
-        mSpannableString.setSpan(mForegroundColorSpan,4,7, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        mSpannableString.setSpan(mForegroundColorSpan, 4, 7, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
     }
 
-    private void setupToolbarAndNavDrawer() {
-        mToolbar = mBinding.toolbar;
+    private void setupToolbarAndNavDrawer(Bundle savedInstanceState) {
         this.setSupportActionBar(mToolbar);
-        ((AppCompatActivity)this).getSupportActionBar().setTitle(mSpannableString);
+        ((AppCompatActivity) this).getSupportActionBar().setTitle(mSpannableString);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+        mNavigationView.setNavigationItemSelectedListener (this);
+        if (savedInstanceState == null) {
+            performTransaction(new HomeFragment());
+            mNavigationView.setCheckedItem(R.id.drawer_nav_podcasts);
+        }
 
-        drawerLayout = mBinding.drawerLayout;
-        navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        mAppBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).setDrawerLayout(drawerLayout).build();
-        navController.addOnDestinationChangedListener(new NavController.OnDestinationChangedListener() {
-            @Override
-            public void onDestinationChanged(@NonNull NavController controller, @NonNull NavDestination destination, @Nullable Bundle arguments) {
-                if (destination.getId() == controller.getGraph().getStartDestination()) {
-                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-                } else {
-                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                }
-            }
-        });
-        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
-        NavigationUI.setupWithNavController(mBinding.navView, navController);
     }
 
     @Override
-    public boolean onSupportNavigateUp() {
-        return NavigationUI.navigateUp(navController,mAppBarConfiguration) | super.onSupportNavigateUp();
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.drawer_nav_podcasts:
+                performTransaction(new HomeFragment());
+                break;
+            case R.id.drawer_nav_favorites:
+                performTransaction(new FavoritesFragment());
+                break;
+            case R.id.drawer_nav_downloads:
+                performTransaction(new DownloadsFragment());
+                break;
+            default:
+                performTransaction(new HomeFragment());
+                break;
+        }
+        drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    private void performTransaction(Fragment fragment) {
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragments_container, fragment).commit();
     }
 
 
-
-
-
-    private boolean isValidDestination(int destination){
-        return destination != Navigation.findNavController(this, R.id.nav_host_fragment).getCurrentDestination().getId();
-    }
 }
+

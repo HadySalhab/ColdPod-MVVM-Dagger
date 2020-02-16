@@ -6,7 +6,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="@dimen/drawerheader_height"
-        android:background="@color/primary_color"
+        android:background="@color/secondary_color"
         android:gravity="bottom"
         android:padding="@dimen/medium_padding"
         android:theme="@style/ThemeOverlay.MaterialComponents.Dark">

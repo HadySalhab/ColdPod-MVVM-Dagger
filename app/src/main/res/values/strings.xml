@@ -6,4 +6,6 @@
     <string name="drawer_nav_podcasts">Podcasts</string>
     <string name="drawer_nav_favorite">Favorite</string>
     <string name="drawer_nav_downloads">Downloads</string>
+    <string name="navigation_drawer_open">Open Navigation Drawer</string>
+    <string name="navigation_drawer_close">Close Navigation Drawer</string>
 </resources>
