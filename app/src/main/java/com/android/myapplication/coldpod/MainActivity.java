@@ -5,6 +5,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -99,8 +100,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void performTransaction(Fragment fragment) {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragments_container, fragment).commit();
+        if(fragment instanceof HomeFragment){
+            showHideFab(View.VISIBLE);
+        }else{
+            showHideFab(View.GONE);
+        }
     }
 
+    private void showHideFab(int visibility){
+        mBinding.mainFab.setVisibility(visibility);
+    }
 
 }
 
