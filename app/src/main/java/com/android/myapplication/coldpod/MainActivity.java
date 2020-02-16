@@ -6,6 +6,7 @@ import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -20,6 +21,8 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.android.myapplication.coldpod.databinding.ActivityMainBinding;
+import com.android.myapplication.coldpod.model.Podcasts;
+import com.android.myapplication.coldpod.ui.SubscribeFragment;
 import com.android.myapplication.coldpod.ui.add.AddFragment;
 import com.android.myapplication.coldpod.ui.DownloadsFragment;
 import com.android.myapplication.coldpod.ui.FavoritesFragment;
@@ -29,7 +32,8 @@ import com.google.android.material.navigation.NavigationView;
 import javax.inject.Inject;
 
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
+        AddFragment.Listener {
     ActivityMainBinding mBinding;
     DrawerLayout drawerLayout;
     Toolbar mToolbar;
@@ -51,8 +55,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setupSpannableTitle();
         setupToolbarAndNavDrawer(savedInstanceState);
     }
-    private void setUpDagger(){
-        ((BaseApplication)getApplication()).getAppComponent().getMainComponent().inject(this);
+
+    private void setUpDagger() {
+        ((BaseApplication) getApplication()).getAppComponent().getMainComponent().inject(this);
     }
 
     @Override
@@ -66,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onChanged(Boolean aBoolean) {
                 if (aBoolean) {
-                    getSupportFragmentManager().beginTransaction().add(R.id.fragments_container,new AddFragment()).addToBackStack("add").commit();
+                    getSupportFragmentManager().beginTransaction().add(R.id.fragments_container, new AddFragment()).addToBackStack("add").commit();
                     showHideFab(View.GONE);
                     mViewModel.setNavToAddFragment(false);
                 }
@@ -123,6 +128,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
+
     private void performTransaction(Fragment fragment) {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragments_container, fragment).commit();
         if (fragment instanceof HomeFragment) {
@@ -138,15 +144,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
-        if(getSupportFragmentManager().findFragmentById(R.id.fragments_container)instanceof AddFragment){
+        if (getSupportFragmentManager().findFragmentById(R.id.fragments_container) instanceof AddFragment) {
             showHideFab(View.VISIBLE);
         }
-        if(drawerLayout.isDrawerOpen(GravityCompat.START)){
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
-        }else{
+        } else {
             super.onBackPressed();
         }
     }
 
+    @Override
+    public void onItemClick(Podcasts podcasts) {
+        Toast.makeText(this,podcasts.getName(), Toast.LENGTH_SHORT).show();
+        getSupportFragmentManager().beginTransaction().add(R.id.fragments_container, new SubscribeFragment()).addToBackStack("subscribe").commit();
+    }
 }
 
