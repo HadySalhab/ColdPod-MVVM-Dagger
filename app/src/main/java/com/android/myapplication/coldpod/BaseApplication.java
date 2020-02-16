@@ -7,6 +7,8 @@ import androidx.annotation.UiThread;
 import com.android.myapplication.coldpod.di.AppComponent;
 import com.android.myapplication.coldpod.di.DaggerAppComponent;
 
+import timber.log.Timber;
+
 
 public class BaseApplication extends Application {
     private AppComponent mAppComponent;
@@ -14,6 +16,7 @@ public class BaseApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Timber.plant(new Timber.DebugTree());
     }
 
     @UiThread
