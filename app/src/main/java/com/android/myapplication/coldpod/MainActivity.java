@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -21,7 +20,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.android.myapplication.coldpod.databinding.ActivityMainBinding;
-import com.android.myapplication.coldpod.ui.AddFragment;
+import com.android.myapplication.coldpod.ui.add.AddFragment;
 import com.android.myapplication.coldpod.ui.DownloadsFragment;
 import com.android.myapplication.coldpod.ui.FavoritesFragment;
 import com.android.myapplication.coldpod.ui.HomeFragment;
