@@ -18,10 +18,12 @@ public class MainModule {
         return podCastsDiffUtil;
     }
 
+
     @MainScope
     @Provides
-    static ITunesApi provideITunesApi(Retrofit retrofit) {
-        return retrofit.create(ITunesApi.class);
+    static ITunesApi provideITunesApi(Retrofit.Builder retrofitBuilder) {
+        return retrofitBuilder.build().create(ITunesApi.class);
     }
+
 
 }

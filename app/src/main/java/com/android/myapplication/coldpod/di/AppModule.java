@@ -10,9 +10,13 @@ import com.android.myapplication.coldpod.database.PodCastDao;
 import com.android.myapplication.coldpod.utils.AppExecutors;
 import com.android.myapplication.coldpod.utils.Constants;
 import com.android.myapplication.coldpod.utils.LiveDataCallAdapterFactory;
+import com.android.myapplication.coldpod.utils.XmlOrJsonConverterFactory;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
+
+import org.simpleframework.xml.convert.AnnotationStrategy;
+import org.simpleframework.xml.core.Persister;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -22,8 +26,12 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.jaxb.JaxbConverterFactory;
+import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
 
 import static com.android.myapplication.coldpod.utils.Constants.DATABASE_NAME;
 
@@ -32,12 +40,26 @@ public class AppModule {
 
     @Singleton
     @Provides
-    static Retrofit provideRetrofitInstance() {
+    static OkHttpClient provideOkHttpClient(){
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        return new OkHttpClient.Builder().addInterceptor(interceptor).build();
+    }
+
+    @Singleton
+    @Provides
+    static XmlOrJsonConverterFactory provideXmlOrJsonConverterFactory(){
+        return new XmlOrJsonConverterFactory();
+    }
+
+    @Singleton
+    @Provides
+    static Retrofit.Builder provideRetrofitBuilder(OkHttpClient client,XmlOrJsonConverterFactory xjf) {
         return new Retrofit.Builder()
                 .baseUrl(Constants.BASE_URL)
-                .addCallAdapterFactory(new LiveDataCallAdapterFactory())
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+                .client(client)
+                .addConverterFactory(xjf)
+                .addCallAdapterFactory(new LiveDataCallAdapterFactory());
     }
 
     @Singleton
