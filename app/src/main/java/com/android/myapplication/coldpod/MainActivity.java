@@ -30,6 +30,8 @@ import com.android.myapplication.coldpod.ui.FavoritesFragment;
 import com.android.myapplication.coldpod.ui.HomeFragment;
 import com.google.android.material.navigation.NavigationView;
 
+import java.util.concurrent.Executor;
+
 import javax.inject.Inject;
 
 

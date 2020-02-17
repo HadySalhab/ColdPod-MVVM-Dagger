@@ -7,12 +7,17 @@ import androidx.room.Room;
 import com.android.myapplication.coldpod.R;
 import com.android.myapplication.coldpod.database.AppDatabase;
 import com.android.myapplication.coldpod.database.PodCastDao;
+import com.android.myapplication.coldpod.utils.AppExecutors;
 import com.android.myapplication.coldpod.utils.Constants;
 import com.android.myapplication.coldpod.utils.LiveDataCallAdapterFactory;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
 
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -62,6 +67,19 @@ public class AppModule {
     @Provides
     static PodCastDao providePodCastDao(AppDatabase db){
         return db.getPodCastDao();
+    }
+
+    @Singleton
+    @Provides
+    @Named("diskIO")
+    static Executor provideDiskIOExecutor(){
+        return Executors.newSingleThreadExecutor();
+    }
+    @Singleton
+    @Provides
+    @Named("networkIO")
+    static Executor provideNetworkIOExecutor(){
+        return Executors.newFixedThreadPool(3);
     }
 
 }
