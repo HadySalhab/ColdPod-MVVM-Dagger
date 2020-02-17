@@ -3,26 +3,34 @@ package com.android.myapplication.coldpod.network;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
+import org.simpleframework.xml.Text;
+import org.simpleframework.xml.Path;
 
 import java.util.List;
+
 
 @Root(name = "channel", strict = false)
 public class Channel {
 
+    @ElementList(inline = true, name = "image", required = false)
+    private List<ArtworkImage> mArtworkImages;
+
     @Element(name = "title", required = false)
     private String mTitle;
 
-    @Element(name = "description", required = false)
+    @Path("description")
+    @Text(required = false)
     private String mDescription;
 
-    @Element(name = "author", required = false)
+    @Path("author")
+    @Text(required = false)
     private String mITunesAuthor;
 
     @Element(name = "language", required = false)
     private String mLanguage;
 
-    @Element(name = "category", required = false)
-    private Category mCategory;
+    @ElementList(inline = true, name = "category", required = false)
+    private List<Category> mCategories;
 
     @ElementList(inline = true, name = "item", required = false)
     private List<Item> mItemList;
@@ -62,12 +70,12 @@ public class Channel {
         mLanguage = language;
     }
 
-    public Category getCategory() {
-        return mCategory;
+    public List<Category> getCategories() {
+        return mCategories;
     }
 
-    public void setCategory(Category category) {
-        mCategory = category;
+    public void setCategories(List<Category> categories) {
+        mCategories = categories;
     }
 
     public List<Item> getItemList() {
@@ -77,5 +85,14 @@ public class Channel {
     public void setItemList(List<Item> itemList) {
         mItemList = itemList;
     }
+
+    public List<ArtworkImage> getArtworkImages() {
+        return mArtworkImages;
+    }
+
+    public void setArtworkImages(List<ArtworkImage> artworkImages) {
+        mArtworkImages = artworkImages;
+    }
+
 }
 

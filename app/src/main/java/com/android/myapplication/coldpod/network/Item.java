@@ -1,15 +1,20 @@
 package com.android.myapplication.coldpod.network;
 
 import org.simpleframework.xml.Element;
+import org.simpleframework.xml.Path;
 import org.simpleframework.xml.Root;
+import org.simpleframework.xml.Text;
 
 @Root(name = "item", strict = false)
 public class Item {
 
-//    @Element(name = "title", required = false)
-//    private String mTitle;
 
-    @Element(name = "description", required = false)
+    @Path("title")
+    @Text(required = false)
+    private String mTitle;
+
+    @Path("description")
+    @Text(required = false)
     private String mDescription;
 
     @Element(name = "summary", required = false)
@@ -27,13 +32,13 @@ public class Item {
     public Item() {
     }
 
-//    public String getTitle() {
-//        return mTitle;
-//    }
-//
-//    public void setTitle(String title) {
-//        mTitle = title;
-//    }
+    public String getTitle() {
+        return mTitle;
+    }
+
+    public void setTitle(String title) {
+        mTitle = title;
+    }
 
     public String getDescription() {
         return mDescription;
