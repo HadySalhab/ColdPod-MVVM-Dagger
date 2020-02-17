@@ -9,4 +9,6 @@ public class Constants {
     public static final String I_TUNES_LOOKUP = "https://itunes.apple.com/lookup";
 
     public static final String EXTRA_PODCAST_ID = "extra_podCastId";
+
+    public static final String DATABASE_NAME = "podcast";
 }
