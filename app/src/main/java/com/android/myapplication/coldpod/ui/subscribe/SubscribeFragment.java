@@ -17,11 +17,18 @@ import android.view.ViewGroup;
 import com.android.myapplication.coldpod.BaseApplication;
 import com.android.myapplication.coldpod.R;
 import com.android.myapplication.coldpod.ViewModelProviderFactory;
-import com.android.myapplication.coldpod.di.main.PodCastIdModule;
-import com.android.myapplication.coldpod.ui.add.AddViewModel;
+import com.android.myapplication.coldpod.network.Category;
+import com.android.myapplication.coldpod.network.Channel;
+import com.android.myapplication.coldpod.network.Enclosure;
+import com.android.myapplication.coldpod.network.Item;
+import com.android.myapplication.coldpod.network.RssFeed;
 import com.android.myapplication.coldpod.utils.Resource;
 
+import java.util.List;
+
 import javax.inject.Inject;
+
+import timber.log.Timber;
 
 import static com.android.myapplication.coldpod.utils.Constants.EXTRA_PODCAST_ID;
 
@@ -29,6 +36,7 @@ import static com.android.myapplication.coldpod.utils.Constants.EXTRA_PODCAST_ID
  * A simple {@link Fragment} subclass.
  */
 public class SubscribeFragment extends Fragment {
+    private static final String TAG = "SubscribeFragment";
     private String podCastsId;
     private SubscribeViewModel mSubscribeViewModel;
 
@@ -49,9 +57,11 @@ public class SubscribeFragment extends Fragment {
         Bundle args = getArguments();
         this.podCastsId = args.getString(EXTRA_PODCAST_ID);
         ((BaseApplication) getActivity().getApplication()).getAppComponent()
-                .getMainComponent(new PodCastIdModule(this.podCastsId))
+                .getMainComponent()
                 .injectSubscribeFragment(this);
-        mSubscribeViewModel = new ViewModelProvider(this,providerFactory).get(SubscribeViewModel.class);
+        mSubscribeViewModel = new ViewModelProvider(this, providerFactory).get(SubscribeViewModel.class);
+        mSubscribeViewModel.setPodCastId(this.podCastsId);
+
     }
 
     @Override
@@ -64,10 +74,35 @@ public class SubscribeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mSubscribeViewModel.getFeedUrl().observe(getViewLifecycleOwner(), new Observer<Resource<String>>() {
+        mSubscribeViewModel.rssFeed.observe(getViewLifecycleOwner(), new Observer<Resource<RssFeed>>() {
             @Override
-            public void onChanged(Resource<String> resource) {
+            public void onChanged(Resource<RssFeed> rssFeedResource) {
+                if (rssFeedResource != null
+                        && rssFeedResource.status == Resource.Status.SUCCESS
+                        && rssFeedResource.data != null) {
+
+                    RssFeed rssFeed = rssFeedResource.data;
+                    Channel channel = rssFeed.getChannel();
+                    String title = channel.getTitle();
+                    Timber.d("title: " + title);
+                    String description = channel.getDescription();
+                    Timber.d("description: " + description);
+                    String author = channel.getITunesAuthor();
+                    Timber.d("author: " + author);
+                    String language = channel.getLanguage();
+                    Timber.d("language: " + language);
+                    List<Category> categories = channel.getCategories();
+                    String categoryText = categories.get(0).getText();
+                    Timber.d("categoryText: " + categoryText);
+                    List<Item> itemList = channel.getItemList();
+                    Enclosure enclosure = itemList.get(0).getEnclosure();
+                    String type = enclosure.getType();
+                    Timber.d("type: " + type);
+                    String enclosureUrl = enclosure.getUrl();
+                    Timber.d("enclosure: " + enclosureUrl);
+                }
             }
         });
+
     }
 }
