@@ -6,7 +6,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DiffUtil;
@@ -17,15 +16,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.android.myapplication.coldpod.BaseApplication;
-import com.android.myapplication.coldpod.MainActivity;
-import com.android.myapplication.coldpod.R;
 import com.android.myapplication.coldpod.ViewModelProviderFactory;
 import com.android.myapplication.coldpod.databinding.FragmentAddBinding;
-import com.android.myapplication.coldpod.di.main.PodCastIdModule;
 import com.android.myapplication.coldpod.model.Podcasts;
-import com.android.myapplication.coldpod.ui.diffUtils.PodCastsDiffUtil;
-
-import java.util.ArrayList;
 
 import javax.inject.Inject;
 
@@ -67,7 +60,7 @@ public class AddFragment extends Fragment implements AddAdapter.Listener {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((BaseApplication) getActivity().getApplication()).getAppComponent()
-                .getMainComponent(new PodCastIdModule())
+                .getMainComponent()
                 .injectAddFragment(this);
     }
 

@@ -14,7 +14,6 @@ import dagger.Subcomponent;
 @MainScope
 @Subcomponent(modules ={
         MainViewModelsModule.class,
-        PodCastIdModule.class,
         MainModule.class
 })
 public interface MainComponent {

@@ -21,7 +21,6 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.android.myapplication.coldpod.databinding.ActivityMainBinding;
-import com.android.myapplication.coldpod.di.main.PodCastIdModule;
 import com.android.myapplication.coldpod.model.Podcasts;
 import com.android.myapplication.coldpod.ui.subscribe.SubscribeFragment;
 import com.android.myapplication.coldpod.ui.add.AddFragment;
@@ -29,8 +28,6 @@ import com.android.myapplication.coldpod.ui.DownloadsFragment;
 import com.android.myapplication.coldpod.ui.FavoritesFragment;
 import com.android.myapplication.coldpod.ui.HomeFragment;
 import com.google.android.material.navigation.NavigationView;
-
-import java.util.concurrent.Executor;
 
 import javax.inject.Inject;
 
@@ -60,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void setUpDagger() {
-        ((BaseApplication) getApplication()).getAppComponent().getMainComponent(new PodCastIdModule())
+        ((BaseApplication) getApplication()).getAppComponent().getMainComponent()
                 .inject(this);
     }
 
