@@ -86,6 +86,10 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$retrofit2_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit2_version"
     implementation "com.squareup.retrofit2:converter-simplexml:$retrofit2_version"
+    implementation "com.squareup.retrofit2:converter-jaxb:$retrofit2_version"
+
+    // OkHttp interceptor
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'
 
     // -- Lifecycle Components (ViewModel, LiveData and ReactiveStreams)
     def lifecycle_version = "2.2.0"
