@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel;
 import com.android.myapplication.coldpod.MainActivityViewModel;
 import com.android.myapplication.coldpod.di.ViewModelKey;
 import com.android.myapplication.coldpod.ui.add.AddViewModel;
+import com.android.myapplication.coldpod.ui.subscribe.SubscribeViewModel;
 
 import dagger.Binds;
 import dagger.Module;
@@ -12,7 +13,6 @@ import dagger.multibindings.IntoMap;
 
 @Module
 public abstract class MainViewModelsModule {
-
     @Binds
     @IntoMap
     @ViewModelKey(MainActivityViewModel.class)
@@ -22,6 +22,12 @@ public abstract class MainViewModelsModule {
     @IntoMap
     @ViewModelKey(AddViewModel.class)
     public abstract ViewModel bindAddViewModel(AddViewModel viewModel);
+
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SubscribeViewModel.class)
+    public abstract ViewModel bindSubscribeViewModel(SubscribeViewModel viewModel);
 }
 
 

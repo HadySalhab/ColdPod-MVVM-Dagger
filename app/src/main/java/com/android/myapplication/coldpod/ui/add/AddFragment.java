@@ -21,6 +21,7 @@ import com.android.myapplication.coldpod.MainActivity;
 import com.android.myapplication.coldpod.R;
 import com.android.myapplication.coldpod.ViewModelProviderFactory;
 import com.android.myapplication.coldpod.databinding.FragmentAddBinding;
+import com.android.myapplication.coldpod.di.main.PodCastIdModule;
 import com.android.myapplication.coldpod.model.Podcasts;
 import com.android.myapplication.coldpod.ui.diffUtils.PodCastsDiffUtil;
 
@@ -66,7 +67,7 @@ public class AddFragment extends Fragment implements AddAdapter.Listener {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((BaseApplication) getActivity().getApplication()).getAppComponent()
-                .getMainComponent()
+                .getMainComponent(new PodCastIdModule())
                 .injectAddFragment(this);
     }
 

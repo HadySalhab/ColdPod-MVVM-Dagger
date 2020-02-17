@@ -21,8 +21,9 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.android.myapplication.coldpod.databinding.ActivityMainBinding;
+import com.android.myapplication.coldpod.di.main.PodCastIdModule;
 import com.android.myapplication.coldpod.model.Podcasts;
-import com.android.myapplication.coldpod.ui.SubscribeFragment;
+import com.android.myapplication.coldpod.ui.subscribe.SubscribeFragment;
 import com.android.myapplication.coldpod.ui.add.AddFragment;
 import com.android.myapplication.coldpod.ui.DownloadsFragment;
 import com.android.myapplication.coldpod.ui.FavoritesFragment;
@@ -57,7 +58,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void setUpDagger() {
-        ((BaseApplication) getApplication()).getAppComponent().getMainComponent().inject(this);
+        ((BaseApplication) getApplication()).getAppComponent().getMainComponent(new PodCastIdModule())
+                .inject(this);
     }
 
     @Override
@@ -157,7 +159,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onItemClick(Podcasts podcasts) {
         Toast.makeText(this,podcasts.getName(), Toast.LENGTH_SHORT).show();
-        getSupportFragmentManager().beginTransaction().add(R.id.fragments_container, new SubscribeFragment()).addToBackStack("subscribe").commit();
+        Fragment fragment = SubscribeFragment.getInstance(podcasts.getId());
+        getSupportFragmentManager().beginTransaction().add(R.id.fragments_container, fragment).addToBackStack("subscribe").commit();
     }
 }
 
