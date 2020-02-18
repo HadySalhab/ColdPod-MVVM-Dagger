@@ -24,8 +24,11 @@ import com.android.myapplication.coldpod.ViewModelProviderFactory;
 import com.android.myapplication.coldpod.databinding.ActivityPodcastListBinding;
 import com.android.myapplication.coldpod.model.Podcasts;
 import com.android.myapplication.coldpod.ui.details.PodCastDetailActivity;
+import com.android.myapplication.coldpod.utils.GridAutofitLayoutManager;
 
 import javax.inject.Inject;
+
+import static com.android.myapplication.coldpod.utils.Constants.GRID_AUTO_FIT_COLUMN_WIDTH;
 
 public class PodCastListActivity extends AppCompatActivity implements PodCastListAdapter.Listener {
     private static final String TAG = "PodCastListActivity";
@@ -73,7 +76,7 @@ public class PodCastListActivity extends AppCompatActivity implements PodCastLis
     }
 
     private void initRV() {
-        GridLayoutManager layoutManager = new GridLayoutManager(this, 3);
+        GridAutofitLayoutManager layoutManager = new GridAutofitLayoutManager(this, GRID_AUTO_FIT_COLUMN_WIDTH);
         mBinding.rvAddPodcast.setLayoutManager(layoutManager);
         mBinding.rvAddPodcast.setHasFixedSize(true);
         mPodCastListAdapter = new PodCastListAdapter(mPodcastsItemCallback, this);

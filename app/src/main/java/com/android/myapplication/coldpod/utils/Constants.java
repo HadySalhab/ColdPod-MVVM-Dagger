@@ -14,4 +14,8 @@ public class Constants {
 
     public static final String IMG_HTML_TAG = "<img.+?>";
     public static final String REPLACEMENT_EMPTY = "";
+
+    public static final int GRID_AUTO_FIT_COLUMN_WIDTH = 380;
+    public static final int GRID_COLUMN_WIDTH_DEFAULT = 48;
+    public static final int GRID_SPAN_COUNT = 1;
 }
