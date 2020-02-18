@@ -35,8 +35,6 @@ public class Channel {
     @ElementList(inline = true, name = "item", required = false)
     private List<Item> mItemList;
 
-    public Channel() {
-    }
 
     public String getTitle() {
         return mTitle;

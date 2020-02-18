@@ -7,7 +7,7 @@
             type="com.android.myapplication.coldpod.model.Podcasts" />
         <variable
             name="viewHolder"
-            type="com.android.myapplication.coldpod.ui.add.AddAdapter.AddViewHolder" />
+            type="com.android.myapplication.coldpod.ui.podcasts.PodCastListAdapter.PodcastListViewHolder" />
     </data>
 
     <com.google.android.material.card.MaterialCardView

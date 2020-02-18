@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.android.myapplication.coldpod.ui.podcasts.PodCastListViewModel" />
+
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:fitsSystemWindows="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ColdPod.Toolbar.ToolbarOverlay">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:elevation="4dp"
+            app:popupTheme="@style/ColdPod.Toolbar.PopupOverlay" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.podcasts.PodCastListFragment"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        >
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_add_podcast"
+            app:podcasts="@{viewModel.podcasts.data}"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            />
+
+    </FrameLayout>
+        <ProgressBar
+            android:visibility="@{viewModel.progress}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>

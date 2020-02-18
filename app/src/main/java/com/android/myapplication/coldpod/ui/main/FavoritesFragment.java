@@ -1,4 +1,4 @@
-package com.android.myapplication.coldpod.ui;
+package com.android.myapplication.coldpod.ui.main;
 
 
 import android.os.Bundle;

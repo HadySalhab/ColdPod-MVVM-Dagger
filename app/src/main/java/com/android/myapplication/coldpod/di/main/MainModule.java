@@ -4,7 +4,9 @@ import androidx.recyclerview.widget.DiffUtil;
 
 import com.android.myapplication.coldpod.model.Podcasts;
 import com.android.myapplication.coldpod.network.ITunesApi;
-import com.android.myapplication.coldpod.ui.diffUtils.PodCastsDiffUtil;
+import com.android.myapplication.coldpod.network.Item;
+import com.android.myapplication.coldpod.ui.details.PodCastDetailDiffUtil;
+import com.android.myapplication.coldpod.ui.podcasts.PodCastsDiffUtil;
 
 import dagger.Module;
 import dagger.Provides;
@@ -13,9 +15,16 @@ import retrofit2.Retrofit;
 @Module
 public class MainModule {
 
+    //bind an implementation to an interface
     @Provides
-    static DiffUtil.ItemCallback<Podcasts> bindDiffUtilItemCallback(PodCastsDiffUtil podCastsDiffUtil) {
+    static DiffUtil.ItemCallback<Podcasts> bindDiffUtilPodCastCallback(PodCastsDiffUtil podCastsDiffUtil) {
         return podCastsDiffUtil;
+    }
+
+    //bind an implementation to an interface
+    @Provides
+    static DiffUtil.ItemCallback<Item> bindDiffUtilDetailCallBack(PodCastDetailDiffUtil podCastDetailDiffUtil) {
+        return podCastDetailDiffUtil;
     }
 
 

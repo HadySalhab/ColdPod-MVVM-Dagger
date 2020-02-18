@@ -11,4 +11,7 @@ public class Constants {
     public static final String EXTRA_PODCAST_ID = "extra_podCastId";
 
     public static final String DATABASE_NAME = "podcast";
+
+    public static final String IMG_HTML_TAG = "<img.+?>";
+    public static final String REPLACEMENT_EMPTY = "";
 }

@@ -4,9 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
-            type="com.android.myapplication.coldpod.MainActivityViewModel" />
+            type="com.android.myapplication.coldpod.ui.main.MainActivityViewModel" />
+
     </data>
 
     <androidx.drawerlayout.widget.DrawerLayout
@@ -29,9 +33,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
                     android:background="?attr/colorPrimary"
-                    app:popupTheme="@style/ColdPod.Toolbar.PopupOverlay"
                     android:elevation="4dp"
-                    />
+                    app:popupTheme="@style/ColdPod.Toolbar.PopupOverlay" />
 
             </com.google.android.material.appbar.AppBarLayout>
 
@@ -44,13 +47,13 @@
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/main_fab"
-                android:onClick="@{()->viewModel.onFabClicked()}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
                 android:layout_gravity="end|bottom"
                 android:layout_marginEnd="@dimen/medium_margin"
                 android:layout_marginBottom="@dimen/medium_margin"
+                android:onClick="@{()->viewModel.onFabClicked()}"
+                android:visibility="@{viewModel.isFabVisible() ? View.VISIBLE : View.GONE}"
                 app:backgroundTint="@color/secondary_color"
                 app:srcCompat="@drawable/ic_add" />
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
@@ -62,7 +65,7 @@
             android:layout_gravity="start"
             android:fitsSystemWindows="true"
             app:headerLayout="@layout/drawer_header"
-            app:menu="@menu/main_nav_graph" />
+            app:menu="@menu/drawer_nav_items" />
 
 
     </androidx.drawerlayout.widget.DrawerLayout>

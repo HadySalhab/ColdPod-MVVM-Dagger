@@ -1,14 +1,9 @@
 package com.android.myapplication.coldpod.di.main;
 
-import androidx.annotation.Nullable;
+import com.android.myapplication.coldpod.ui.details.PodCastDetailActivity;
+import com.android.myapplication.coldpod.ui.main.MainActivity;
+import com.android.myapplication.coldpod.ui.podcasts.PodCastListActivity;
 
-import com.android.myapplication.coldpod.MainActivity;
-import com.android.myapplication.coldpod.ui.add.AddFragment;
-import com.android.myapplication.coldpod.ui.subscribe.SubscribeFragment;
-
-import javax.inject.Named;
-
-import dagger.BindsInstance;
 import dagger.Subcomponent;
 
 @MainScope
@@ -18,6 +13,6 @@ import dagger.Subcomponent;
 })
 public interface MainComponent {
     void inject(MainActivity mainActivity);
-    void injectAddFragment(AddFragment addFragment);
-    void injectSubscribeFragment(SubscribeFragment subscribeFragment);
+    void injectPodCastListActivity(PodCastListActivity podCastListActivity);
+    void injectPodCastDetailActivity(PodCastDetailActivity podCastDetailActivity);
 }

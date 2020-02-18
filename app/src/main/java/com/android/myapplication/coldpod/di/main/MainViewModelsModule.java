@@ -2,10 +2,10 @@ package com.android.myapplication.coldpod.di.main;
 
 import androidx.lifecycle.ViewModel;
 
-import com.android.myapplication.coldpod.MainActivityViewModel;
+import com.android.myapplication.coldpod.ui.main.MainActivityViewModel;
 import com.android.myapplication.coldpod.di.ViewModelKey;
-import com.android.myapplication.coldpod.ui.add.AddViewModel;
-import com.android.myapplication.coldpod.ui.subscribe.SubscribeViewModel;
+import com.android.myapplication.coldpod.ui.podcasts.PodCastListViewModel;
+import com.android.myapplication.coldpod.ui.details.PodCastDetailViewModel;
 
 import dagger.Binds;
 import dagger.Module;
@@ -20,14 +20,14 @@ public abstract class MainViewModelsModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(AddViewModel.class)
-    public abstract ViewModel bindAddViewModel(AddViewModel viewModel);
+    @ViewModelKey(PodCastListViewModel.class)
+    public abstract ViewModel bindPodCastListViewModel(PodCastListViewModel viewModel);
 
 
     @Binds
     @IntoMap
-    @ViewModelKey(SubscribeViewModel.class)
-    public abstract ViewModel bindSubscribeViewModel(SubscribeViewModel viewModel);
+    @ViewModelKey(PodCastDetailViewModel.class)
+    public abstract ViewModel bindPodCastDetailViewModel(PodCastDetailViewModel viewModel);
 }
 
 

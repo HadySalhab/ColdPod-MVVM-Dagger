@@ -1,4 +1,4 @@
-package com.android.myapplication.coldpod.ui.add;
+package com.android.myapplication.coldpod.ui.podcasts;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,45 +11,49 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.myapplication.coldpod.R;
-import com.android.myapplication.coldpod.databinding.AddPodcastListItemBinding;
+import com.android.myapplication.coldpod.databinding.PodcastListItemBinding;
 import com.android.myapplication.coldpod.model.Podcasts;
 
-import javax.inject.Inject;
+public class PodCastListAdapter extends ListAdapter<Podcasts, PodCastListAdapter.PodcastListViewHolder
+        > {
 
-public class AddAdapter extends ListAdapter<Podcasts, AddAdapter.AddViewHolder> {
-
-    private static final String TAG = "AddAdapter";
+    private static final String TAG = "PodCastListAdapter";
     interface Listener {
         void onItemClick(Podcasts podcasts);
     }
 
-    private final AddAdapter.Listener mListener;
+    private final PodCastListAdapter.Listener mListener;
 
 
-    public AddAdapter(@NonNull DiffUtil.ItemCallback<Podcasts> diffCallback, Listener listener) {
+    public PodCastListAdapter(@NonNull DiffUtil.ItemCallback<Podcasts> diffCallback, Listener listener) {
         super(diffCallback);
         mListener = listener;
     }
 
     @NonNull
     @Override
-    public AddViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public PodcastListViewHolder
+    onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        AddPodcastListItemBinding binding = DataBindingUtil
-                .inflate(layoutInflater, R.layout.add_podcast_list_item, parent, false);
-        return new AddViewHolder(binding);
+        PodcastListItemBinding binding = DataBindingUtil
+                .inflate(layoutInflater, R.layout.podcast_list_item, parent, false);
+        return new PodcastListViewHolder
+                (binding);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull AddViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull PodcastListViewHolder
+                                             holder, int position) {
         Podcasts podcasts = getItem(position);
         holder.bind(podcasts);
     }
 
-    public class AddViewHolder extends RecyclerView.ViewHolder {
-        AddPodcastListItemBinding binding;
+    public class PodcastListViewHolder
+            extends RecyclerView.ViewHolder {
+        PodcastListItemBinding binding;
 
-        AddViewHolder(@NonNull AddPodcastListItemBinding binding) {
+        PodcastListViewHolder
+                (@NonNull PodcastListItemBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }

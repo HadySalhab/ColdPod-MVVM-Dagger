@@ -1,11 +1,16 @@
-package com.android.myapplication.coldpod.ui.add;
+package com.android.myapplication.coldpod.ui.podcasts;
 
+import android.view.View;
+
+import androidx.arch.core.util.Function;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
 import com.android.myapplication.coldpod.model.Podcasts;
+import com.android.myapplication.coldpod.network.Channel;
 import com.android.myapplication.coldpod.repository.PodCastsRepository;
 import com.android.myapplication.coldpod.utils.Resource;
 
@@ -13,17 +18,25 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class AddViewModel extends ViewModel {
+public class PodCastListViewModel extends ViewModel {
 
     private final PodCastsRepository mPodCastsRepository;
     private final MediatorLiveData<Resource<List<Podcasts>>> _podcasts = new MediatorLiveData<>();
     public final LiveData<Resource<List<Podcasts>>>  getPodcasts(){
         return _podcasts;
-
     }
+    public LiveData<Integer> progress = Transformations.map(_podcasts, new Function<Resource<List<Podcasts>>, Integer>() {
+        @Override
+        public Integer apply(Resource<List<Podcasts>> input) {
+            if(input.status== Resource.Status.LOADING){
+                return View.VISIBLE;
+            }
+            return View.GONE;
+        }
+    });
 
     @Inject
-    public AddViewModel(PodCastsRepository podCastsRepository) {
+    public PodCastListViewModel(PodCastsRepository podCastsRepository) {
         mPodCastsRepository = podCastsRepository;
     }
 

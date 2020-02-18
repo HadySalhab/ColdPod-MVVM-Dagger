@@ -1,4 +1,4 @@
-package com.android.myapplication.coldpod.ui.diffUtils;
+package com.android.myapplication.coldpod.ui.podcasts;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;

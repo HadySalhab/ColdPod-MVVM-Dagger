@@ -5,9 +5,17 @@ import org.simpleframework.xml.Path;
 import org.simpleframework.xml.Root;
 import org.simpleframework.xml.Text;
 
+import java.util.Objects;
+import java.util.UUID;
+
 @Root(name = "item", strict = false)
 public class Item {
 
+    private String id = UUID.randomUUID().toString();
+
+    public String getId() {
+        return id;
+    }
 
     @Path("title")
     @Text(required = false)
@@ -34,6 +42,25 @@ public class Item {
 
     public String getTitle() {
         return mTitle;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Item item = (Item) o;
+        return Objects.equals(id, item.id) &&
+                Objects.equals(mTitle, item.mTitle) &&
+                Objects.equals(mDescription, item.mDescription) &&
+                Objects.equals(mITunesSummary, item.mITunesSummary) &&
+                Objects.equals(mPubDate, item.mPubDate) &&
+                Objects.equals(mITunesDuration, item.mITunesDuration) &&
+                Objects.equals(mEnclosure, item.mEnclosure);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, mTitle, mDescription, mITunesSummary, mPubDate, mITunesDuration, mEnclosure);
     }
 
     public void setTitle(String title) {

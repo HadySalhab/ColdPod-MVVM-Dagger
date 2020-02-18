@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="item"
+            type="com.android.myapplication.coldpod.network.Item" />
+        <variable
+            name="viewHolder"
+            type="com.android.myapplication.coldpod.ui.details.PodCastDetailAdapter.PodCastDetailViewHolder" />
+    </data>
+<com.google.android.material.card.MaterialCardView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="3dp"
+    android:background="@android:color/white"
+    app:contentPadding="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_item_title"
+            style="@style/Base.TextAppearance.AppCompat.Subhead"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{item.title}"
+            tools:text="title" />
+
+        <TextView
+            android:id="@+id/tv_item_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="3"
+            app:item_description="@{item.description}"
+            tools:text="description" />
+
+        <TextView
+            android:id="@+id/tv_item_pub_date"
+            android:layout_width="wrap_content"
+            android:text="@{item.pubDate}"
+            android:layout_height="wrap_content"
+            tools:text="pub date" />
+
+        <TextView
+            android:id="@+id/tv_item_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{item.iTunesDuration}"
+            tools:text="duration" />
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>
+
+    </layout>

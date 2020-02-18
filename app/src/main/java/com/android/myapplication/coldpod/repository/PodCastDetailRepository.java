@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData;
 
 import com.android.myapplication.coldpod.di.main.MainScope;
 import com.android.myapplication.coldpod.network.ApiResponse;
+import com.android.myapplication.coldpod.network.Channel;
 import com.android.myapplication.coldpod.network.ITunesApi;
 import com.android.myapplication.coldpod.network.LookupResponse;
 import com.android.myapplication.coldpod.network.LookupResult;
@@ -19,15 +20,15 @@ import java.util.List;
 import javax.inject.Inject;
 
 @MainScope
-public class SubscribeRepository {
+public class PodCastDetailRepository {
 
     private final ITunesApi mITunesApi;
 
-    private static final String TAG = "SubscribeRepository";
+    private static final String TAG = "PodCastDetailRepository";
 
 
     @Inject
-    public SubscribeRepository(ITunesApi iTunesApi) {
+    public PodCastDetailRepository(ITunesApi iTunesApi) {
         mITunesApi = iTunesApi;
     }
 
@@ -63,26 +64,27 @@ public class SubscribeRepository {
 
     }
 
-    public LiveData<Resource<RssFeed>> getRssfeed(String url) {
-        return new NetworkBoundResource<RssFeed, RssFeed>() {
+    public LiveData<Resource<Channel>> getRssfeed(String url) {
+        return new NetworkBoundResource<Channel, RssFeed>() {
 
             @Override
             protected void handleApiSuccessResponse(ApiResponse.ApiSuccessResponse response) {
                 Log.d(TAG, "handleApiSuccessResponse: ");
                 RssFeed rssFeed = (RssFeed) response.getBody();
-                results.setValue(new Resource<RssFeed>(Resource.Status.SUCCESS, rssFeed, null));
+                Channel channel = rssFeed.getChannel();
+                results.setValue(new Resource<Channel>(Resource.Status.SUCCESS, channel, null));
             }
 
             @Override
             protected void handleApiEmptyResponse(ApiResponse.ApiEmptyResponse response) {
                 Log.d(TAG, "handleApiEmptyResponse: ");
-                results.setValue(new Resource<RssFeed>(Resource.Status.SUCCESS, null, null));
+                results.setValue(new Resource<Channel>(Resource.Status.SUCCESS, null, null));
             }
 
             @Override
             protected void handleApiErrorResponse(ApiResponse.ApiErrorResponse response) {
-                Log.d(TAG, "handleApiErrorResponse: " +response.getErrorMessage() );
-                results.setValue(new Resource<RssFeed>(Resource.Status.ERROR, null, response.getErrorMessage()));
+                Log.d(TAG, "handleApiErrorResponse: " + response.getErrorMessage());
+                results.setValue(new Resource<Channel>(Resource.Status.ERROR, null, response.getErrorMessage()));
 
             }
 

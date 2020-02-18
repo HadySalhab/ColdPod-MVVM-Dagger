@@ -1,12 +1,10 @@
-package com.android.myapplication.coldpod;
+package com.android.myapplication.coldpod.ui.main;
 
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -20,20 +18,17 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.android.myapplication.coldpod.BaseApplication;
+import com.android.myapplication.coldpod.R;
+import com.android.myapplication.coldpod.ViewModelProviderFactory;
 import com.android.myapplication.coldpod.databinding.ActivityMainBinding;
-import com.android.myapplication.coldpod.model.Podcasts;
-import com.android.myapplication.coldpod.ui.subscribe.SubscribeFragment;
-import com.android.myapplication.coldpod.ui.add.AddFragment;
-import com.android.myapplication.coldpod.ui.DownloadsFragment;
-import com.android.myapplication.coldpod.ui.FavoritesFragment;
-import com.android.myapplication.coldpod.ui.HomeFragment;
+import com.android.myapplication.coldpod.ui.podcasts.PodCastListActivity;
 import com.google.android.material.navigation.NavigationView;
 
 import javax.inject.Inject;
 
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
-        AddFragment.Listener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
     ActivityMainBinding mBinding;
     DrawerLayout drawerLayout;
     Toolbar mToolbar;
@@ -68,13 +63,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void subscribeObserver() {
-        mViewModel.getNavToAddFragment().observe(this, new Observer<Boolean>() {
+        mViewModel.getNavToPodcastsActivity().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
                 if (aBoolean) {
-                    getSupportFragmentManager().beginTransaction().add(R.id.fragments_container, new AddFragment()).addToBackStack("add").commit();
-                    showHideFab(View.GONE);
-                    mViewModel.setNavToAddFragment(false);
+                    startActivity(PodCastListActivity.getInstance(MainActivity.this));
+                   // overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left);
+                    //reseting
+                    mViewModel.setNavToPodcastsActivity(false);
                 }
             }
         });
@@ -104,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toggle.syncState();
         mNavigationView.setNavigationItemSelectedListener(this);
         if (savedInstanceState == null) {
-            performTransaction(new HomeFragment());
+            performTransaction(new SubscribedFragment());
             mNavigationView.setCheckedItem(R.id.drawer_nav_podcasts);
         }
 
@@ -114,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.drawer_nav_podcasts:
-                performTransaction(new HomeFragment());
+                performTransaction(new SubscribedFragment());
                 break;
             case R.id.drawer_nav_favorites:
                 performTransaction(new FavoritesFragment());
@@ -123,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 performTransaction(new DownloadsFragment());
                 break;
             default:
-                performTransaction(new HomeFragment());
+                performTransaction(new SubscribedFragment());
                 break;
         }
         drawerLayout.closeDrawer(GravityCompat.START);
@@ -132,21 +128,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void performTransaction(Fragment fragment) {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragments_container, fragment).commit();
-        if (fragment instanceof HomeFragment) {
-            showHideFab(View.VISIBLE);
+        if (fragment instanceof SubscribedFragment) {
+            mViewModel.setIfFabVisible(true);
         } else {
-            showHideFab(View.GONE);
+            mViewModel.setIfFabVisible(false);
         }
     }
 
-    private void showHideFab(int visibility) {
-        mBinding.mainFab.setVisibility(visibility);
-    }
+
 
     @Override
     public void onBackPressed() {
-        if (getSupportFragmentManager().findFragmentById(R.id.fragments_container) instanceof AddFragment) {
-            showHideFab(View.VISIBLE);
+        if (getSupportFragmentManager().findFragmentById(R.id.fragments_container) instanceof SubscribedFragment) {
+            mViewModel.setIfFabVisible(true);
         }
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
@@ -155,11 +149,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    @Override
-    public void onItemClick(Podcasts podcasts) {
-        Toast.makeText(this,podcasts.getName(), Toast.LENGTH_SHORT).show();
-        Fragment fragment = SubscribeFragment.getInstance(podcasts.getId());
-        getSupportFragmentManager().beginTransaction().add(R.id.fragments_container, fragment).addToBackStack("subscribe").commit();
-    }
 }
 
