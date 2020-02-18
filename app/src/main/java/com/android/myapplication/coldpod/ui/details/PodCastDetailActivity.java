@@ -102,26 +102,13 @@ public class PodCastDetailActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        mPodCastDetailViewModel.mChannel.observe(this, new Observer<Channel>() {
-            @Override
-            public void onChanged(Channel channel) {
-                Log.d(TAG, "onChanged: "+ channel);
-            }
-        });
-        mPodCastDetailViewModel.mResourceChannel.observe(this, new Observer<Resource<Channel>>() {
-            @Override
-            public void onChanged(Resource<Channel> channelResource) {
-                if(channelResource!=null){
-                    Log.d(TAG, "channel resource: "+channelResource.status);
-                    Log.d(TAG, "channel resource: "+channelResource.data);
-                }
-            }
-        });
-        mPodCastDetailViewModel.progress.observe(this, new Observer<Integer>() {
+        mPodCastDetailViewModel.getProgress().observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
-                boolean value = integer == View.GONE;
-                Log.d(TAG, "onChanged: " + value);
+                if(integer!=null) {
+                    boolean v = integer==View.GONE;
+                    Log.d(TAG, "onChanged: " + v);
+                }
             }
         });
     }
