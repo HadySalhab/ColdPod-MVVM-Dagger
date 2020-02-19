@@ -25,4 +25,7 @@ public class MainRepository {
     public LiveData<List<PodcastEntry>> getPodcasts() {
         return mPodCastDao.loadPodcasts();
     }
+    public LiveData<PodcastEntry> getPodCastById(String podCastId) {
+        return mPodCastDao.loadPodcastByPodcastId(podCastId);
+    }
 }

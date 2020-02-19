@@ -1,5 +1,6 @@
 package com.android.myapplication.coldpod.ui.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -21,17 +22,23 @@ import androidx.lifecycle.ViewModelProvider;
 import com.android.myapplication.coldpod.BaseApplication;
 import com.android.myapplication.coldpod.R;
 import com.android.myapplication.coldpod.ViewModelProviderFactory;
+import com.android.myapplication.coldpod.database.PodcastEntry;
 import com.android.myapplication.coldpod.databinding.ActivityMainBinding;
 import com.android.myapplication.coldpod.ui.main.downloads.DownloadsFragment;
 import com.android.myapplication.coldpod.ui.main.favorites.FavoritesFragment;
 import com.android.myapplication.coldpod.ui.main.subscribed.SubscribedFragment;
+import com.android.myapplication.coldpod.ui.podcast_entry.PodCastEntryActivity;
 import com.android.myapplication.coldpod.ui.podcasts.PodCastListActivity;
 import com.google.android.material.navigation.NavigationView;
 
 import javax.inject.Inject;
 
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class MainActivity extends AppCompatActivity implements
+        NavigationView.OnNavigationItemSelectedListener,
+        SubscribedFragment.Listener {
+
+
     ActivityMainBinding mBinding;
     DrawerLayout drawerLayout;
     Toolbar mToolbar;
@@ -71,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onChanged(Boolean aBoolean) {
                 if (aBoolean) {
                     startActivity(PodCastListActivity.getInstance(MainActivity.this));
-                   // overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left);
+                    // overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left);
                     //reseting
                     mViewModel.setNavToPodcastsActivity(false);
                 }
@@ -139,7 +146,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-
     @Override
     public void onBackPressed() {
         if (getSupportFragmentManager().findFragmentById(R.id.fragments_container) instanceof SubscribedFragment) {
@@ -152,5 +158,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    @Override
+    public void onPodCastEntryClicked(PodcastEntry podcastEntry) {
+        Intent intent = PodCastEntryActivity.getInstance(this, podcastEntry.getPodcastId());
+        startActivity(intent);
+    }
 }
 

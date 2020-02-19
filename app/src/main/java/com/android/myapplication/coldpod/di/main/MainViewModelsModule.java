@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.android.myapplication.coldpod.ui.main.MainActivityViewModel;
 import com.android.myapplication.coldpod.di.ViewModelKey;
+import com.android.myapplication.coldpod.ui.podcast_entry.PodCastEntryViewModel;
 import com.android.myapplication.coldpod.ui.podcasts.PodCastListViewModel;
 import com.android.myapplication.coldpod.ui.details.PodCastDetailViewModel;
 
@@ -28,6 +29,11 @@ public abstract class MainViewModelsModule {
     @IntoMap
     @ViewModelKey(PodCastDetailViewModel.class)
     public abstract ViewModel bindPodCastDetailViewModel(PodCastDetailViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(PodCastEntryViewModel.class)
+    public abstract ViewModel bindPodCastEntryViewModel(PodCastEntryViewModel viewModel);
 }
 
 

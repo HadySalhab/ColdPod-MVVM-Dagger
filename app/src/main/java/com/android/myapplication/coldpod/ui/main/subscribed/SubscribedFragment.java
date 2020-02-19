@@ -1,6 +1,7 @@
 package com.android.myapplication.coldpod.ui.main.subscribed;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +30,24 @@ public class SubscribedFragment extends BaseFragment implements SubscribedListAd
     private SubscribedListAdapter mAdapter;
     private FragmentSubscribedBinding binding;
 
+    private Listener mListener;
+
+    public interface Listener {
+        public void onPodCastEntryClicked(PodcastEntry podcastEntry);
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        mListener = ((Listener) context);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +62,6 @@ public class SubscribedFragment extends BaseFragment implements SubscribedListAd
         initRV();
         return binding.getRoot();
     }
-
 
 
     public void initRV() {
@@ -66,7 +84,9 @@ public class SubscribedFragment extends BaseFragment implements SubscribedListAd
 
     @Override
     public void onItemClick(PodcastEntry podcastEntry) {
-
+        if (mListener != null) {
+            mListener.onPodCastEntryClicked(podcastEntry);
+        }
     }
 
 
