@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onPodCastEntryClicked(PodcastEntry podcastEntry) {
-        Intent intent = PodCastEntryActivity.getInstance(this, podcastEntry.getPodcastId());
+        Intent intent = PodCastEntryActivity.getInstance(this, podcastEntry.getPodcastId(),podcastEntry.getTitle());
         startActivity(intent);
     }
 }

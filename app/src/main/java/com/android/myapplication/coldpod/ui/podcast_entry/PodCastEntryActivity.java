@@ -3,7 +3,9 @@ package com.android.myapplication.coldpod.ui.podcast_entry;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
@@ -15,12 +17,14 @@ import com.android.myapplication.coldpod.R;
 import com.android.myapplication.coldpod.ViewModelProviderFactory;
 import com.android.myapplication.coldpod.databinding.ActivityPodcastEntryBinding;
 import com.android.myapplication.coldpod.network.Item;
+import com.google.android.material.appbar.AppBarLayout;
 
 import java.util.ArrayList;
 
 import javax.inject.Inject;
 
 import static com.android.myapplication.coldpod.utils.Constants.EXTRA_PODCAST_ID;
+import static com.android.myapplication.coldpod.utils.Constants.EXTRA_PODCAST_NAME;
 
 public class PodCastEntryActivity extends AppCompatActivity {
     private ActivityPodcastEntryBinding mBinding;
@@ -33,12 +37,14 @@ public class PodCastEntryActivity extends AppCompatActivity {
     DiffUtil.ItemCallback<Item> mItemItemCallback;
 
     private String podCastId;
+    private String podCastName;
     private PodCastEntryViewModel mViewModel;
 
 
-    public static Intent getInstance(Context context, String podcastId) {
+    public static Intent getInstance(Context context, String podcastId,String podCastName) {
         Intent intent = new Intent(context, PodCastEntryActivity.class);
         intent.putExtra(EXTRA_PODCAST_ID, podcastId);
+        intent.putExtra(EXTRA_PODCAST_NAME,podCastName);
         return intent;
     }
 
@@ -47,11 +53,14 @@ public class PodCastEntryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         initDagger();
         podCastId = getIntent().getStringExtra(EXTRA_PODCAST_ID);
+        podCastName = getIntent().getStringExtra(EXTRA_PODCAST_NAME);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_podcast_entry);
         mViewModel = new ViewModelProvider(this, providerFactory).get(PodCastEntryViewModel.class);
         mBinding.setViewModel(mViewModel);
         mBinding.setLifecycleOwner(this);
         initRv();
+        initToolbar();
+        initCollapsingToolbar();
         mViewModel.setPodCastId(podCastId);
     }
 
@@ -65,5 +74,45 @@ public class PodCastEntryActivity extends AppCompatActivity {
 
     private void initDagger() {
         ((BaseApplication) getApplication()).getAppComponent().getMainComponent().injectPodCastEntryActivity(this);
+    }
+    private void initToolbar() {
+        setSupportActionBar(mBinding.toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+    private void initCollapsingToolbar(){
+        mBinding.collapsingToolbar.setCollapsedTitleTextColor(getResources().getColor(R.color.black_color));
+        mBinding.appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                int scrollRange = appBarLayout.getTotalScrollRange();
+                if (verticalOffset == 0) {
+                    // When a CollapsingToolbarLayout is expanded, hide the title
+                    mBinding.collapsingToolbar.setTitle(" ");
+                } else if (Math.abs(verticalOffset) >= scrollRange) {
+                    // When a CollapsingToolbarLayout is fully collapsed, show the title
+                    if (mBinding != null) {
+                        mBinding.collapsingToolbar.setTitle(podCastName);
+                    }
+                } else {
+                    // Otherwise, hide the title
+                    mBinding.collapsingToolbar.setTitle(" ");
+                }
+            }
+        });
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
     }
 }
