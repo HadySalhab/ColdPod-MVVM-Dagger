@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "e97f3dba40c24a66e5f04d82ea510c39",
+    "identityHash": "6d541ce9f8de637e10903807e6e18797",
     "entities": [
       {
         "tableName": "podcast",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `podcast_id` INTEGER NOT NULL, `title` TEXT, `description` TEXT, `author` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `podcast_id` TEXT, `title` TEXT, `description` TEXT, `author` TEXT, `artwork_image_url` TEXT)",
         "fields": [
           {
             "fieldPath": "id",
@@ -17,8 +17,8 @@
           {
             "fieldPath": "podcastId",
             "columnName": "podcast_id",
-            "affinity": "INTEGER",
-            "notNull": true
+            "affinity": "TEXT",
+            "notNull": false
           },
           {
             "fieldPath": "title",
@@ -37,6 +37,12 @@
             "columnName": "author",
             "affinity": "TEXT",
             "notNull": false
+          },
+          {
+            "fieldPath": "artworkImageUrl",
+            "columnName": "artwork_image_url",
+            "affinity": "TEXT",
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -52,7 +58,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e97f3dba40c24a66e5f04d82ea510c39')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6d541ce9f8de637e10903807e6e18797')"
     ]
   }
 }

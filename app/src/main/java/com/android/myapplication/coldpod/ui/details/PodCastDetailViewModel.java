@@ -2,7 +2,6 @@ package com.android.myapplication.coldpod.ui.details;
 
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.arch.core.util.Function;
 import androidx.lifecycle.LiveData;
@@ -17,7 +16,6 @@ import com.android.myapplication.coldpod.network.ArtworkImage;
 import com.android.myapplication.coldpod.network.Channel;
 import com.android.myapplication.coldpod.repository.PodCastDetailRepository;
 import com.android.myapplication.coldpod.utils.AbsentLiveData;
-import com.android.myapplication.coldpod.utils.AppExecutors;
 import com.android.myapplication.coldpod.utils.Constants;
 import com.android.myapplication.coldpod.utils.Resource;
 
@@ -27,24 +25,31 @@ import javax.inject.Inject;
 
 
 public class PodCastDetailViewModel extends ViewModel {
-    private PodcastEntry editablePodcast;
+
+
     private boolean isSubscribed = false; //default value
     private static final String TAG = "PodCastDetailViewModel";
     private final PodCastDetailRepository repository;
-
-
-    private LiveData<PodcastEntry> podcastEntry;
+    private LiveData<PodcastEntry> dbPodCast;
     public LiveData<String> subscriptionButtonText;
 
-
+    /*
+    * when changed will fire the requests...
+    * */
     private final MutableLiveData<String> _podcastId = new MutableLiveData<>();
 
-    private MediatorLiveData<Integer> progress = new MediatorLiveData<>();
 
+    /*
+    * will handle the progress bar visibility
+    * */
+    private MediatorLiveData<Integer> progress = new MediatorLiveData<>();
     public LiveData<Integer> getProgress() {
         return progress;
     }
 
+    /*
+    * get rssFeed Url when id is given...
+    * */
     private final LiveData<Resource<String>> feedURL = Transformations.switchMap(_podcastId, new Function<String, LiveData<Resource<String>>>() {
         @Override
         public LiveData<Resource<String>> apply(String input) {
@@ -53,6 +58,9 @@ public class PodCastDetailViewModel extends ViewModel {
         }
     });
 
+    /*
+    * get podCast when rssFeed Url is ready...
+    * */
     public final LiveData<Resource<Channel>> mResourceChannel = Transformations.switchMap(feedURL, new Function<Resource<String>, LiveData<Resource<Channel>>>() {
         @Override
         public LiveData<Resource<Channel>> apply(Resource<String> input) {
@@ -63,21 +71,38 @@ public class PodCastDetailViewModel extends ViewModel {
             return AbsentLiveData.create();
         }
     });
-    public LiveData<Channel> mChannel = Transformations.map(mResourceChannel, new Function<Resource<Channel>, Channel>() {
+
+    private final LiveData<PodcastEntry> networkPodCast = Transformations.map(mResourceChannel, new Function<Resource<Channel>, PodcastEntry>() {
         @Override
-        public Channel apply(Resource<Channel> input) {
-            if (input != null) {
-                if (input.data != null) {
-                    updatePodcastEntry();
+        public PodcastEntry apply(Resource<Channel> input) {
+            if (input != null && input.status == Resource.Status.SUCCESS && input.data != null) {
+                Channel receivedChannel = input.data;
+                List<ArtworkImage> artworkImage = receivedChannel.getArtworkImages();
+                ArtworkImage image = artworkImage.get(0);
+                String artworkImageUrl = image.getImageUrl();
+                if (artworkImageUrl == null) {
+                    artworkImageUrl = image.getImageHref();
                 }
-                return input.data;
+                return  new PodcastEntry(
+                        _podcastId.getValue(),
+                        receivedChannel.getTitle(),
+                        receivedChannel.getDescription(),
+                        receivedChannel.getITunesAuthor(),
+                        artworkImageUrl
+                );
+
+            }else{
+                return null;
             }
-            return null;
         }
     });
 
 
-    public void registerMediatorToFeedUrlRequest() {
+    /*
+    * Progress will be displayed to getFeedUrl request
+    * when feedUrl is given , register to getPodCast request...
+    * */
+    public void checkLoadingStatus() {
         progress.addSource(feedURL, new Observer<Resource<String>>() {
             @Override
             public void onChanged(Resource<String> resource) {
@@ -85,7 +110,7 @@ public class PodCastDetailViewModel extends ViewModel {
                     progress.setValue(View.VISIBLE);
                     if (resource.status != Resource.Status.LOADING) {
                         progress.removeSource(feedURL);
-                        registerMediatorToChannelRequest();
+                        keepCheckingLoadingStatus();
                     }
                 } else {
                     progress.removeSource(feedURL);
@@ -96,7 +121,11 @@ public class PodCastDetailViewModel extends ViewModel {
     }
 
 
-    public void registerMediatorToChannelRequest() {
+    /*
+    * FeedUrl is ready at this moment...
+    * keep loading until we get the podCasts from the api...
+    * */
+    public void keepCheckingLoadingStatus() {
         progress.addSource(mResourceChannel, new Observer<Resource<Channel>>() {
             @Override
             public void onChanged(Resource<Channel> channelResource) {
@@ -115,24 +144,36 @@ public class PodCastDetailViewModel extends ViewModel {
     }
 
 
+    /*
+    * Constructor...
+    * */
     @Inject
     public PodCastDetailViewModel(PodCastDetailRepository repository) {
         this.repository = repository;
-
-
     }
 
 
+    /*
+    *The id will be given from the activity...
+    * it will trigger required events...
+    * will check loading status
+    *
+    * we check if the podCast is available in db (available = subscribed podCast , Not availabe = podCast is not subscribed)
+    * we update the btn text
+    *
+    * */
     public void setPodCastId(String podCastId) {
         Log.d(TAG, "setPodCastId: " + podCastId);
         _podcastId.setValue(podCastId);
-        podcastEntry = repository.getPodcastByPodcastId(podCastId);
+        checkLoadingStatus();
+
+        dbPodCast = repository.getPodcastByPodcastId(podCastId);
         checkSubscription();
-        registerMediatorToFeedUrlRequest();
+
     }
 
     public void checkSubscription() {
-        subscriptionButtonText = Transformations.map(podcastEntry, new Function<PodcastEntry, String>() {
+        subscriptionButtonText = Transformations.map(dbPodCast, new Function<PodcastEntry, String>() {
             @Override
             public String apply(PodcastEntry input) {
                 if (input == null) {
@@ -147,34 +188,17 @@ public class PodCastDetailViewModel extends ViewModel {
 
     }
 
-    private void updatePodcastEntry() {
-        Channel receivedChannel = mChannel.getValue();
-        List<ArtworkImage> artworkImage = receivedChannel.getArtworkImages();
-        ArtworkImage image = artworkImage.get(0);
-        String artworkImageUrl = image.getImageUrl();
-        if (artworkImageUrl == null) {
-            artworkImageUrl = image.getImageHref();
-        }
-        editablePodcast = new PodcastEntry(
-                _podcastId.getValue(),
-                receivedChannel.getTitle(),
-                receivedChannel.getDescription(),
-                receivedChannel.getITunesAuthor(),
-                artworkImageUrl
-        );
-    }
-
 
     public void onSubscribeClicked() {
-        if (editablePodcast != null) {
-            if (!isSubscribed) {
-                repository.insertPodcast(editablePodcast);
-            } else {
-                editablePodcast = podcastEntry.getValue();
-               repository.remove(editablePodcast);
-
+        PodcastEntry podcastEntry = networkPodCast.getValue();
+            if(podcastEntry!=null){
+                if(!isSubscribed){
+                    repository.insertPodcast(podcastEntry);
+                }else{
+                    podcastEntry = dbPodCast.getValue();
+                    repository.remove(podcastEntry);
+                }
             }
         }
 
     }
-}
