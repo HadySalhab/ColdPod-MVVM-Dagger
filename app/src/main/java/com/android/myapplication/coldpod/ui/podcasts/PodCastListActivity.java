@@ -63,6 +63,7 @@ public class PodCastListActivity extends AppCompatActivity implements PodCastLis
         mBinding.setViewModel(mPodCastListViewModel);
         initRV();
         initToolbar();
+        mPodCastListViewModel.getPodCasts("us");
     }
 
     private void initToolbar(){
@@ -81,12 +82,6 @@ public class PodCastListActivity extends AppCompatActivity implements PodCastLis
         mBinding.rvAddPodcast.setHasFixedSize(true);
         mPodCastListAdapter = new PodCastListAdapter(mPodcastsItemCallback, this);
         mBinding.rvAddPodcast.setAdapter(mPodCastListAdapter);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mPodCastListViewModel.getPodCasts("us");
     }
 
     @Override
