@@ -1,28 +1,54 @@
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
+        <variable
+            name="item"
+            type="com.android.myapplication.coldpod.network.Item" />
     </data>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/iv_detail_artwork"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:padding="8dp"
+            android:scaleType="centerCrop"
+            app:item_image="@{item.itemImage}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tv_detail_title"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="@{item.title}"
+            app:layout_constraintStart_toEndOf="@+id/iv_detail_artwork"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="title" />
 
         <TextView
             android:id="@+id/tv_detail_pub_date"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="@{item.pubDate}"
+            app:layout_constraintStart_toEndOf="@+id/iv_detail_artwork"
+            app:layout_constraintTop_toBottomOf="@+id/tv_detail_title"
+            tools:text="pub date" />
 
         <TextView
             android:id="@+id/tv_detail_duration"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="@{item.iTunesDuration}"
+            app:layout_constraintStart_toEndOf="@+id/iv_detail_artwork"
+            app:layout_constraintTop_toBottomOf="@+id/tv_detail_pub_date"
+            tools:text="duration" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

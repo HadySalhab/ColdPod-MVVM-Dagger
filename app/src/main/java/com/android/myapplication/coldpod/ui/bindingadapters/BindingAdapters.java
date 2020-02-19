@@ -1,5 +1,7 @@
 package com.android.myapplication.coldpod.ui.bindingadapters;
 
+import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.text.Html;
 import android.view.View;
 import android.widget.ImageView;
@@ -15,8 +17,10 @@ import com.android.myapplication.coldpod.network.ArtworkImage;
 import com.android.myapplication.coldpod.network.Category;
 import com.android.myapplication.coldpod.network.Channel;
 import com.android.myapplication.coldpod.network.Item;
+import com.android.myapplication.coldpod.network.ItemImage;
 import com.android.myapplication.coldpod.ui.details.PodCastDetailAdapter;
 import com.android.myapplication.coldpod.ui.main.subscribed.SubscribedListAdapter;
+import com.android.myapplication.coldpod.ui.podcast_entry.PodCastEntryAdapter;
 import com.android.myapplication.coldpod.ui.podcasts.PodCastListAdapter;
 import com.android.myapplication.coldpod.utils.Resource;
 import com.bumptech.glide.Glide;
@@ -56,6 +60,10 @@ public class BindingAdapters {
             }
             // Use Glide library to upload the artwork
             Glide.with(imageView.getContext())
+                    .setDefaultRequestOptions(RequestOptions
+                            .placeholderOf(R.drawable.white_background)
+                            .error(R.drawable.white_background)
+                    )
                     .load(artworkImageUrl)
                     .into(imageView);
         }
@@ -124,5 +132,33 @@ public class BindingAdapters {
             subscribedListAdapter.submitList(podcastEntries);
         }
   }
+
+  @BindingAdapter("item_image")
+    public static void bindItemImage(ImageView imageView, ItemImage itemImage){
+      if (itemImage != null) {
+          String itemImageUrl = itemImage.getItemImageHref();
+          // Use Glide library to upload the artwork
+          Glide.with(imageView.getContext())
+                  .setDefaultRequestOptions(RequestOptions
+                          .placeholderOf(R.drawable.white_background)
+                          .error(R.drawable.logo)
+                  )
+                  .load(itemImageUrl)
+                  .into(imageView);
+      }else{
+          Drawable drawable = imageView.getContext().getDrawable(R.drawable.logo);
+          Glide.with(imageView.getContext())
+                  .load(drawable)
+                  .into(imageView);
+      }
+  }
+
+    @BindingAdapter("items")
+    public static void bindItemsToRv(RecyclerView recyclerView, List<Item> items){
+        PodCastEntryAdapter podCastEntryAdapter = (PodCastEntryAdapter) recyclerView.getAdapter();
+        if(items!=null){
+            podCastEntryAdapter.submitList(items);
+        }
+    }
 
 }
