@@ -22,10 +22,22 @@ public class MainRepository {
         mPodCastDao = podCastDao;
         mAppExecutors = appExecutors;
     }
+
     public LiveData<List<PodcastEntry>> getPodcasts() {
         return mPodCastDao.loadPodcasts();
     }
+
     public LiveData<PodcastEntry> getPodCastById(String podCastId) {
         return mPodCastDao.loadPodcastByPodcastId(podCastId);
+    }
+
+    public void deletePodCastEntry(PodcastEntry podcastEntry) {
+        mAppExecutors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                mPodCastDao.deletePodcast(podcastEntry);
+            }
+        });
+
     }
 }

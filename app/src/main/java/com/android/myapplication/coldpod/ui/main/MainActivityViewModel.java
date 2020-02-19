@@ -48,4 +48,7 @@ public class MainActivityViewModel extends ViewModel {
     void setIfFabVisible(boolean value) {
         _isFabVisible.setValue(value);
     }
+    public void deletePodCastEntry(PodcastEntry podcastEntry){
+        mMainRepository.deletePodCastEntry(podcastEntry);
+    }
 }

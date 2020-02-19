@@ -89,5 +89,10 @@ public class SubscribedFragment extends BaseFragment implements SubscribedListAd
         }
     }
 
+    @Override
+    public void onDeleteClick(PodcastEntry podcastEntry) {
+        mMainActivityViewModel.deletePodCastEntry(podcastEntry);
+    }
+
 
 }

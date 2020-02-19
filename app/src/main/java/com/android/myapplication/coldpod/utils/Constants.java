@@ -19,4 +19,8 @@ public class Constants {
     public static final int GRID_AUTO_FIT_COLUMN_WIDTH = 380;
     public static final int GRID_COLUMN_WIDTH_DEFAULT = 48;
     public static final int GRID_SPAN_COUNT = 1;
+
+    public static final String DELETE = "Delete";
+    public static final int GROUP_ID_DELETE = 0;
+    public static final int ORDER_DELETE = 0;
 }
