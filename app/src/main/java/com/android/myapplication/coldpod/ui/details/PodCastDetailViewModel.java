@@ -2,6 +2,7 @@ package com.android.myapplication.coldpod.ui.details;
 
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.arch.core.util.Function;
 import androidx.lifecycle.LiveData;
@@ -11,25 +12,36 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
+import com.android.myapplication.coldpod.database.PodcastEntry;
+import com.android.myapplication.coldpod.network.ArtworkImage;
 import com.android.myapplication.coldpod.network.Channel;
-import com.android.myapplication.coldpod.network.RssFeed;
 import com.android.myapplication.coldpod.repository.PodCastDetailRepository;
 import com.android.myapplication.coldpod.utils.AbsentLiveData;
+import com.android.myapplication.coldpod.utils.AppExecutors;
 import com.android.myapplication.coldpod.utils.Constants;
 import com.android.myapplication.coldpod.utils.Resource;
 
+import java.util.List;
 
 import javax.inject.Inject;
 
 
 public class PodCastDetailViewModel extends ViewModel {
+    private PodcastEntry editablePodcast;
+    private boolean isSubscribed = false; //default value
     private static final String TAG = "PodCastDetailViewModel";
     private final PodCastDetailRepository repository;
+
+
+    private LiveData<PodcastEntry> podcastEntry;
+    public LiveData<String> subscriptionButtonText;
+
 
     private final MutableLiveData<String> _podcastId = new MutableLiveData<>();
 
     private MediatorLiveData<Integer> progress = new MediatorLiveData<>();
-    public LiveData<Integer> getProgress(){
+
+    public LiveData<Integer> getProgress() {
         return progress;
     }
 
@@ -55,39 +67,27 @@ public class PodCastDetailViewModel extends ViewModel {
         @Override
         public Channel apply(Resource<Channel> input) {
             if (input != null) {
+                if (input.data != null) {
+                    updatePodcastEntry();
+                }
                 return input.data;
             }
             return null;
         }
     });
-/*    public LiveData<Integer> progress = Transformations.map(mResourceChannel, new Function<Resource<Channel>, Integer>() {
-        @Override
-        public Integer apply(Resource<Channel> input) {
-            if(input!=null) {
-                if (input.status == Resource.Status.LOADING) {
-                    return View.VISIBLE;
-                }else {
-                    return View.GONE;
-                }
-            }
-            return View.VISIBLE;
-        }
-    });*/
 
 
-
-
-    public void registerMediatorToFeedUrlRequest(){
+    public void registerMediatorToFeedUrlRequest() {
         progress.addSource(feedURL, new Observer<Resource<String>>() {
             @Override
             public void onChanged(Resource<String> resource) {
-                if(resource!=null){
+                if (resource != null) {
                     progress.setValue(View.VISIBLE);
-                    if(resource.status!= Resource.Status.LOADING){
+                    if (resource.status != Resource.Status.LOADING) {
                         progress.removeSource(feedURL);
                         registerMediatorToChannelRequest();
                     }
-                }else{
+                } else {
                     progress.removeSource(feedURL);
                     progress.setValue(View.GONE);
                 }
@@ -96,20 +96,20 @@ public class PodCastDetailViewModel extends ViewModel {
     }
 
 
-    public void registerMediatorToChannelRequest(){
+    public void registerMediatorToChannelRequest() {
         progress.addSource(mResourceChannel, new Observer<Resource<Channel>>() {
             @Override
             public void onChanged(Resource<Channel> channelResource) {
-               if(channelResource!=null){
-                   progress.setValue(View.VISIBLE);
-                   if(channelResource.status!= Resource.Status.LOADING){
-                       progress.removeSource(mResourceChannel);
-                       progress.setValue(View.GONE);
-                   }
-               }else{
-                   progress.removeSource(mResourceChannel);
-                   progress.setValue(View.GONE);
-               }
+                if (channelResource != null) {
+                    progress.setValue(View.VISIBLE);
+                    if (channelResource.status != Resource.Status.LOADING) {
+                        progress.removeSource(mResourceChannel);
+                        progress.setValue(View.GONE);
+                    }
+                } else {
+                    progress.removeSource(mResourceChannel);
+                    progress.setValue(View.GONE);
+                }
             }
         });
     }
@@ -118,12 +118,63 @@ public class PodCastDetailViewModel extends ViewModel {
     @Inject
     public PodCastDetailViewModel(PodCastDetailRepository repository) {
         this.repository = repository;
+
+
     }
 
 
     public void setPodCastId(String podCastId) {
         Log.d(TAG, "setPodCastId: " + podCastId);
         _podcastId.setValue(podCastId);
+        podcastEntry = repository.getPodcastByPodcastId(podCastId);
+        checkSubscription();
         registerMediatorToFeedUrlRequest();
+    }
+
+    public void checkSubscription() {
+        subscriptionButtonText = Transformations.map(podcastEntry, new Function<PodcastEntry, String>() {
+            @Override
+            public String apply(PodcastEntry input) {
+                if (input == null) {
+                    isSubscribed = false;
+                    return "Subscribe";
+                } else {
+                    isSubscribed = true;
+                    return "Unsubscribe";
+                }
+            }
+        });
+
+    }
+
+    private void updatePodcastEntry() {
+        Channel receivedChannel = mChannel.getValue();
+        List<ArtworkImage> artworkImage = receivedChannel.getArtworkImages();
+        ArtworkImage image = artworkImage.get(0);
+        String artworkImageUrl = image.getImageUrl();
+        if (artworkImageUrl == null) {
+            artworkImageUrl = image.getImageHref();
+        }
+        editablePodcast = new PodcastEntry(
+                _podcastId.getValue(),
+                receivedChannel.getTitle(),
+                receivedChannel.getDescription(),
+                receivedChannel.getITunesAuthor(),
+                artworkImageUrl
+        );
+    }
+
+
+    public void onSubscribeClicked() {
+        if (editablePodcast != null) {
+            if (!isSubscribed) {
+                repository.insertPodcast(editablePodcast);
+            } else {
+                editablePodcast = podcastEntry.getValue();
+               repository.remove(editablePodcast);
+
+            }
+        }
+
     }
 }

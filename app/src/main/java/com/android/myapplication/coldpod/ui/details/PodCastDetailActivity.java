@@ -4,8 +4,9 @@ package com.android.myapplication.coldpod.ui.details;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -15,29 +16,13 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
 import com.android.myapplication.coldpod.BaseApplication;
 import com.android.myapplication.coldpod.R;
 import com.android.myapplication.coldpod.ViewModelProviderFactory;
 import com.android.myapplication.coldpod.databinding.ActivityPodcastDetailBinding;
-import com.android.myapplication.coldpod.model.Podcasts;
-import com.android.myapplication.coldpod.network.Category;
-import com.android.myapplication.coldpod.network.Channel;
-import com.android.myapplication.coldpod.network.Enclosure;
 import com.android.myapplication.coldpod.network.Item;
-import com.android.myapplication.coldpod.network.RssFeed;
-import com.android.myapplication.coldpod.utils.Resource;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
-
-import timber.log.Timber;
 
 import static com.android.myapplication.coldpod.utils.Constants.EXTRA_PODCAST_ID;
 

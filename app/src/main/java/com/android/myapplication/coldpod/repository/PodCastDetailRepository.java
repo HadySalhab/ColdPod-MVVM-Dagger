@@ -1,10 +1,13 @@
 package com.android.myapplication.coldpod.repository;
 
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
+import com.android.myapplication.coldpod.database.PodCastDao;
+import com.android.myapplication.coldpod.database.PodcastEntry;
 import com.android.myapplication.coldpod.di.main.MainScope;
 import com.android.myapplication.coldpod.network.ApiResponse;
 import com.android.myapplication.coldpod.network.Channel;
@@ -12,6 +15,7 @@ import com.android.myapplication.coldpod.network.ITunesApi;
 import com.android.myapplication.coldpod.network.LookupResponse;
 import com.android.myapplication.coldpod.network.LookupResult;
 import com.android.myapplication.coldpod.network.RssFeed;
+import com.android.myapplication.coldpod.utils.AppExecutors;
 import com.android.myapplication.coldpod.utils.NetworkBoundResource;
 import com.android.myapplication.coldpod.utils.Resource;
 
@@ -23,13 +27,17 @@ import javax.inject.Inject;
 public class PodCastDetailRepository {
 
     private final ITunesApi mITunesApi;
+    private final PodCastDao mPodCastDao;
+    private final AppExecutors mAppExecutors;
 
     private static final String TAG = "PodCastDetailRepository";
 
 
     @Inject
-    public PodCastDetailRepository(ITunesApi iTunesApi) {
+    public PodCastDetailRepository(ITunesApi iTunesApi, PodCastDao podcastDao, AppExecutors executors) {
         mITunesApi = iTunesApi;
+        mPodCastDao = podcastDao;
+        mAppExecutors = executors;
     }
 
     public LiveData<Resource<String>> getLookUp(String url, String podcastId) {
@@ -94,6 +102,29 @@ public class PodCastDetailRepository {
                 return mITunesApi.getRssFeed(url);
             }
         }.getAsLiveData();
+    }
+
+    public LiveData<PodcastEntry> getPodcastByPodcastId(String podcastId) {
+        return mPodCastDao.loadPodcastByPodcastId(podcastId);
+    }
+
+    public void insertPodcast(PodcastEntry podcastEntry) {
+        mAppExecutors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                // Insert the podcast data into the database by using the podcastDao
+                mPodCastDao.insertPodcast(podcastEntry);
+            }
+        });
+    }
+
+    public void remove(PodcastEntry podcastEntry) {
+        mAppExecutors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                mPodCastDao.deletePodcast(podcastEntry);
+            }
+        });
     }
 
 }

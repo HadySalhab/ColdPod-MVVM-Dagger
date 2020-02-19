@@ -4,10 +4,11 @@
     android:layout_width="match_parent"
     android:background="@color/secondary_color"
     android:layout_height="match_parent"
-    tools:context=".ui.main.SubscribedFragment">
+    tools:context=".ui.main.subscribed.SubscribedFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_subscribed_podcasts"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
  />
