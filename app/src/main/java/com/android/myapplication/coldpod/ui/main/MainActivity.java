@@ -22,6 +22,8 @@ import com.android.myapplication.coldpod.BaseApplication;
 import com.android.myapplication.coldpod.R;
 import com.android.myapplication.coldpod.ViewModelProviderFactory;
 import com.android.myapplication.coldpod.databinding.ActivityMainBinding;
+import com.android.myapplication.coldpod.ui.main.downloads.DownloadsFragment;
+import com.android.myapplication.coldpod.ui.main.favorites.FavoritesFragment;
 import com.android.myapplication.coldpod.ui.main.subscribed.SubscribedFragment;
 import com.android.myapplication.coldpod.ui.podcasts.PodCastListActivity;
 import com.google.android.material.navigation.NavigationView;

@@ -1,4 +1,4 @@
-package com.android.myapplication.coldpod.ui.main.subscribed;
+package com.android.myapplication.coldpod.ui.main.favorites;
 
 
 import android.os.Bundle;
@@ -15,13 +15,11 @@ import android.view.ViewGroup;
 import com.android.myapplication.coldpod.R;
 import com.android.myapplication.coldpod.ui.main.BaseFragment;
 
-
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SubscribedFragment extends BaseFragment {
+public class FavoritesFragment extends BaseFragment {
     private static final String TAG = "Debug";
-
 
 
 
@@ -30,7 +28,7 @@ public class SubscribedFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_subscribed, container, false);
+        return inflater.inflate(R.layout.fragment_favorites, container, false);
     }
 
     @Override

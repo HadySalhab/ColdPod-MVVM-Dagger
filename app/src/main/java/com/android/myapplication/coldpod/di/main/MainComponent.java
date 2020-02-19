@@ -1,6 +1,7 @@
 package com.android.myapplication.coldpod.di.main;
 
 import com.android.myapplication.coldpod.ui.details.PodCastDetailActivity;
+import com.android.myapplication.coldpod.ui.main.BaseFragment;
 import com.android.myapplication.coldpod.ui.main.MainActivity;
 import com.android.myapplication.coldpod.ui.podcasts.PodCastListActivity;
 
@@ -15,4 +16,5 @@ public interface MainComponent {
     void inject(MainActivity mainActivity);
     void injectPodCastListActivity(PodCastListActivity podCastListActivity);
     void injectPodCastDetailActivity(PodCastDetailActivity podCastDetailActivity);
+    void injectBaseFragment(BaseFragment baseFragment);
 }

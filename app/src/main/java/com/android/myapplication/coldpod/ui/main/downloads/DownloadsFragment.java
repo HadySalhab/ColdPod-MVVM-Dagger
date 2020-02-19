@@ -1,22 +1,26 @@
-package com.android.myapplication.coldpod.ui.main;
+package com.android.myapplication.coldpod.ui.main.downloads;
 
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.android.myapplication.coldpod.R;
+import com.android.myapplication.coldpod.ui.main.BaseFragment;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DownloadsFragment extends Fragment {
+public class DownloadsFragment extends BaseFragment {
 
-
+    private static final String TAG = "Debug";
     public DownloadsFragment() {
         // Required empty public constructor
     }
@@ -29,4 +33,9 @@ public class DownloadsFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_downloads, container, false);
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        Log.d(TAG, "onViewCreated: "+ mMainActivityViewModel);
+    }
 }
