@@ -4,6 +4,8 @@ import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.text.Html;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -158,6 +160,22 @@ public class BindingAdapters {
         PodCastEntryAdapter podCastEntryAdapter = (PodCastEntryAdapter) recyclerView.getAdapter();
         if(items!=null){
             podCastEntryAdapter.submitList(items);
+        }
+    }
+
+    @BindingAdapter("empty_subscription_anim")
+    public static void bindEmptySubscriptionAnimation(TextView textView ,List<PodcastEntry> podCastEntries){
+        if(podCastEntries==null || podCastEntries.size() == 0){
+            textView.setVisibility(View.VISIBLE);
+            Animation anim = new AlphaAnimation(0.0f, 1.0f);
+            anim.setDuration(1500);
+            anim.setStartOffset(20);
+            anim.setRepeatMode(Animation.REVERSE);
+            anim.setRepeatCount(Animation.INFINITE);
+            textView.startAnimation(anim);
+        }else{
+            textView.setVisibility(View.GONE);
+            textView.clearAnimation();
         }
     }
 

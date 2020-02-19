@@ -7,9 +7,10 @@
         <variable
             name="viewModel"
             type="com.android.myapplication.coldpod.ui.main.MainActivityViewModel" />
+        <import type="android.view.View"/>
     </data>
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:background="@color/secondary_color"
         android:layout_height="match_parent"
@@ -19,8 +20,40 @@
             android:id="@+id/rv_subscribed_podcasts"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:podcast_entries="@{viewModel.podcastEntries}"
-            />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:podcast_entries="@{viewModel.podcastEntries}" />
 
-    </FrameLayout>
+        <TextView
+            android:id="@+id/tv_empty_subscription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:lineSpacingExtra="5sp"
+            android:text="No Subscriptions\n Please click on the + Button to subscribe"
+            android:textColor="@color/black_color"
+            android:textSize="20sp"
+            android:visibility="@{viewModel.isListNullOrEmpty ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/rv_subscribed_podcasts"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/rv_subscribed_podcasts" />
+
+        <TextView
+            android:id="@+id/tv_empty_subscription_anim"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Subscription ->"
+            android:textSize="20sp"
+            android:textColor="@color/primary_color"
+            android:textStyle="italic|bold"
+            app:empty_subscription_anim="@{viewModel.podcastEntries}"
+            android:layout_marginBottom="32dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
