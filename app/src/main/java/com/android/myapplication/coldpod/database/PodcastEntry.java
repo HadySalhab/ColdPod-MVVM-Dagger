@@ -5,6 +5,8 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import java.util.Objects;
+
 @Entity(tableName = "podcast")
 public class PodcastEntry {
 
@@ -71,5 +73,23 @@ public class PodcastEntry {
 
     public String getArtworkImageUrl() {
         return artworkImageUrl;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PodcastEntry that = (PodcastEntry) o;
+        return id == that.id &&
+                Objects.equals(podcastId, that.podcastId) &&
+                Objects.equals(title, that.title) &&
+                Objects.equals(description, that.description) &&
+                Objects.equals(author, that.author) &&
+                Objects.equals(artworkImageUrl, that.artworkImageUrl);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, podcastId, title, description, author, artworkImageUrl);
     }
 }

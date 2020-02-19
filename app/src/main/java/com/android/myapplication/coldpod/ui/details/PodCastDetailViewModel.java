@@ -72,32 +72,6 @@ public class PodCastDetailViewModel extends ViewModel {
         }
     });
 
-    private final LiveData<PodcastEntry> networkPodCast = Transformations.map(mResourceChannel, new Function<Resource<Channel>, PodcastEntry>() {
-        @Override
-        public PodcastEntry apply(Resource<Channel> input) {
-            if (input != null && input.status == Resource.Status.SUCCESS && input.data != null) {
-                Channel receivedChannel = input.data;
-                List<ArtworkImage> artworkImage = receivedChannel.getArtworkImages();
-                ArtworkImage image = artworkImage.get(0);
-                String artworkImageUrl = image.getImageUrl();
-                if (artworkImageUrl == null) {
-                    artworkImageUrl = image.getImageHref();
-                }
-                return  new PodcastEntry(
-                        _podcastId.getValue(),
-                        receivedChannel.getTitle(),
-                        receivedChannel.getDescription(),
-                        receivedChannel.getITunesAuthor(),
-                        artworkImageUrl
-                );
-
-            }else{
-                return null;
-            }
-        }
-    });
-
-
     /*
     * Progress will be displayed to getFeedUrl request
     * when feedUrl is given , register to getPodCast request...
@@ -190,12 +164,15 @@ public class PodCastDetailViewModel extends ViewModel {
 
 
     public void onSubscribeClicked() {
-        PodcastEntry podcastEntry = networkPodCast.getValue();
+        Log.d(TAG, "onSubscribeClicked: ");
+        PodcastEntry podcastEntry = getPodCastFromNetworkSource();
+        Log.d(TAG, "onSubscribeClicked: "+ podcastEntry);
         //network data is the source of truth
         //if the network data is unavailable, we dont want to allow the user to even click on the button
             if(podcastEntry!=null){
                 if(!isSubscribed){
                     repository.insertPodcast(podcastEntry);
+                    Log.d(TAG, "onSubscribeClicked: "+ podcastEntry);
                 }else{
                     podcastEntry = dbPodCast.getValue();
                     repository.remove(podcastEntry);
@@ -203,4 +180,26 @@ public class PodCastDetailViewModel extends ViewModel {
             }
         }
 
+
+    private PodcastEntry getPodCastFromNetworkSource(){
+        if (mResourceChannel.getValue() != null && mResourceChannel.getValue().status == Resource.Status.SUCCESS && mResourceChannel.getValue().data != null) {
+            Channel receivedChannel = mResourceChannel.getValue().data;
+            List<ArtworkImage> artworkImage = receivedChannel.getArtworkImages();
+            ArtworkImage image = artworkImage.get(0);
+            String artworkImageUrl = image.getImageUrl();
+            if (artworkImageUrl == null) {
+                artworkImageUrl = image.getImageHref();
+            }
+            return  new PodcastEntry(
+                    _podcastId.getValue(),
+                    receivedChannel.getTitle(),
+                    receivedChannel.getDescription(),
+                    receivedChannel.getITunesAuthor(),
+                    artworkImageUrl
+            );
+
+        }else{
+            return null;
+        }
+    }
     }

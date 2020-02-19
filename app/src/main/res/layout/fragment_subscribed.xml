@@ -1,16 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:background="@color/secondary_color"
-    android:layout_height="match_parent"
-    tools:context=".ui.main.subscribed.SubscribedFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- TODO: Update blank fragment layout -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_subscribed_podcasts"
+    <data>
+        <variable
+            name="viewModel"
+            type="com.android.myapplication.coldpod.ui.main.MainActivityViewModel" />
+    </data>
+
+    <FrameLayout
         android:layout_width="match_parent"
+        android:background="@color/secondary_color"
         android:layout_height="match_parent"
- />
+        tools:context=".ui.main.subscribed.SubscribedFragment">
 
-</FrameLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_subscribed_podcasts"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:podcast_entries="@{viewModel.podcastEntries}"
+            />
+
+    </FrameLayout>
+</layout>

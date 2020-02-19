@@ -9,12 +9,14 @@ import androidx.databinding.BindingAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.myapplication.coldpod.R;
+import com.android.myapplication.coldpod.database.PodcastEntry;
 import com.android.myapplication.coldpod.model.Podcasts;
 import com.android.myapplication.coldpod.network.ArtworkImage;
 import com.android.myapplication.coldpod.network.Category;
 import com.android.myapplication.coldpod.network.Channel;
 import com.android.myapplication.coldpod.network.Item;
 import com.android.myapplication.coldpod.ui.details.PodCastDetailAdapter;
+import com.android.myapplication.coldpod.ui.main.subscribed.SubscribedListAdapter;
 import com.android.myapplication.coldpod.ui.podcasts.PodCastListAdapter;
 import com.android.myapplication.coldpod.utils.Resource;
 import com.bumptech.glide.Glide;
@@ -111,4 +113,13 @@ public class BindingAdapters {
             view.setVisibility(View.GONE);
         }
     }
+
+  @BindingAdapter("podcast_entries")
+    public static void bindPodCastEntriesToRv(RecyclerView recyclerView, List<PodcastEntry> podcastEntries){
+        SubscribedListAdapter subscribedListAdapter = (SubscribedListAdapter) recyclerView.getAdapter();
+        if(podcastEntries!=null){
+            subscribedListAdapter.submitList(podcastEntries);
+        }
+  }
+
 }

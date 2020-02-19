@@ -10,9 +10,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DiffUtil;
 
 import com.android.myapplication.coldpod.BaseApplication;
 import com.android.myapplication.coldpod.ViewModelProviderFactory;
+import com.android.myapplication.coldpod.database.PodcastEntry;
 
 import javax.inject.Inject;
 
@@ -21,6 +23,9 @@ public class BaseFragment extends Fragment {
 
     @Inject
     ViewModelProviderFactory providerFactory;
+
+    @Inject
+    protected DiffUtil.ItemCallback<PodcastEntry> mPodcastEntryItemCallback;
 
     protected MainActivityViewModel mMainActivityViewModel;
 
