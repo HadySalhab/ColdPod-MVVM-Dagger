@@ -1,5 +1,8 @@
 package com.android.myapplication.coldpod.network;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Path;
 import org.simpleframework.xml.Root;
@@ -9,7 +12,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Root(name = "item", strict = false)
-public class Item {
+public class Item implements Parcelable {
 
     private String id = UUID.randomUUID().toString();
 
@@ -116,6 +119,42 @@ public class Item {
     }
     public void setItemImage(ItemImage itemImage) {
         mItemImage = itemImage;
+    }
+    protected Item(Parcel in) {
+        mTitle = in.readString();
+        mDescription = in.readString();
+        mITunesSummary = in.readString();
+        mPubDate = in.readString();
+        mITunesDuration = in.readString();
+        mEnclosure = (Enclosure) in.readValue(Enclosure.class.getClassLoader());
+        mItemImage = (ItemImage) in.readValue(ItemImage.class.getClassLoader());
+    }
+
+    public static final Creator<Item> CREATOR = new Creator<Item>() {
+        @Override
+        public Item createFromParcel(Parcel in) {
+            return new Item(in);
+        }
+
+        @Override
+        public Item[] newArray(int size) {
+            return new Item[size];
+        }
+    };
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mTitle);
+        dest.writeString(mDescription);
+        dest.writeString(mITunesSummary);
+        dest.writeString(mPubDate);
+        dest.writeString(mITunesDuration);
+        dest.writeValue(mEnclosure);
+        dest.writeValue(mItemImage);
     }
 }
 
