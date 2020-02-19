@@ -69,6 +69,7 @@ public class PodcastEntry {
      * @param description
      * @param author
      */
+    @Ignore
     public PodcastEntry(String podcastId, String title, String description, String author,String artworkImageUrl,List<Item> items, Date date) {
         this.podcastId = podcastId;
         this.title = title;

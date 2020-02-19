@@ -88,8 +88,7 @@ public class PodCastListActivity extends AppCompatActivity implements PodCastLis
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case android.R.id.home:
-
-                finish();
+                onBackPressed();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -99,12 +98,8 @@ public class PodCastListActivity extends AppCompatActivity implements PodCastLis
     @Override
     public void onItemClick(Podcasts podcasts) {
         Log.d(TAG, "onItemClick: " + podcasts.getId());
-        startActivity(PodCastDetailActivity.getInstance(this,podcasts.getId()));
+        startActivity(PodCastDetailActivity.getInstance(this,podcasts.getId(),podcasts.getName()));
     }
 
-    @Override
-    public void finish() {
-        super.finish();
-       // overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
-    }
+
 }

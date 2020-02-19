@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "6d541ce9f8de637e10903807e6e18797",
+    "identityHash": "5dea9c61bc91c23ec99743017020ccdd",
     "entities": [
       {
         "tableName": "podcast",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `podcast_id` TEXT, `title` TEXT, `description` TEXT, `author` TEXT, `artwork_image_url` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `podcast_id` TEXT, `title` TEXT, `description` TEXT, `author` TEXT, `artwork_image_url` TEXT, `items` TEXT, `date` INTEGER)",
         "fields": [
           {
             "fieldPath": "id",
@@ -43,6 +43,18 @@
             "columnName": "artwork_image_url",
             "affinity": "TEXT",
             "notNull": false
+          },
+          {
+            "fieldPath": "items",
+            "columnName": "items",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "date",
+            "columnName": "date",
+            "affinity": "INTEGER",
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -58,7 +70,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6d541ce9f8de637e10903807e6e18797')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5dea9c61bc91c23ec99743017020ccdd')"
     ]
   }
 }
