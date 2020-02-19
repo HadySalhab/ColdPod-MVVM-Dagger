@@ -19,6 +19,7 @@ import com.android.myapplication.coldpod.utils.AbsentLiveData;
 import com.android.myapplication.coldpod.utils.Constants;
 import com.android.myapplication.coldpod.utils.Resource;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -34,22 +35,23 @@ public class PodCastDetailViewModel extends ViewModel {
     public LiveData<String> subscriptionButtonText;
 
     /*
-    * when changed will fire the requests...
-    * */
+     * when changed will fire the requests...
+     * */
     private final MutableLiveData<String> _podcastId = new MutableLiveData<>();
 
 
     /*
-    * will handle the progress bar visibility
-    * */
+     * will handle the progress bar visibility
+     * */
     private MediatorLiveData<Integer> progress = new MediatorLiveData<>();
+
     public LiveData<Integer> getProgress() {
         return progress;
     }
 
     /*
-    * get rssFeed Url when id is given...
-    * */
+     * get rssFeed Url when id is given...
+     * */
     private final LiveData<Resource<String>> feedURL = Transformations.switchMap(_podcastId, new Function<String, LiveData<Resource<String>>>() {
         @Override
         public LiveData<Resource<String>> apply(String input) {
@@ -59,8 +61,8 @@ public class PodCastDetailViewModel extends ViewModel {
     });
 
     /*
-    * get podCast when rssFeed Url is ready...
-    * */
+     * get podCast when rssFeed Url is ready...
+     * */
     public final LiveData<Resource<Channel>> mResourceChannel = Transformations.switchMap(feedURL, new Function<Resource<String>, LiveData<Resource<Channel>>>() {
         @Override
         public LiveData<Resource<Channel>> apply(Resource<String> input) {
@@ -73,9 +75,9 @@ public class PodCastDetailViewModel extends ViewModel {
     });
 
     /*
-    * Progress will be displayed to getFeedUrl request
-    * when feedUrl is given , register to getPodCast request...
-    * */
+     * Progress will be displayed to getFeedUrl request
+     * when feedUrl is given , register to getPodCast request...
+     * */
     public void checkLoadingStatus() {
         progress.addSource(feedURL, new Observer<Resource<String>>() {
             @Override
@@ -96,9 +98,9 @@ public class PodCastDetailViewModel extends ViewModel {
 
 
     /*
-    * FeedUrl is ready at this moment...
-    * keep loading until we get the podCasts from the api...
-    * */
+     * FeedUrl is ready at this moment...
+     * keep loading until we get the podCasts from the api...
+     * */
     public void keepCheckingLoadingStatus() {
         progress.addSource(mResourceChannel, new Observer<Resource<Channel>>() {
             @Override
@@ -119,8 +121,8 @@ public class PodCastDetailViewModel extends ViewModel {
 
 
     /*
-    * Constructor...
-    * */
+     * Constructor...
+     * */
     @Inject
     public PodCastDetailViewModel(PodCastDetailRepository repository) {
         this.repository = repository;
@@ -128,14 +130,14 @@ public class PodCastDetailViewModel extends ViewModel {
 
 
     /*
-    *The id will be given from the activity...
-    * it will trigger required events...
-    * will check loading status
-    *
-    * we check if the podCast is available in db (available = subscribed podCast , Not availabe = podCast is not subscribed)
-    * we update the btn text
-    *
-    * */
+     *The id will be given from the activity...
+     * it will trigger required events...
+     * will check loading status
+     *
+     * we check if the podCast is available in db (available = subscribed podCast , Not availabe = podCast is not subscribed)
+     * we update the btn text
+     *
+     * */
     public void setPodCastId(String podCastId) {
         Log.d(TAG, "setPodCastId: " + podCastId);
         _podcastId.setValue(podCastId);
@@ -166,22 +168,22 @@ public class PodCastDetailViewModel extends ViewModel {
     public void onSubscribeClicked() {
         Log.d(TAG, "onSubscribeClicked: ");
         PodcastEntry podcastEntry = getPodCastFromNetworkSource();
-        Log.d(TAG, "onSubscribeClicked: "+ podcastEntry);
+        Log.d(TAG, "onSubscribeClicked: " + podcastEntry);
         //network data is the source of truth
         //if the network data is unavailable, we dont want to allow the user to even click on the button
-            if(podcastEntry!=null){
-                if(!isSubscribed){
-                    repository.insertPodcast(podcastEntry);
-                    Log.d(TAG, "onSubscribeClicked: "+ podcastEntry);
-                }else{
-                    podcastEntry = dbPodCast.getValue();
-                    repository.remove(podcastEntry);
-                }
+        if (podcastEntry != null) {
+            if (!isSubscribed) {
+                repository.insertPodcast(podcastEntry);
+                Log.d(TAG, "onSubscribeClicked: " + podcastEntry);
+            } else {
+                podcastEntry = dbPodCast.getValue();
+                repository.remove(podcastEntry);
             }
         }
+    }
 
 
-    private PodcastEntry getPodCastFromNetworkSource(){
+    private PodcastEntry getPodCastFromNetworkSource() {
         if (mResourceChannel.getValue() != null && mResourceChannel.getValue().status == Resource.Status.SUCCESS && mResourceChannel.getValue().data != null) {
             Channel receivedChannel = mResourceChannel.getValue().data;
             List<ArtworkImage> artworkImage = receivedChannel.getArtworkImages();
@@ -190,16 +192,18 @@ public class PodCastDetailViewModel extends ViewModel {
             if (artworkImageUrl == null) {
                 artworkImageUrl = image.getImageHref();
             }
-            return  new PodcastEntry(
+            return new PodcastEntry(
                     _podcastId.getValue(),
                     receivedChannel.getTitle(),
                     receivedChannel.getDescription(),
                     receivedChannel.getITunesAuthor(),
-                    artworkImageUrl
+                    artworkImageUrl,
+                    receivedChannel.getItemList(),
+                    new Date()
             );
 
-        }else{
+        } else {
             return null;
         }
     }
-    }
+}
