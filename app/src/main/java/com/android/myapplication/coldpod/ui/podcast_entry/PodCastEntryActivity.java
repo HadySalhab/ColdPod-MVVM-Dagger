@@ -17,6 +17,7 @@ import com.android.myapplication.coldpod.R;
 import com.android.myapplication.coldpod.ViewModelProviderFactory;
 import com.android.myapplication.coldpod.databinding.ActivityPodcastEntryBinding;
 import com.android.myapplication.coldpod.network.Item;
+import com.android.myapplication.coldpod.ui.playing.PlayingActivity;
 import com.google.android.material.appbar.AppBarLayout;
 
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ import javax.inject.Inject;
 import static com.android.myapplication.coldpod.utils.Constants.EXTRA_PODCAST_ID;
 import static com.android.myapplication.coldpod.utils.Constants.EXTRA_PODCAST_NAME;
 
-public class PodCastEntryActivity extends AppCompatActivity {
+public class PodCastEntryActivity extends AppCompatActivity implements PodCastEntryAdapter.Listener {
     private ActivityPodcastEntryBinding mBinding;
     private PodCastEntryAdapter mAdapter;
 
@@ -41,10 +42,10 @@ public class PodCastEntryActivity extends AppCompatActivity {
     private PodCastEntryViewModel mViewModel;
 
 
-    public static Intent getInstance(Context context, String podcastId,String podCastName) {
+    public static Intent getInstance(Context context, String podcastId, String podCastName) {
         Intent intent = new Intent(context, PodCastEntryActivity.class);
         intent.putExtra(EXTRA_PODCAST_ID, podcastId);
-        intent.putExtra(EXTRA_PODCAST_NAME,podCastName);
+        intent.putExtra(EXTRA_PODCAST_NAME, podCastName);
         return intent;
     }
 
@@ -64,23 +65,25 @@ public class PodCastEntryActivity extends AppCompatActivity {
         mViewModel.setPodCastId(podCastId);
     }
 
-    private void initRv(){
+    private void initRv() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mBinding.rvDetail.setLayoutManager(layoutManager);
         mBinding.rvDetail.setHasFixedSize(true);
-        mAdapter = new PodCastEntryAdapter(mItemItemCallback);
+        mAdapter = new PodCastEntryAdapter(mItemItemCallback, this);
         mBinding.rvDetail.setAdapter(mAdapter);
     }
 
     private void initDagger() {
         ((BaseApplication) getApplication()).getAppComponent().getMainComponent().injectPodCastEntryActivity(this);
     }
+
     private void initToolbar() {
         setSupportActionBar(mBinding.toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
-    private void initCollapsingToolbar(){
+
+    private void initCollapsingToolbar() {
         mBinding.collapsingToolbar.setCollapsedTitleTextColor(getResources().getColor(R.color.black_color));
         mBinding.appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
 
@@ -114,5 +117,11 @@ public class PodCastEntryActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
 
         }
+    }
+
+    @Override
+    public void onItemClick(Item item) {
+        Intent intent = new Intent(this, PlayingActivity.class);
+        startActivity(intent);
     }
 }

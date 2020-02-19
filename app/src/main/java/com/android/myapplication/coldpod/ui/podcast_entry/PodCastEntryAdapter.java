@@ -14,8 +14,15 @@ import com.android.myapplication.coldpod.network.Item;
 public class PodCastEntryAdapter extends ListAdapter<Item, PodCastEntryAdapter.PodCastEntryViewHolder> {
 
 
-    public PodCastEntryAdapter(@NonNull DiffUtil.ItemCallback<Item> diffCallback) {
+    public interface Listener{
+        void onItemClick(Item item);
+    }
+    private Listener mListener;
+
+
+    public PodCastEntryAdapter(@NonNull DiffUtil.ItemCallback<Item> diffCallback,Listener listener) {
         super(diffCallback);
+        mListener = listener;
     }
 
     @NonNull
@@ -44,7 +51,12 @@ public class PodCastEntryAdapter extends ListAdapter<Item, PodCastEntryAdapter.P
         }
         void bind(Item item) {
             mBinding.setItem(item);
+            mBinding.setViewHolder(this);
             mBinding.executePendingBindings();
         }
+        public void onItemClick(Item item){
+            mListener.onItemClick(item);
+        }
+
     }
 }
