@@ -47,9 +47,12 @@ public class BindingAdapters {
         if (channel != null) {
             List<ArtworkImage> artworkImages = channel.getArtworkImages();
             ArtworkImage artworkImage = artworkImages.get(0);
-            String artworkImageUrl = artworkImage.getImageUrl();
+            String artworkImageUrl = artworkImage.getImageHref();
             if (artworkImageUrl == null) {
-                artworkImageUrl = artworkImage.getImageHref();
+                artworkImageUrl = artworkImages.get(1).getImageHref();
+                if (artworkImageUrl == null) {
+                    artworkImageUrl = artworkImage.getImageUrl();
+                }
             }
             // Use Glide library to upload the artwork
             Glide.with(imageView.getContext())
