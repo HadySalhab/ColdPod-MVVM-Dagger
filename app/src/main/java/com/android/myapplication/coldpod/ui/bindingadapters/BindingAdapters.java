@@ -1,6 +1,7 @@
 package com.android.myapplication.coldpod.ui.bindingadapters;
 
 import android.text.Html;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,6 +16,7 @@ import com.android.myapplication.coldpod.network.Channel;
 import com.android.myapplication.coldpod.network.Item;
 import com.android.myapplication.coldpod.ui.details.PodCastDetailAdapter;
 import com.android.myapplication.coldpod.ui.podcasts.PodCastListAdapter;
+import com.android.myapplication.coldpod.utils.Resource;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
@@ -89,6 +91,24 @@ public class BindingAdapters {
         if (description != null) {
             String descriptionWithoutImageTag = description.replaceAll(IMG_HTML_TAG, REPLACEMENT_EMPTY);
             textView.setText(Html.fromHtml(Html.fromHtml(descriptionWithoutImageTag).toString()));
+        }
+    }
+
+    @BindingAdapter("network_error_screen")
+    public static void bindNetworkErrorScreenVisibility(View view, Resource.Status status){
+        if(status == Resource.Status.ERROR){
+            view.setVisibility(View.VISIBLE);
+        }else{
+            view.setVisibility(View.GONE);
+        }
+    }
+
+    @BindingAdapter("empty_data_screen")
+    public static void bindEmptyDataScreenVisibility(View view, Resource resource){
+        if(resource.status == Resource.Status.SUCCESS && resource.data==null){
+            view.setVisibility(View.VISIBLE);
+        }else{
+            view.setVisibility(View.GONE);
         }
     }
 }

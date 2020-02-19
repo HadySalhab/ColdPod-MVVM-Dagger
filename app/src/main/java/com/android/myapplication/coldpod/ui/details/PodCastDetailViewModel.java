@@ -191,6 +191,8 @@ public class PodCastDetailViewModel extends ViewModel {
 
     public void onSubscribeClicked() {
         PodcastEntry podcastEntry = networkPodCast.getValue();
+        //network data is the source of truth
+        //if the network data is unavailable, we dont want to allow the user to even click on the button
             if(podcastEntry!=null){
                 if(!isSubscribed){
                     repository.insertPodcast(podcastEntry);
