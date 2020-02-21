@@ -44,8 +44,8 @@ public class PodCastEntryActivity extends AppCompatActivity implements PodCastEn
     private String podCastId;
     private String podCastName;
     private PodCastEntryViewModel mViewModel;
-    String podcastImage;
-    String podcastTitle;
+    private String podcastImage;
+    private String podcastTitle;
 
 
     public static Intent getInstance(Context context, String podcastId, String podCastName) {
@@ -145,6 +145,6 @@ public class PodCastEntryActivity extends AppCompatActivity implements PodCastEn
 
         Log.d("test", "onItemClick: "+ mViewModel.dbPodcastEntry.getValue().getTitle());
 
-        startService(PodcastService.getInstance(this,item.getEnclosure().getUrl(),item.getTitle(),podcastImage,podcastTitle));
+        startService(PodcastService.getInstance(this,item,podcastImage,podcastTitle));
     }
 }

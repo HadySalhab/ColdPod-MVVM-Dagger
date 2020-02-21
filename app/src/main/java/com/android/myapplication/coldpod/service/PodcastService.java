@@ -11,14 +11,15 @@ import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.text.TextUtils;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.media.MediaBrowserServiceCompat;
 
 import com.android.myapplication.coldpod.R;
+import com.android.myapplication.coldpod.network.Item;
 import com.android.myapplication.coldpod.ui.playing.PlayingActivity;
-import com.android.myapplication.coldpod.utils.Constants;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
@@ -41,7 +42,10 @@ import java.util.List;
 import timber.log.Timber;
 
 import static com.android.myapplication.coldpod.utils.Constants.ACTION_RELEASE_OLD_PLAYER;
+import static com.android.myapplication.coldpod.utils.Constants.EXTRA_ITEM;
+import static com.android.myapplication.coldpod.utils.Constants.EXTRA_PODCAST_NAME;
 import static com.android.myapplication.coldpod.utils.Constants.FAST_FORWARD_INCREMENT;
+import static com.android.myapplication.coldpod.utils.Constants.NOTIFICATION_PENDING_INTENT_ID;
 import static com.android.myapplication.coldpod.utils.Constants.PLAYBACK_CHANNEL_ID;
 import static com.android.myapplication.coldpod.utils.Constants.PLAYBACK_NOTIFICATION_ID;
 import static com.android.myapplication.coldpod.utils.Constants.REWIND_INCREMENT;
@@ -54,35 +58,38 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
 
     private SimpleExoPlayer mExoPlayer;
     private static final String TAG = PodcastService.class.getSimpleName();
-    private String itemUrl;
-    private String itemTitle;
+    private Item mItem;
     private String podCastTitle;
     private String podCastImage;
 
-    public static final String EXTRA_ITEM_URL = "extra_item_url";
-    public static final String EXTRA_ITEM_TITLE = "extra_item_title";
+
+    //extra data for notification
     public static final String EXTRA_PODCAST_TITLE = "extra_podcast_title";
     public static final String EXTRA_PODCAST_IMAGE = "extra_podcast_image";
 
 
-    /** Attributes for audio playback, which configure the underlying platform AudioTrack */
+    /**
+     * Attributes for audio playback, which configure the underlying platform AudioTrack
+     */
     private AudioAttributes mAudioAttributes;
 
 
-    /** A notification manager to start, update and cancel a media style notification reflecting
-     * the player state */
+    /**
+     * A notification manager to start, update and cancel a media style notification reflecting
+     * the player state
+     */
     private PlayerNotificationManager mPlayerNotificationManager;
 
 
-    public static Intent getInstance(Context context , String itemUrl,String itemTitle,String podCastImage, String podCastTitle){
+    public static Intent getInstance(Context context, Item item, String podCastImage, String podCastTitle) {
         Intent serviceIntent = new Intent(context, PodcastService.class);
-        serviceIntent.putExtra(EXTRA_ITEM_URL, itemUrl);
-        serviceIntent.putExtra(EXTRA_ITEM_TITLE,itemTitle);
+        serviceIntent.putExtra(EXTRA_ITEM, item);
         serviceIntent.putExtra(EXTRA_PODCAST_TITLE, podCastTitle);
         serviceIntent.putExtra(EXTRA_PODCAST_IMAGE, podCastImage);
         serviceIntent.setAction(ACTION_RELEASE_OLD_PLAYER);
         return serviceIntent;
     }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -104,13 +111,19 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
                 releasePlayer();
             }
         }
-        itemUrl = intent.getStringExtra(EXTRA_ITEM_URL);
-        itemTitle = intent.getStringExtra(EXTRA_ITEM_TITLE);
-        podCastImage = intent.getStringExtra(EXTRA_PODCAST_IMAGE);
-        podCastTitle = intent.getStringExtra(EXTRA_PODCAST_TITLE);
+        if (intent.hasExtra(EXTRA_ITEM)) {
+            mItem = intent.getParcelableExtra(EXTRA_ITEM);
+        }
+        Log.d(TAG, "onStartCommand: " + mItem);
+        if (intent.hasExtra(EXTRA_PODCAST_IMAGE)) {
+            podCastImage = intent.getStringExtra(EXTRA_PODCAST_IMAGE);
+        }
+        if (intent.hasExtra(EXTRA_PODCAST_TITLE)) {
+            podCastTitle = intent.getStringExtra(EXTRA_PODCAST_TITLE);
+        }
         initializePlayer();
         // Initialize PlayerNotificationManager
-        initializeNotificationManager(itemTitle);
+        initializeNotificationManager(mItem);
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -147,6 +160,7 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
                 new Intent(this, PlayingActivity.class),
                 PendingIntent.FLAG_UPDATE_CURRENT));
     }
+
     /**
      * Initialize ExoPlayer.
      */
@@ -163,7 +177,7 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
             mExoPlayer.addListener(this);
 
             // Prepare the MediaSource
-            Uri mediaUri = Uri.parse(itemUrl);
+            Uri mediaUri = Uri.parse(mItem.getEnclosure().getUrl());
             MediaSource mediaSource = buildMediaSource(mediaUri);
             //start buffering
             mExoPlayer.prepare(mediaSource);
@@ -175,8 +189,10 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
             mExoPlayer.setAudioAttributes(mAudioAttributes, /* handleAudioFocus= */ true);
         }
     }
+
     /**
      * Create a MediaSource.
+     *
      * @param mediaUri
      */
     private MediaSource buildMediaSource(Uri mediaUri) {
@@ -215,10 +231,10 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
     @Nullable
     @Override
     public BrowserRoot onGetRoot(@NonNull String clientPackageName, int clientUid, @Nullable Bundle rootHints) {
-        if(clientPackageName.equals(getApplication().getPackageName())){
-            return new BrowserRoot(COLD_POD_ROOT_ID,null);
+        if (clientPackageName.equals(getApplication().getPackageName())) {
+            return new BrowserRoot(COLD_POD_ROOT_ID, null);
         }
-        return new BrowserRoot(COLD_POD_EMPTY_ROOT_ID,null);
+        return new BrowserRoot(COLD_POD_EMPTY_ROOT_ID, null);
     }
 
     @Override
@@ -242,6 +258,7 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
         }
         result.sendResult(mediaItems);
     }
+
     /**
      * Media Session Callbacks, where all external clients control the player.
      */
@@ -313,14 +330,13 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
     }
 
 
-
     /**
      * Initialize PlayerNotificationManager.
      * References: @see "https://medium.com/google-exoplayer/playback-notifications-with-exoplayer-a2f1a18cf93b"
      * "https://www.youtube.com/watch?v=svdq1BWl4r8" "https://github.com/google/ExoPlayer/tree/io18"
      * "https://google.github.io/ExoPlayer/doc/reference/com/google/android/exoplayer2/ui/PlayerNotificationManager.html"
      */
-    private void initializeNotificationManager(String itemTitle) {
+    private void initializeNotificationManager(Item item) {
         // Create a notification manager and a low-priority notification channel with the channel ID
         // and channel name
         mPlayerNotificationManager = PlayerNotificationManager.createWithNotificationChannel(
@@ -332,13 +348,13 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
                 new PlayerNotificationManager.MediaDescriptionAdapter() {
                     @Override
                     public String getCurrentContentTitle(Player player) {
-                        return itemTitle;
+                        return item.getTitle();
                     }
 
                     @Nullable
                     @Override
                     public PendingIntent createCurrentContentIntent(Player player) {
-                        return null;
+                        return createContentPendingIntent();
                     }
 
                     @Nullable
@@ -405,4 +421,10 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
                 .setContentType(C.CONTENT_TYPE_SPEECH)
                 .build();
     }
+
+    private PendingIntent createContentPendingIntent() {
+        Intent intent = PlayingActivity.getInstance(this, mItem);
+        return PendingIntent.getActivity(this, NOTIFICATION_PENDING_INTENT_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
 }

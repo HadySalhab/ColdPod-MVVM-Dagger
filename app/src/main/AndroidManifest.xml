@@ -14,7 +14,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.playing.PlayingActivity"></activity>
+        <activity
+            android:launchMode="singleTop"
+            android:name=".ui.playing.PlayingActivity"></activity>
         <activity android:name=".ui.podcast_entry.PodCastEntryActivity" />
         <activity android:name=".ui.podcasts.PodCastListActivity" />
         <activity android:name=".ui.main.MainActivity">
