@@ -15,4 +15,6 @@
     <string name="action_delete">Delete</string>
 
     <string name="playback_channel_name">Playback</string>
+    <string name="playing_menu_items_favorite">Favorite</string>
+    <string name="playing_menu_items_share">Share</string>
 </resources>

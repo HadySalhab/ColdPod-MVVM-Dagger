@@ -94,6 +94,8 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
     @Override
     public void onCreate() {
         super.onCreate();
+
+        Timber.d("Podcast Service is created");
         // Initialize the media session
         initializeMediaSession();
 
@@ -107,7 +109,7 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
     //we have to check whether extras are being passed, in order to avoid overriding previous data
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
+        Timber.d("Podcast Service onStartCommand is called");
         // Check if the old player should be released
         if (intent.getAction() != null && intent.getAction().equals(ACTION_RELEASE_OLD_PLAYER)) {
             if (mExoPlayer != null) {
@@ -316,6 +318,7 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
             // Take the service out of the foreground
             //REMOVE THE NOTIFICATION
             stopForeground(true);
+            Log.d(TAG, "Podcast Service is canceled...");
         }
     }
 

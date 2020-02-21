@@ -1,5 +1,7 @@
 package com.android.myapplication.coldpod.ui.playing;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
@@ -15,8 +17,11 @@ import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.SeekBar;
+import android.widget.Toast;
 
 import com.android.myapplication.coldpod.R;
 import com.android.myapplication.coldpod.databinding.ActivityPlayingBinding;
@@ -56,8 +61,49 @@ public class PlayingActivity extends AppCompatActivity {
 
         // Create MediaBrowserCompat
         createMediaBrowserCompat();
+
+
+        initToolbar();
+    }
+    private void initToolbar(){
+        // Set the toolbar as the app bar
+        setSupportActionBar(mBinding.playingToolbar);
+
+
+        ActionBar actionBar = getSupportActionBar();
+        // Set the action bar back button to look like an up button
+        if (actionBar != null) {
+            actionBar.setTitle("");
+            actionBar.setDisplayShowHomeEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.playing_menu_items,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // When the user press the up button, finishes this NowPlayingActivity
+                onBackPressed();
+                return true;
+            case R.id.action_favorite:
+                //
+                Toast.makeText(this, "fav", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.action_share:
+                //
+                Toast.makeText(this, "share", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     /**
      * Constructs a MediaBrowserCompat.
