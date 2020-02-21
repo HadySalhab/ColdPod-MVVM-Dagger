@@ -3,11 +3,13 @@ package com.android.myapplication.coldpod.ui.podcast_entry;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -15,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.android.myapplication.coldpod.BaseApplication;
 import com.android.myapplication.coldpod.R;
 import com.android.myapplication.coldpod.ViewModelProviderFactory;
+import com.android.myapplication.coldpod.database.PodcastEntry;
 import com.android.myapplication.coldpod.databinding.ActivityPodcastEntryBinding;
 import com.android.myapplication.coldpod.network.Item;
 import com.android.myapplication.coldpod.service.PodcastService;
@@ -41,6 +44,8 @@ public class PodCastEntryActivity extends AppCompatActivity implements PodCastEn
     private String podCastId;
     private String podCastName;
     private PodCastEntryViewModel mViewModel;
+    String podcastImage;
+    String podcastTitle;
 
 
     public static Intent getInstance(Context context, String podcastId, String podCastName) {
@@ -121,15 +126,25 @@ public class PodCastEntryActivity extends AppCompatActivity implements PodCastEn
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        mViewModel.dbPodcastEntry.observe(this, new Observer<PodcastEntry>() {
+            @Override
+            public void onChanged(PodcastEntry podcastEntry) {
+                if(podcastEntry!=null){
+                    podcastImage = podcastEntry.getArtworkImageUrl();
+                    podcastTitle = podcastEntry.getTitle();
+                }
+            }
+        });
+    }
+
+    @Override
     public void onItemClick(Item item) {
         startActivity(PlayingActivity.getInstance(this,item));
-        String podcastImage ="";
-        String podcastTitle="";
-        if(mViewModel.dbPodcastEntry.getValue()!=null){
-            podcastImage = mViewModel.dbPodcastEntry.getValue().getArtworkImageUrl();
-            podcastTitle = mViewModel.dbPodcastEntry.getValue().getTitle();
-        }
 
-        startService(PodcastService.getInstance(this,item.getEnclosure().getUrl(),podcastImage,podcastTitle));
+        Log.d("test", "onItemClick: "+ mViewModel.dbPodcastEntry.getValue().getTitle());
+
+        startService(PodcastService.getInstance(this,item.getEnclosure().getUrl(),item.getTitle(),podcastImage,podcastTitle));
     }
 }

@@ -1,8 +1,10 @@
 package com.android.myapplication.coldpod.service;
 
+import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
@@ -27,6 +29,7 @@ import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
+import com.google.android.exoplayer2.ui.PlayerNotificationManager;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
@@ -36,6 +39,10 @@ import java.util.List;
 import timber.log.Timber;
 
 import static com.android.myapplication.coldpod.utils.Constants.ACTION_RELEASE_OLD_PLAYER;
+import static com.android.myapplication.coldpod.utils.Constants.FAST_FORWARD_INCREMENT;
+import static com.android.myapplication.coldpod.utils.Constants.PLAYBACK_CHANNEL_ID;
+import static com.android.myapplication.coldpod.utils.Constants.PLAYBACK_NOTIFICATION_ID;
+import static com.android.myapplication.coldpod.utils.Constants.REWIND_INCREMENT;
 
 public class PodcastService extends MediaBrowserServiceCompat implements Player.EventListener {
     private static MediaSessionCompat mMediaSession;
@@ -46,16 +53,24 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
     private SimpleExoPlayer mExoPlayer;
     private static final String TAG = PodcastService.class.getSimpleName();
     private String itemUrl;
+    private String itemTitle;
     private String podCastTitle;
     private String podCastImage;
 
-    public static final String EXTRA_URL = "extra_url";
+    public static final String EXTRA_ITEM_URL = "extra_item_url";
+    public static final String EXTRA_ITEM_TITLE = "extra_item_title";
     public static final String EXTRA_PODCAST_TITLE = "extra_podcast_title";
     public static final String EXTRA_PODCAST_IMAGE = "extra_podcast_image";
 
-    public static Intent getInstance(Context context , String itemUrl,String podCastImage, String podCastTitle){
+    /** A notification manager to start, update and cancel a media style notification reflecting
+     * the player state */
+    private PlayerNotificationManager mPlayerNotificationManager;
+
+
+    public static Intent getInstance(Context context , String itemUrl,String itemTitle,String podCastImage, String podCastTitle){
         Intent serviceIntent = new Intent(context, PodcastService.class);
-        serviceIntent.putExtra(EXTRA_URL, itemUrl);
+        serviceIntent.putExtra(EXTRA_ITEM_URL, itemUrl);
+        serviceIntent.putExtra(EXTRA_ITEM_TITLE,itemTitle);
         serviceIntent.putExtra(EXTRA_PODCAST_TITLE, podCastTitle);
         serviceIntent.putExtra(EXTRA_PODCAST_IMAGE, podCastImage);
         serviceIntent.setAction(ACTION_RELEASE_OLD_PLAYER);
@@ -79,8 +94,13 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
                 releasePlayer();
             }
         }
-        itemUrl = intent.getStringExtra(EXTRA_URL);
+        itemUrl = intent.getStringExtra(EXTRA_ITEM_URL);
+        itemTitle = intent.getStringExtra(EXTRA_ITEM_TITLE);
+        podCastImage = intent.getStringExtra(EXTRA_PODCAST_IMAGE);
+        podCastTitle = intent.getStringExtra(EXTRA_PODCAST_TITLE);
         initializePlayer();
+        // Initialize PlayerNotificationManager
+        initializeNotificationManager(itemTitle);
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -165,7 +185,9 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
     public void onDestroy() {
         mMediaSession.release();
         releasePlayer();
-
+        // If the player is released it must be removed from the manager by calling setPlayer(null)
+        // which will cancel the notification
+        mPlayerNotificationManager.setPlayer(null);
         super.onDestroy();
     }
 
@@ -233,14 +255,14 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
 
         @Override
         public void onRewind() {
-            mExoPlayer.seekTo(Math.max(mExoPlayer.getCurrentPosition() - 10000, 0));
+            mExoPlayer.seekTo(Math.max(mExoPlayer.getCurrentPosition() - REWIND_INCREMENT, 0));
             Timber.e("onRewind:");
         }
 
         @Override
         public void onFastForward() {
             long duration = mExoPlayer.getDuration();
-            mExoPlayer.seekTo(Math.min(mExoPlayer.getCurrentPosition() + 30000, duration));
+            mExoPlayer.seekTo(Math.min(mExoPlayer.getCurrentPosition() + FAST_FORWARD_INCREMENT, duration));
         }
 
         @Override
@@ -276,4 +298,82 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
         }
         mMediaSession.setPlaybackState(mStateBuilder.build());
     }
+
+
+
+    /**
+     * Initialize PlayerNotificationManager.
+     * References: @see "https://medium.com/google-exoplayer/playback-notifications-with-exoplayer-a2f1a18cf93b"
+     * "https://www.youtube.com/watch?v=svdq1BWl4r8" "https://github.com/google/ExoPlayer/tree/io18"
+     * "https://google.github.io/ExoPlayer/doc/reference/com/google/android/exoplayer2/ui/PlayerNotificationManager.html"
+     */
+    private void initializeNotificationManager(String itemTitle) {
+        // Create a notification manager and a low-priority notification channel with the channel ID
+        // and channel name
+        mPlayerNotificationManager = PlayerNotificationManager.createWithNotificationChannel(
+                this,
+                PLAYBACK_CHANNEL_ID,
+                R.string.playback_channel_name,
+                PLAYBACK_NOTIFICATION_ID,
+                // An adapter to provide descriptive data about the current playing item
+                new PlayerNotificationManager.MediaDescriptionAdapter() {
+                    @Override
+                    public String getCurrentContentTitle(Player player) {
+                        return itemTitle;
+                    }
+
+                    @Nullable
+                    @Override
+                    public PendingIntent createCurrentContentIntent(Player player) {
+                        return null;
+                    }
+
+                    @Nullable
+                    @Override
+                    public String getCurrentContentText(Player player) {
+                        return podCastTitle;
+                    }
+
+                    @Nullable
+                    @Override
+                    public Bitmap getCurrentLargeIcon(Player player, PlayerNotificationManager.BitmapCallback callback) {
+                        return null;
+                    }
+
+                }
+        );
+
+        // A listener for start and cancellation of the notification
+        mPlayerNotificationManager.setNotificationListener(new PlayerNotificationManager.NotificationListener() {
+            // Called when the notification is initially created
+            @Override
+            public void onNotificationStarted(int notificationId, Notification notification) {
+                startForeground(notificationId, notification);
+            }
+
+            // Called when the notification is cancelled
+            @Override
+            public void onNotificationCancelled(int notificationId) {
+                stopSelf();
+            }
+        });
+
+        // Once the notification manager is created, attach the player
+        mPlayerNotificationManager.setPlayer(mExoPlayer);
+        // Set the MediaSessionToken
+        mPlayerNotificationManager.setMediaSessionToken(mMediaSession.getSessionToken());
+
+        // Customize the notification
+        // Set the small icon of the notification
+        mPlayerNotificationManager.setSmallIcon(R.drawable.logo);
+        // Set skip previous and next actions
+        mPlayerNotificationManager.setUseNavigationActions(true);
+        // Set the fast forward increment by 30 sec
+        mPlayerNotificationManager.setFastForwardIncrementMs(FAST_FORWARD_INCREMENT);
+        // Set the rewind increment by 10sec
+        mPlayerNotificationManager.setRewindIncrementMs(REWIND_INCREMENT);
+        // Omit the stop action
+        mPlayerNotificationManager.setStopAction(null);
+    }
+
 }
