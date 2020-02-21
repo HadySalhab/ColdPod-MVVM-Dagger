@@ -121,7 +121,6 @@ public class PodCastEntryActivity extends AppCompatActivity implements PodCastEn
 
     @Override
     public void onItemClick(Item item) {
-        Intent intent = new Intent(this, PlayingActivity.class);
-        startActivity(intent);
+        startActivity(PlayingActivity.getInstance(this,item));
     }
 }
