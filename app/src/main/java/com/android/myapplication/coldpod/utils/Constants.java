@@ -11,6 +11,7 @@ public class Constants {
     public static final String EXTRA_PODCAST_ID = "extra_podCastId";
     public static final String EXTRA_PODCAST_NAME="extra_podcastName";
     public static final String EXTRA_ITEM = "extra_item";
+    public static final String ACTION_RELEASE_OLD_PLAYER = "action_release_old_player";
 
     public static final String DATABASE_NAME = "podcast";
 

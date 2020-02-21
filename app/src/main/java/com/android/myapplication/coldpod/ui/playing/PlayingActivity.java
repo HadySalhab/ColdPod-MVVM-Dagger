@@ -14,6 +14,7 @@ import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
 import android.view.View;
 import android.widget.SeekBar;
 
@@ -49,7 +50,7 @@ public class PlayingActivity extends AppCompatActivity {
         mBinding = DataBindingUtil.setContentView(
                 this, R.layout.activity_playing);
         mItem = getIntent().getParcelableExtra(Constants.EXTRA_ITEM);
-
+        mBinding.setItem(mItem);
 
         Timber.d("enclosure url: " + mItem.getEnclosure().getUrl());
 
@@ -140,32 +141,20 @@ public class PlayingActivity extends AppCompatActivity {
             };
 
     void buildTransportControls() {
-        //we are getting the controller of this specific client
-        MediaControllerCompat mediaControllerCompat = MediaControllerCompat.getMediaController(PlayingActivity.this);
-        MediaControllerCompat.TransportControls transportControls = mediaControllerCompat.getTransportControls();
-        int pbState = mediaControllerCompat.getPlaybackState().getState();
-
-
-
-        if (pbState == PlaybackStateCompat.STATE_PLAYING) {
-            mBinding.ibPlayPause.setImageResource(R.drawable.exo_controls_pause);
-        } else {
-            mBinding.ibPlayPause.setImageResource(R.drawable.exo_controls_play);
-        }
-
-
         // Attach a listener to the play/pause button
         mBinding.ibPlayPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                int pbState = MediaControllerCompat.getMediaController(PlayingActivity.this)
+                        .getPlaybackState().getState();
 
-                //if the player is currently in playing state, we have to stop -> stop
                 if (pbState == PlaybackStateCompat.STATE_PLAYING) {
-                    transportControls.pause();
+                    MediaControllerCompat.getMediaController(PlayingActivity.this)
+                            .getTransportControls().pause();
 
                 } else {
-                    //if the player is currently not playing any media-> play
-                    transportControls.play();
+                    MediaControllerCompat.getMediaController(PlayingActivity.this)
+                            .getTransportControls().play();
 
                 }
             }
@@ -175,7 +164,8 @@ public class PlayingActivity extends AppCompatActivity {
         mBinding.ibFastforward.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                transportControls.fastForward();
+                MediaControllerCompat.getMediaController(PlayingActivity.this)
+                        .getTransportControls().fastForward();
             }
         });
 
@@ -183,7 +173,8 @@ public class PlayingActivity extends AppCompatActivity {
         mBinding.ibRewind.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                transportControls.rewind();
+                MediaControllerCompat.getMediaController(PlayingActivity.this)
+                        .getTransportControls().rewind();
             }
         });
 
@@ -204,16 +195,24 @@ public class PlayingActivity extends AppCompatActivity {
             }
         });
 
-
+        MediaControllerCompat mediaController = MediaControllerCompat.getMediaController(PlayingActivity.this);
 
         // Display the initial state
-        MediaMetadataCompat metadata = mediaControllerCompat.getMetadata();
+        MediaMetadataCompat metadata = mediaController.getMetadata();
+        PlaybackStateCompat pbState = mediaController.getPlaybackState();
 
+        if (pbState.getState() == PlaybackStateCompat.STATE_PLAYING) {
+            mBinding.ibPlayPause.setImageResource(R.drawable.exo_controls_pause);
+        } else {
+            mBinding.ibPlayPause.setImageResource(R.drawable.exo_controls_play);
+        }
 
 
         // Register a Callback to stay in sync
-        mediaControllerCompat.registerCallback(controllerCallback);
+        mediaController.registerCallback(controllerCallback);
     }
+
+
 
     /**
      * Callback for receiving updates from the session.

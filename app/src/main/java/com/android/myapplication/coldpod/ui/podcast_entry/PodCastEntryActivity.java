@@ -17,6 +17,7 @@ import com.android.myapplication.coldpod.R;
 import com.android.myapplication.coldpod.ViewModelProviderFactory;
 import com.android.myapplication.coldpod.databinding.ActivityPodcastEntryBinding;
 import com.android.myapplication.coldpod.network.Item;
+import com.android.myapplication.coldpod.service.PodcastService;
 import com.android.myapplication.coldpod.ui.playing.PlayingActivity;
 import com.google.android.material.appbar.AppBarLayout;
 
@@ -122,5 +123,13 @@ public class PodCastEntryActivity extends AppCompatActivity implements PodCastEn
     @Override
     public void onItemClick(Item item) {
         startActivity(PlayingActivity.getInstance(this,item));
+        String podcastImage ="";
+        String podcastTitle="";
+        if(mViewModel.dbPodcastEntry.getValue()!=null){
+            podcastImage = mViewModel.dbPodcastEntry.getValue().getArtworkImageUrl();
+            podcastTitle = mViewModel.dbPodcastEntry.getValue().getTitle();
+        }
+
+        startService(PodcastService.getInstance(this,item.getEnclosure().getUrl(),podcastImage,podcastTitle));
     }
 }

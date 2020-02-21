@@ -1,6 +1,7 @@
 package com.android.myapplication.coldpod.service;
 
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import androidx.media.MediaBrowserServiceCompat;
 
 import com.android.myapplication.coldpod.R;
 import com.android.myapplication.coldpod.ui.playing.PlayingActivity;
+import com.android.myapplication.coldpod.utils.Constants;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -33,22 +35,53 @@ import java.util.List;
 
 import timber.log.Timber;
 
+import static com.android.myapplication.coldpod.utils.Constants.ACTION_RELEASE_OLD_PLAYER;
+
 public class PodcastService extends MediaBrowserServiceCompat implements Player.EventListener {
     private static MediaSessionCompat mMediaSession;
     private PlaybackStateCompat.Builder mStateBuilder;
     public static final String COLD_POD_ROOT_ID = "pod_root_id";
     public static final String COLD_POD_EMPTY_ROOT_ID = "empty_root_id";
+
     private SimpleExoPlayer mExoPlayer;
     private static final String TAG = PodcastService.class.getSimpleName();
+    private String itemUrl;
+    private String podCastTitle;
+    private String podCastImage;
 
+    public static final String EXTRA_URL = "extra_url";
+    public static final String EXTRA_PODCAST_TITLE = "extra_podcast_title";
+    public static final String EXTRA_PODCAST_IMAGE = "extra_podcast_image";
+
+    public static Intent getInstance(Context context , String itemUrl,String podCastImage, String podCastTitle){
+        Intent serviceIntent = new Intent(context, PodcastService.class);
+        serviceIntent.putExtra(EXTRA_URL, itemUrl);
+        serviceIntent.putExtra(EXTRA_PODCAST_TITLE, podCastTitle);
+        serviceIntent.putExtra(EXTRA_PODCAST_IMAGE, podCastImage);
+        serviceIntent.setAction(ACTION_RELEASE_OLD_PLAYER);
+        return serviceIntent;
+    }
     @Override
     public void onCreate() {
         super.onCreate();
         // Initialize the media session
         initializeMediaSession();
 
-        // Initialize ExoPlayer
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+
+        // Check if the old player should be released
+        if (intent.getAction() != null && intent.getAction().equals(ACTION_RELEASE_OLD_PLAYER)) {
+            if (mExoPlayer != null) {
+                mExoPlayer.stop();
+                releasePlayer();
+            }
+        }
+        itemUrl = intent.getStringExtra(EXTRA_URL);
         initializePlayer();
+        return super.onStartCommand(intent, flags, startId);
     }
 
     /**
@@ -100,12 +133,12 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
             mExoPlayer.addListener(this);
 
             // Prepare the MediaSource
-            String testUrl = "http://feeds.soundcloud.com/stream/525464154-risepodcast-181105-rachel-hollis-rise-podcast-edmylett.m4a";
-//          Uri mediaUri = Uri.parse(mItem.getEnclosure().getUrl());
-            Uri mediaUri = Uri.parse(testUrl);
+            Uri mediaUri = Uri.parse(itemUrl);
             MediaSource mediaSource = buildMediaSource(mediaUri);
+            //start buffering
             mExoPlayer.prepare(mediaSource);
 
+            //play it when you finish buffering
             mExoPlayer.setPlayWhenReady(true);
         }
     }
