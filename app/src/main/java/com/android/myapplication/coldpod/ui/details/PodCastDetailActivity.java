@@ -22,7 +22,7 @@ import com.android.myapplication.coldpod.BaseApplication;
 import com.android.myapplication.coldpod.R;
 import com.android.myapplication.coldpod.ViewModelProviderFactory;
 import com.android.myapplication.coldpod.databinding.ActivityPodcastDetailBinding;
-import com.android.myapplication.coldpod.network.Item;
+import com.android.myapplication.coldpod.persistence.Item;
 import com.google.android.material.appbar.AppBarLayout;
 
 import javax.inject.Inject;

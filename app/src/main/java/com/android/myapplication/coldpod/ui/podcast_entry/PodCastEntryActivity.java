@@ -19,7 +19,7 @@ import com.android.myapplication.coldpod.R;
 import com.android.myapplication.coldpod.ViewModelProviderFactory;
 import com.android.myapplication.coldpod.persistence.PodcastEntry;
 import com.android.myapplication.coldpod.databinding.ActivityPodcastEntryBinding;
-import com.android.myapplication.coldpod.network.Item;
+import com.android.myapplication.coldpod.persistence.Item;
 import com.android.myapplication.coldpod.service.PodcastService;
 import com.android.myapplication.coldpod.ui.playing.PlayingActivity;
 import com.google.android.material.appbar.AppBarLayout;

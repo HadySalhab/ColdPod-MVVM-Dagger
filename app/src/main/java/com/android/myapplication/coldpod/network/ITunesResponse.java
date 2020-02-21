@@ -1,5 +1,6 @@
 package com.android.myapplication.coldpod.network;
 
+import com.android.myapplication.coldpod.network.data.Feed;
 import com.google.gson.annotations.SerializedName;
 
 public class ITunesResponse {

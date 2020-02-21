@@ -1,4 +1,4 @@
-package com.android.myapplication.coldpod.network;
+package com.android.myapplication.coldpod.network.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;

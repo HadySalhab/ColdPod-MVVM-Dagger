@@ -1,7 +1,13 @@
-package com.android.myapplication.coldpod.network;
+package com.android.myapplication.coldpod.persistence;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+
+import com.android.myapplication.coldpod.network.data.Enclosure;
+import com.android.myapplication.coldpod.network.data.ItemImage;
 
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Path;
@@ -42,6 +48,8 @@ public class Item implements Parcelable {
 
     @Element(name = "image", required = false)
     private ItemImage mItemImage;
+
+    private boolean isFavorite;
 
 
     public Item() {

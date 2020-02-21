@@ -2,10 +2,11 @@ package com.android.myapplication.coldpod.network;
 
 import androidx.lifecycle.LiveData;
 
+import com.android.myapplication.coldpod.network.data.RssFeed;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;

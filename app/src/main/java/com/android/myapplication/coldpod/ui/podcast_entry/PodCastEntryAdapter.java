@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.myapplication.coldpod.databinding.PodcastEntryListItemBinding;
-import com.android.myapplication.coldpod.network.Item;
+import com.android.myapplication.coldpod.persistence.Item;
 
 public class PodCastEntryAdapter extends ListAdapter<Item, PodCastEntryAdapter.PodCastEntryViewHolder> {
 

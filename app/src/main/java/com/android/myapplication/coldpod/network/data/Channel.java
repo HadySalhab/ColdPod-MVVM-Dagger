@@ -1,4 +1,8 @@
-package com.android.myapplication.coldpod.network;
+package com.android.myapplication.coldpod.network.data;
+
+import com.android.myapplication.coldpod.network.data.ArtworkImage;
+import com.android.myapplication.coldpod.network.data.Category;
+import com.android.myapplication.coldpod.persistence.Item;
 
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;

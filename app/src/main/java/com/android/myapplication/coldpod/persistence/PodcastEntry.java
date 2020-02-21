@@ -5,8 +5,6 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
-import com.android.myapplication.coldpod.network.Item;
-
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;

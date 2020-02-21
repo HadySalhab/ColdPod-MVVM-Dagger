@@ -6,7 +6,7 @@
 
         <variable
             name="item"
-            type="com.android.myapplication.coldpod.network.Item" />
+            type="com.android.myapplication.coldpod.persistence.Item" />
         <variable
             name="viewHolder"
             type="com.android.myapplication.coldpod.ui.podcast_entry.PodCastEntryAdapter.PodCastEntryViewHolder" />

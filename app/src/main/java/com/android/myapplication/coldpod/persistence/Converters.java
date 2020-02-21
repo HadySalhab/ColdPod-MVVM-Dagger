@@ -2,7 +2,6 @@ package com.android.myapplication.coldpod.persistence;
 
 import androidx.room.TypeConverter;
 
-import com.android.myapplication.coldpod.network.Item;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 

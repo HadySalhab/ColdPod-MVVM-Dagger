@@ -1,5 +1,6 @@
 package com.android.myapplication.coldpod.network;
 
+import com.android.myapplication.coldpod.network.data.LookupResult;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;

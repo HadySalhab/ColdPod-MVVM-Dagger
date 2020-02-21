@@ -4,9 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
 import com.android.myapplication.coldpod.di.main.MainScope;
-import com.android.myapplication.coldpod.model.Podcasts;
+import com.android.myapplication.coldpod.network.data.Podcasts;
 import com.android.myapplication.coldpod.network.ApiResponse;
-import com.android.myapplication.coldpod.network.Feed;
+import com.android.myapplication.coldpod.network.data.Feed;
 import com.android.myapplication.coldpod.network.ITunesApi;
 import com.android.myapplication.coldpod.network.ITunesResponse;
 import com.android.myapplication.coldpod.utils.NetworkBoundResource;

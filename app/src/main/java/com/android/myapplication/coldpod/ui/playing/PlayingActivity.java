@@ -25,7 +25,7 @@ import android.widget.Toast;
 
 import com.android.myapplication.coldpod.R;
 import com.android.myapplication.coldpod.databinding.ActivityPlayingBinding;
-import com.android.myapplication.coldpod.network.Item;
+import com.android.myapplication.coldpod.persistence.Item;
 import com.android.myapplication.coldpod.service.PodcastService;
 import com.android.myapplication.coldpod.utils.Constants;
 

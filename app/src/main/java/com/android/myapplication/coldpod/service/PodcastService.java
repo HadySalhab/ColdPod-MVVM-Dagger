@@ -18,7 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.media.MediaBrowserServiceCompat;
 
 import com.android.myapplication.coldpod.R;
-import com.android.myapplication.coldpod.network.Item;
+import com.android.myapplication.coldpod.persistence.Item;
 import com.android.myapplication.coldpod.ui.playing.PlayingActivity;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -43,7 +43,6 @@ import timber.log.Timber;
 
 import static com.android.myapplication.coldpod.utils.Constants.ACTION_RELEASE_OLD_PLAYER;
 import static com.android.myapplication.coldpod.utils.Constants.EXTRA_ITEM;
-import static com.android.myapplication.coldpod.utils.Constants.EXTRA_PODCAST_NAME;
 import static com.android.myapplication.coldpod.utils.Constants.FAST_FORWARD_INCREMENT;
 import static com.android.myapplication.coldpod.utils.Constants.NOTIFICATION_PENDING_INTENT_ID;
 import static com.android.myapplication.coldpod.utils.Constants.PLAYBACK_CHANNEL_ID;

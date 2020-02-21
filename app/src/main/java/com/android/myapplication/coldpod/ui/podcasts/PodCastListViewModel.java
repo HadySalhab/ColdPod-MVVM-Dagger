@@ -9,8 +9,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
-import com.android.myapplication.coldpod.model.Podcasts;
-import com.android.myapplication.coldpod.network.Channel;
+import com.android.myapplication.coldpod.network.data.Podcasts;
 import com.android.myapplication.coldpod.repository.PodCastsRepository;
 import com.android.myapplication.coldpod.utils.Resource;
 

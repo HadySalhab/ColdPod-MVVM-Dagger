@@ -1,4 +1,4 @@
-package com.android.myapplication.coldpod.network;
+package com.android.myapplication.coldpod.network.data;
 
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;

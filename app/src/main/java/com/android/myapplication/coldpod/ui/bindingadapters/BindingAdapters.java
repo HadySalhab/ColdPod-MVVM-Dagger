@@ -13,12 +13,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.myapplication.coldpod.R;
 import com.android.myapplication.coldpod.persistence.PodcastEntry;
-import com.android.myapplication.coldpod.model.Podcasts;
-import com.android.myapplication.coldpod.network.ArtworkImage;
-import com.android.myapplication.coldpod.network.Category;
-import com.android.myapplication.coldpod.network.Channel;
-import com.android.myapplication.coldpod.network.Item;
-import com.android.myapplication.coldpod.network.ItemImage;
+import com.android.myapplication.coldpod.network.data.Podcasts;
+import com.android.myapplication.coldpod.network.data.ArtworkImage;
+import com.android.myapplication.coldpod.network.data.Category;
+import com.android.myapplication.coldpod.network.data.Channel;
+import com.android.myapplication.coldpod.persistence.Item;
+import com.android.myapplication.coldpod.network.data.ItemImage;
 import com.android.myapplication.coldpod.ui.details.PodCastDetailAdapter;
 import com.android.myapplication.coldpod.ui.main.subscribed.SubscribedListAdapter;
 import com.android.myapplication.coldpod.ui.podcast_entry.PodCastEntryAdapter;

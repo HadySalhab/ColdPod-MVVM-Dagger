@@ -7,7 +7,6 @@ import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DiffUtil;
-import androidx.recyclerview.widget.GridLayoutManager;
 
 import android.content.Context;
 import android.content.Intent;
@@ -22,7 +21,7 @@ import com.android.myapplication.coldpod.BaseApplication;
 import com.android.myapplication.coldpod.R;
 import com.android.myapplication.coldpod.ViewModelProviderFactory;
 import com.android.myapplication.coldpod.databinding.ActivityPodcastListBinding;
-import com.android.myapplication.coldpod.model.Podcasts;
+import com.android.myapplication.coldpod.network.data.Podcasts;
 import com.android.myapplication.coldpod.ui.details.PodCastDetailActivity;
 import com.android.myapplication.coldpod.utils.GridAutofitLayoutManager;
 

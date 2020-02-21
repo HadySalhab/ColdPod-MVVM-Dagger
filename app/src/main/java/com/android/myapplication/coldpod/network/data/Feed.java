@@ -1,6 +1,6 @@
-package com.android.myapplication.coldpod.network;
+package com.android.myapplication.coldpod.network.data;
 
-import com.android.myapplication.coldpod.model.Podcasts;
+import com.android.myapplication.coldpod.network.data.Podcasts;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;

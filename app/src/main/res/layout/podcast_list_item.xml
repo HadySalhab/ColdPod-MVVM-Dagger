@@ -4,7 +4,7 @@
     <data>
         <variable
             name="podCast"
-            type="com.android.myapplication.coldpod.model.Podcasts" />
+            type="com.android.myapplication.coldpod.network.data.Podcasts" />
         <variable
             name="viewHolder"
             type="com.android.myapplication.coldpod.ui.podcasts.PodCastListAdapter.PodcastListViewHolder" />

@@ -7,7 +7,7 @@
         <variable
             name="viewModel"
             type="com.android.myapplication.coldpod.ui.details.PodCastDetailViewModel" />
-        <import type="com.android.myapplication.coldpod.network.Channel"/>
+        <import type="com.android.myapplication.coldpod.network.data.Channel"/>
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
