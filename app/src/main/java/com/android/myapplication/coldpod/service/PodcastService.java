@@ -19,12 +19,14 @@ import androidx.media.MediaBrowserServiceCompat;
 import com.android.myapplication.coldpod.R;
 import com.android.myapplication.coldpod.ui.playing.PlayingActivity;
 import com.android.myapplication.coldpod.utils.Constants;
+import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.LoadControl;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.audio.AudioAttributes;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
@@ -62,6 +64,11 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
     public static final String EXTRA_PODCAST_TITLE = "extra_podcast_title";
     public static final String EXTRA_PODCAST_IMAGE = "extra_podcast_image";
 
+
+    /** Attributes for audio playback, which configure the underlying platform AudioTrack */
+    private AudioAttributes mAudioAttributes;
+
+
     /** A notification manager to start, update and cancel a media style notification reflecting
      * the player state */
     private PlayerNotificationManager mPlayerNotificationManager;
@@ -81,6 +88,9 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
         super.onCreate();
         // Initialize the media session
         initializeMediaSession();
+
+        // Create an instance of com.google.android.exoplayer2.audio.AudioAttributes
+        initAudioAttributes();
 
     }
 
@@ -160,6 +170,9 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
 
             //play it when you finish buffering
             mExoPlayer.setPlayWhenReady(true);
+
+            // Set the attributes for audio playback. ExoPlayer manages audio focus automatically.
+            mExoPlayer.setAudioAttributes(mAudioAttributes, /* handleAudioFocus= */ true);
         }
     }
     /**
@@ -376,4 +389,20 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
         mPlayerNotificationManager.setStopAction(null);
     }
 
+    /**
+     * Create an instance of AudioAttributes.
+     * References: @see "https://medium.com/google-exoplayer/easy-audio-focus-with-exoplayer-a2dcbbe4640e"
+     * "https://google.github.io/ExoPlayer/doc/reference/com/google/android/exoplayer2/audio/AudioAttributes.html"
+     */
+    private void initAudioAttributes() {
+        mAudioAttributes = new AudioAttributes.Builder()
+                // If audio focus should be handled, the AudioAttributes.usage must be C.USAGE_MEDIA
+                // or C.USAGE_GAME. Other usages will throw an IllegalArgumentException.
+                .setUsage(C.USAGE_MEDIA)
+                // Since the app is playing a podcast, set contentType to CONTENT_TYPE_SPEECH.
+                // SimpleExoPlayer will pause while the notification, such as when a message arrives,
+                // is playing and will automatically resume afterwards.
+                .setContentType(C.CONTENT_TYPE_SPEECH)
+                .build();
+    }
 }
