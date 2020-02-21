@@ -1,7 +1,6 @@
 package com.android.myapplication.coldpod.ui.bindingadapters;
 
 import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.text.Html;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -13,7 +12,7 @@ import androidx.databinding.BindingAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.myapplication.coldpod.R;
-import com.android.myapplication.coldpod.database.PodcastEntry;
+import com.android.myapplication.coldpod.persistence.PodcastEntry;
 import com.android.myapplication.coldpod.model.Podcasts;
 import com.android.myapplication.coldpod.network.ArtworkImage;
 import com.android.myapplication.coldpod.network.Category;
@@ -27,8 +26,6 @@ import com.android.myapplication.coldpod.ui.podcasts.PodCastListAdapter;
 import com.android.myapplication.coldpod.utils.Resource;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 

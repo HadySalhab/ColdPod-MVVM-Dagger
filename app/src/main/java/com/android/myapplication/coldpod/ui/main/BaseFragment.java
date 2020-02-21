@@ -1,10 +1,7 @@
 package com.android.myapplication.coldpod.ui.main;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,7 +11,7 @@ import androidx.recyclerview.widget.DiffUtil;
 
 import com.android.myapplication.coldpod.BaseApplication;
 import com.android.myapplication.coldpod.ViewModelProviderFactory;
-import com.android.myapplication.coldpod.database.PodcastEntry;
+import com.android.myapplication.coldpod.persistence.PodcastEntry;
 
 import javax.inject.Inject;
 

@@ -2,7 +2,7 @@ package com.android.myapplication.coldpod.di.main;
 
 import androidx.recyclerview.widget.DiffUtil;
 
-import com.android.myapplication.coldpod.database.PodcastEntry;
+import com.android.myapplication.coldpod.persistence.PodcastEntry;
 import com.android.myapplication.coldpod.model.Podcasts;
 import com.android.myapplication.coldpod.network.ITunesApi;
 import com.android.myapplication.coldpod.network.Item;

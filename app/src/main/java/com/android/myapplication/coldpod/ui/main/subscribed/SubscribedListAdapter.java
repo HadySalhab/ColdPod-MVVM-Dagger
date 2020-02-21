@@ -13,9 +13,8 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.myapplication.coldpod.R;
-import com.android.myapplication.coldpod.database.PodcastEntry;
+import com.android.myapplication.coldpod.persistence.PodcastEntry;
 import com.android.myapplication.coldpod.databinding.SubscribedPodcastsListItemBinding;
-import com.android.myapplication.coldpod.model.Podcasts;
 
 import static com.android.myapplication.coldpod.utils.Constants.DELETE;
 import static com.android.myapplication.coldpod.utils.Constants.GROUP_ID_DELETE;

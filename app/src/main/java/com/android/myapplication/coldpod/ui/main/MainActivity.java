@@ -22,7 +22,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.android.myapplication.coldpod.BaseApplication;
 import com.android.myapplication.coldpod.R;
 import com.android.myapplication.coldpod.ViewModelProviderFactory;
-import com.android.myapplication.coldpod.database.PodcastEntry;
+import com.android.myapplication.coldpod.persistence.PodcastEntry;
 import com.android.myapplication.coldpod.databinding.ActivityMainBinding;
 import com.android.myapplication.coldpod.ui.main.downloads.DownloadsFragment;
 import com.android.myapplication.coldpod.ui.main.favorites.FavoritesFragment;

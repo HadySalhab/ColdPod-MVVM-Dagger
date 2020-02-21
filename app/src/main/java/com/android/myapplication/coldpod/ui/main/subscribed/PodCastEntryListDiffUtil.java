@@ -3,7 +3,7 @@ package com.android.myapplication.coldpod.ui.main.subscribed;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 
-import com.android.myapplication.coldpod.database.PodcastEntry;
+import com.android.myapplication.coldpod.persistence.PodcastEntry;
 
 import javax.inject.Inject;
 

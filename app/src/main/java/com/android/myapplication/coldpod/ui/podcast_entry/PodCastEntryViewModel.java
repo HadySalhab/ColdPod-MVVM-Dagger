@@ -6,10 +6,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
-import com.android.myapplication.coldpod.database.PodcastEntry;
+import com.android.myapplication.coldpod.persistence.PodcastEntry;
 import com.android.myapplication.coldpod.repository.MainRepository;
-
-import java.util.List;
 
 import javax.inject.Inject;
 

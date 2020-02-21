@@ -10,14 +10,11 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 
-import com.android.myapplication.coldpod.database.PodcastEntry;
+import com.android.myapplication.coldpod.persistence.PodcastEntry;
 import com.android.myapplication.coldpod.databinding.FragmentSubscribedBinding;
 import com.android.myapplication.coldpod.ui.main.BaseFragment;
 import com.android.myapplication.coldpod.utils.GridAutofitLayoutManager;
-
-import java.util.List;
 
 import static com.android.myapplication.coldpod.utils.Constants.GRID_AUTO_FIT_COLUMN_WIDTH;
 

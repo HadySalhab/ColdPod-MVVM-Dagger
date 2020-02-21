@@ -11,7 +11,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
-import com.android.myapplication.coldpod.database.PodcastEntry;
+import com.android.myapplication.coldpod.persistence.PodcastEntry;
 import com.android.myapplication.coldpod.network.ArtworkImage;
 import com.android.myapplication.coldpod.network.Channel;
 import com.android.myapplication.coldpod.repository.PodCastDetailRepository;

@@ -1,10 +1,12 @@
-package com.android.myapplication.coldpod.database;
+package com.android.myapplication.coldpod.persistence;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+
+import com.android.myapplication.coldpod.persistence.PodcastEntry;
 
 import java.util.List;
 

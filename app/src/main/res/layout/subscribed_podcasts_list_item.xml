@@ -4,7 +4,7 @@
 <data>
     <variable
         name="podcastEntry"
-        type="com.android.myapplication.coldpod.database.PodcastEntry" />
+        type="com.android.myapplication.coldpod.persistence.PodcastEntry" />
     <variable
         name="viewHolder"
         type="com.android.myapplication.coldpod.ui.main.subscribed.SubscribedListAdapter.SubscribedListViewHolder" />

@@ -1,4 +1,4 @@
-package com.android.myapplication.coldpod.database;
+package com.android.myapplication.coldpod.persistence;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;

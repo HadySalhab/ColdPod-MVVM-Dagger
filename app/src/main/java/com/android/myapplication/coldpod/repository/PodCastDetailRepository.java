@@ -1,13 +1,12 @@
 package com.android.myapplication.coldpod.repository;
 
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
-import com.android.myapplication.coldpod.database.PodCastDao;
-import com.android.myapplication.coldpod.database.PodcastEntry;
+import com.android.myapplication.coldpod.persistence.PodCastDao;
+import com.android.myapplication.coldpod.persistence.PodcastEntry;
 import com.android.myapplication.coldpod.di.main.MainScope;
 import com.android.myapplication.coldpod.network.ApiResponse;
 import com.android.myapplication.coldpod.network.Channel;

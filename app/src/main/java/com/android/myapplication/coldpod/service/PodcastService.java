@@ -287,6 +287,7 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
         public void onPlay() {
             Log.d(TAG, "onPlay: ");
             // onPlay() callback should include code that calls startService().
+            //this will trigger onStartCommand
             startService(new Intent(getApplicationContext(), PodcastService.class));
 
             // Set the session active
@@ -354,7 +355,7 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
 
             Timber.d("onPlayerStateChanged: we are paused");
         }
-        mMediaSession.setPlaybackState(mStateBuilder.build());
+        mMediaSession.setPlaybackState(mStateBuilder.build()); //this will notify back the media browser
     }
 
 
