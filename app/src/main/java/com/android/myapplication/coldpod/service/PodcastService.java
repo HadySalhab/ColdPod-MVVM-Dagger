@@ -90,6 +90,7 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
         return serviceIntent;
     }
 
+    //this will be called only the first time we create the service,during the lifecycle of the service
     @Override
     public void onCreate() {
         super.onCreate();
@@ -101,6 +102,9 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
 
     }
 
+    //this will be called every time we call startService()
+    //since an intent is passed to it every time it is being called,
+    //we have to check whether extras are being passed, in order to avoid overriding previous data
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
@@ -211,6 +215,8 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
 
 
     @Override
+    //this will destroy the service
+    //the onCreate will be  called after we start this service.
     public void onDestroy() {
         mMediaSession.release();
         releasePlayer();
@@ -279,7 +285,7 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
         @Override
         public void onPause() {
             mExoPlayer.setPlayWhenReady(false);
-
+            //When pausing, we don't want to stop the foreground service, we still want the notification to appear.
             stopForeground(false);
         }
 
@@ -298,6 +304,7 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
         @Override
         public void onStop() {
             // onStop() callback should call stopSelf().
+            //WILL destroy the service
             stopSelf();
 
             // Set the session inactive
@@ -307,6 +314,7 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
             mExoPlayer.stop();
 
             // Take the service out of the foreground
+            //REMOVE THE NOTIFICATION
             stopForeground(true);
         }
     }
@@ -377,6 +385,7 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
             // Called when the notification is initially created
             @Override
             public void onNotificationStarted(int notificationId, Notification notification) {
+                //PROMOTING THE SERVICE TO BECOME A FOREGROUND SERVICE, WITH THE FOLLOWING NOTIFICATION
                 startForeground(notificationId, notification);
             }
 
@@ -404,6 +413,7 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
         // Omit the stop action
         mPlayerNotificationManager.setStopAction(null);
     }
+
 
     /**
      * Create an instance of AudioAttributes.
