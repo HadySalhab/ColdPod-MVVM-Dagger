@@ -9,7 +9,7 @@
 
     <item
         android:id="@+id/action_share"
-        android:icon="@drawable/abc_ic_menu_share_mtrl_alpha"
+        android:icon="@drawable/ic_share"
         android:title="@string/playing_menu_items_share"
         app:showAsAction="ifRoom" />
 </menu>

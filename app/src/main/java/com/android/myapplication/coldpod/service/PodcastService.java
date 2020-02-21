@@ -109,6 +109,12 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG,"Podcast Service onStartCommand is called");
         // Check if the old player should be released
+
+        //Since onStartCommand is triggered everyTime when startService is called,
+        //we only want to release exo when the intent has an action of release ,
+        //which is passed from podCastEntryActivity
+        //if onPlay was called after service was being launched
+        //we don't want to release exo
         if (intent.getAction() != null && intent.getAction().equals(ACTION_RELEASE_OLD_PLAYER)) {
             if (mExoPlayer != null) {
                 mExoPlayer.stop();
