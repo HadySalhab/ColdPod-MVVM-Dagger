@@ -94,11 +94,9 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
     @Override
     public void onCreate() {
         super.onCreate();
-
-        Timber.d("Podcast Service is created");
+        Log.d(TAG,"Podcast Service is created");
         // Initialize the media session
         initializeMediaSession();
-
         // Create an instance of com.google.android.exoplayer2.audio.AudioAttributes
         initAudioAttributes();
 
@@ -109,7 +107,7 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
     //we have to check whether extras are being passed, in order to avoid overriding previous data
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Timber.d("Podcast Service onStartCommand is called");
+        Log.d(TAG,"Podcast Service onStartCommand is called");
         // Check if the old player should be released
         if (intent.getAction() != null && intent.getAction().equals(ACTION_RELEASE_OLD_PLAYER)) {
             if (mExoPlayer != null) {
@@ -120,13 +118,15 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
         if (intent.hasExtra(EXTRA_ITEM)) {
             mItem = intent.getParcelableExtra(EXTRA_ITEM);
         }
-        Log.d(TAG, "onStartCommand: " + mItem);
+
         if (intent.hasExtra(EXTRA_PODCAST_IMAGE)) {
             podCastImage = intent.getStringExtra(EXTRA_PODCAST_IMAGE);
         }
         if (intent.hasExtra(EXTRA_PODCAST_TITLE)) {
             podCastTitle = intent.getStringExtra(EXTRA_PODCAST_TITLE);
         }
+        Log.d(TAG,"OnStartCommand: Extras: item: "+mItem+", podcast image: "+podCastImage+", podcastTitle: "+podCastTitle);
+
         initializePlayer();
         // Initialize PlayerNotificationManager
         initializeNotificationManager(mItem);
@@ -137,6 +137,7 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
      * Initialize the media session.
      */
     private void initializeMediaSession() {
+        Log.d(TAG,"initialize media Session");
         // Create a MediaSessionCompat
         mMediaSession = new MediaSessionCompat(PodcastService.this, TAG);
 
@@ -171,7 +172,9 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
      * Initialize ExoPlayer.
      */
     private void initializePlayer() {
+        Log.d(TAG, "Initialize ExoPLayer");
         if (mExoPlayer == null) {
+            Log.d(TAG, "INITIALIZE EXOPLAYER: exo is null");
             // Create an instance of the ExoPlayer
             DefaultRenderersFactory defaultRenderersFactory = new DefaultRenderersFactory(this);
             TrackSelector trackSelector = new DefaultTrackSelector();
@@ -189,6 +192,7 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
             mExoPlayer.prepare(mediaSource);
 
             //play it when you finish buffering
+            //changing the state of exo
             mExoPlayer.setPlayWhenReady(true);
 
             // Set the attributes for audio playback. ExoPlayer manages audio focus automatically.
@@ -202,6 +206,7 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
      * @param mediaUri
      */
     private MediaSource buildMediaSource(Uri mediaUri) {
+        Log.d(TAG," BUILDING MEDIA SOURCE");
         String userAgent = Util.getUserAgent(this, getString(R.string.app_name));
         DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(
                 this, userAgent);
@@ -210,6 +215,7 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
 
     @Override
     public void onTaskRemoved(Intent rootIntent) {
+        Log.d(TAG, "onTaskRemoved: ");
         super.onTaskRemoved(rootIntent);
         mExoPlayer.stop(true);
         stopSelf();
@@ -220,6 +226,7 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
     //this will destroy the service
     //the onCreate will be  called after we start this service.
     public void onDestroy() {
+        Log.d(TAG, "onDestroy: ");
         mMediaSession.release();
         releasePlayer();
         // If the player is released it must be removed from the manager by calling setPlayer(null)
@@ -232,6 +239,7 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
      * Release ExoPlayer.
      */
     private void releasePlayer() {
+        Log.d(TAG, "releasePlayer: ");
         mExoPlayer.release();
         mExoPlayer = null;
     }
@@ -239,7 +247,9 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
     @Nullable
     @Override
     public BrowserRoot onGetRoot(@NonNull String clientPackageName, int clientUid, @Nullable Bundle rootHints) {
+        Log.d(TAG, "onGetRoot: ");
         if (clientPackageName.equals(getApplication().getPackageName())) {
+            Log.d(TAG, "onGetRoot: Allow Browsing");
             return new BrowserRoot(COLD_POD_ROOT_ID, null);
         }
         return new BrowserRoot(COLD_POD_EMPTY_ROOT_ID, null);
@@ -247,6 +257,7 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
 
     @Override
     public void onLoadChildren(@NonNull String parentId, @NonNull Result<List<MediaBrowserCompat.MediaItem>> result) {
+        Log.d(TAG, "onLoadChildren: ");
         // Browsing not allowed
         if (TextUtils.equals(COLD_POD_EMPTY_ROOT_ID, parentId)) {
             result.sendResult(null);
@@ -274,6 +285,7 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
 
         @Override
         public void onPlay() {
+            Log.d(TAG, "onPlay: ");
             // onPlay() callback should include code that calls startService().
             startService(new Intent(getApplicationContext(), PodcastService.class));
 
@@ -286,6 +298,8 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
 
         @Override
         public void onPause() {
+            Log.d(TAG, "onPause: ");
+            //we are changing the state of the player
             mExoPlayer.setPlayWhenReady(false);
             //When pausing, we don't want to stop the foreground service, we still want the notification to appear.
             stopForeground(false);
@@ -294,11 +308,12 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
         @Override
         public void onRewind() {
             mExoPlayer.seekTo(Math.max(mExoPlayer.getCurrentPosition() - REWIND_INCREMENT, 0));
-            Timber.e("onRewind:");
+            Log.d(TAG, "onRewind: ");
         }
 
         @Override
         public void onFastForward() {
+            Log.d(TAG, "onFastForward: ");
             long duration = mExoPlayer.getDuration();
             mExoPlayer.seekTo(Math.min(mExoPlayer.getCurrentPosition() + FAST_FORWARD_INCREMENT, duration));
         }
@@ -318,10 +333,12 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
             // Take the service out of the foreground
             //REMOVE THE NOTIFICATION
             stopForeground(true);
-            Log.d(TAG, "Podcast Service is canceled...");
+            Log.d(TAG, "onStop: ");
         }
     }
 
+
+    //this will be called everyTime the state of the player is changed
     @Override
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
         if (playbackState == Player.STATE_READY && playWhenReady) {
@@ -348,6 +365,7 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
      * "https://google.github.io/ExoPlayer/doc/reference/com/google/android/exoplayer2/ui/PlayerNotificationManager.html"
      */
     private void initializeNotificationManager(Item item) {
+        Log.d(TAG, "initializeNotificationManager: ");
         // Create a notification manager and a low-priority notification channel with the channel ID
         // and channel name
         mPlayerNotificationManager = PlayerNotificationManager.createWithNotificationChannel(

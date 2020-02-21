@@ -33,6 +33,7 @@ import com.android.myapplication.coldpod.utils.Constants;
 import timber.log.Timber;
 
 public class PlayingActivity extends AppCompatActivity {
+    private static final String TAG = PodcastService.class.getSimpleName();
 
 
     private Item mItem;
@@ -56,9 +57,7 @@ public class PlayingActivity extends AppCompatActivity {
                 this, R.layout.activity_playing);
         mItem = getIntent().getParcelableExtra(Constants.EXTRA_ITEM);
         mBinding.setItem(mItem);
-
-        Timber.d("enclosure url: " + mItem.getEnclosure().getUrl());
-
+        Log.d(TAG, "playing activity: onCreate...");
         // Create MediaBrowserCompat
         createMediaBrowserCompat();
 
@@ -109,6 +108,7 @@ public class PlayingActivity extends AppCompatActivity {
      * Constructs a MediaBrowserCompat.
      */
     private void createMediaBrowserCompat() {
+        Log.d(TAG, "PlayingActivity: createMediaBrowserCompat: ");
         mMediaBrowser = new MediaBrowserCompat(this,
                 //the media browser needs the name of the service it is trying to connect to
                 new ComponentName(this, PodcastService.class),
@@ -119,6 +119,7 @@ public class PlayingActivity extends AppCompatActivity {
 
     @Override
     protected void onStart() {
+        Log.d(TAG, "PlayinActivity onStart: ");
         super.onStart();
         // Connect to the MediaBrowserService
         mMediaBrowser.connect();
@@ -126,6 +127,7 @@ public class PlayingActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
+        Log.d(TAG, "Playing Activity: onResume: ");
         super.onResume();
         // Set the audio stream so the app responds to the volume control on the device
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
@@ -133,6 +135,7 @@ public class PlayingActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
+        Log.d(TAG, "Playing Activity: onStop: ");
         super.onStop();
 
         // Disconnect the MediaBrowser and unregister the MediaController.Callback when the
@@ -150,7 +153,7 @@ public class PlayingActivity extends AppCompatActivity {
                //if connection is successful
                 @Override
                 public void onConnected() {
-
+                    Log.d(TAG, "Playing Activity: MediaBrowser onConnected: ");
                     // Get the token for the MediaSession
                     MediaSessionCompat.Token token = mMediaBrowser.getSessionToken();
 
@@ -191,16 +194,19 @@ public class PlayingActivity extends AppCompatActivity {
         mBinding.ibPlayPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(TAG, "PlayingActivity: playPause ");
                 int pbState = MediaControllerCompat.getMediaController(PlayingActivity.this)
                         .getPlaybackState().getState();
 
                 if (pbState == PlaybackStateCompat.STATE_PLAYING) {
                     MediaControllerCompat.getMediaController(PlayingActivity.this)
                             .getTransportControls().pause();
+                    Log.d(TAG, "PlayingActivity: pause ");
 
                 } else {
                     MediaControllerCompat.getMediaController(PlayingActivity.this)
                             .getTransportControls().play();
+                    Log.d(TAG, "PlayingActivity: play ");
 
                 }
             }
@@ -272,6 +278,7 @@ public class PlayingActivity extends AppCompatActivity {
         @Override
         public void onPlaybackStateChanged(PlaybackStateCompat state) {
             super.onPlaybackStateChanged(state);
+            Log.d(TAG, "PlayActivity onPlaybackStateChanged: ");
             if (state.getState() == PlaybackStateCompat.STATE_PLAYING) {
                 mBinding.ibPlayPause.setImageResource(R.drawable.exo_controls_pause);
             } else {
