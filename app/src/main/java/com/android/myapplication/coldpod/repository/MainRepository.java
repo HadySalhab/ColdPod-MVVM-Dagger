@@ -2,6 +2,7 @@ package com.android.myapplication.coldpod.repository;
 
 import androidx.lifecycle.LiveData;
 
+import com.android.myapplication.coldpod.persistence.FavoriteEntry;
 import com.android.myapplication.coldpod.persistence.PodCastDao;
 import com.android.myapplication.coldpod.persistence.PodcastEntry;
 import com.android.myapplication.coldpod.di.main.MainScope;
@@ -40,4 +41,29 @@ public class MainRepository {
         });
 
     }
+    public LiveData<FavoriteEntry> getFavoriteEpisodeByItemTitle(String itemTitle) {
+        return mPodCastDao.loadFavoriteEpisodeByItemTitle(itemTitle);
+    }
+
+    public LiveData<List<FavoriteEntry>> getFavorites() {
+        return mPodCastDao.loadFavorites();
+    }
+    public void deletFavorite(FavoriteEntry favoriteEntry){
+        mAppExecutors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                mPodCastDao.deleteFavoriteEpisode(favoriteEntry);
+            }
+        });
+    }
+    public void insertFavoriteEpisode(FavoriteEntry favoriteEntry){
+        mAppExecutors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                mPodCastDao.insertFavoriteEpisode(favoriteEntry);
+            }
+        });
+    }
 }
+
+

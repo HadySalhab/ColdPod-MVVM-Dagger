@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "5dea9c61bc91c23ec99743017020ccdd",
+    "identityHash": "a80ba74a1e7488899b860e0a81463057",
     "entities": [
       {
         "tableName": "podcast",
@@ -65,12 +65,98 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "favorite_episodes",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `podcast_id` TEXT, `title` TEXT, `artwork_image_url` TEXT, `item_title` TEXT, `item_description` TEXT, `item_pub_date` TEXT, `item_duration` TEXT, `item_enclosure_url` TEXT, `item_enclosure_type` TEXT, `item_enclosure_length` TEXT, `item_image_url` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "podcastId",
+            "columnName": "podcast_id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "artworkImageUrl",
+            "columnName": "artwork_image_url",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "itemTitle",
+            "columnName": "item_title",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "itemDescription",
+            "columnName": "item_description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "itemPubDate",
+            "columnName": "item_pub_date",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "itemDuration",
+            "columnName": "item_duration",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "itemEnclosureUrl",
+            "columnName": "item_enclosure_url",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "itemEnclosureType",
+            "columnName": "item_enclosure_type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "itemEnclosureLength",
+            "columnName": "item_enclosure_length",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "itemImageUrl",
+            "columnName": "item_image_url",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5dea9c61bc91c23ec99743017020ccdd')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a80ba74a1e7488899b860e0a81463057')"
     ]
   }
 }

@@ -2,11 +2,13 @@ package com.android.myapplication.coldpod.di.main;
 
 import androidx.recyclerview.widget.DiffUtil;
 
+import com.android.myapplication.coldpod.persistence.FavoriteEntry;
 import com.android.myapplication.coldpod.persistence.PodcastEntry;
 import com.android.myapplication.coldpod.network.data.Podcasts;
 import com.android.myapplication.coldpod.network.ITunesApi;
 import com.android.myapplication.coldpod.persistence.Item;
 import com.android.myapplication.coldpod.ui.details.PodCastDetailDiffUtil;
+import com.android.myapplication.coldpod.ui.main.favorites.FavoritesDiffUtil;
 import com.android.myapplication.coldpod.ui.main.subscribed.PodCastEntryListDiffUtil;
 import com.android.myapplication.coldpod.ui.podcasts.PodCastsDiffUtil;
 
@@ -33,6 +35,12 @@ public class MainModule {
     @Provides
     static DiffUtil.ItemCallback<PodcastEntry> bindPodcastEntryDiffUtil(PodCastEntryListDiffUtil podCastEntryListDiffUtil) {
         return podCastEntryListDiffUtil;
+    }
+
+    //bind an implementation to an interface
+    @Provides
+    static DiffUtil.ItemCallback<FavoriteEntry> bindFavoritesDiffUtil(FavoritesDiffUtil favoritesDiffUtil) {
+        return favoritesDiffUtil;
     }
 
     @MainScope

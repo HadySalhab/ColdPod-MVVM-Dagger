@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.DiffUtil;
 
 import com.android.myapplication.coldpod.BaseApplication;
 import com.android.myapplication.coldpod.ViewModelProviderFactory;
+import com.android.myapplication.coldpod.persistence.FavoriteEntry;
 import com.android.myapplication.coldpod.persistence.PodcastEntry;
 
 import javax.inject.Inject;
@@ -23,6 +24,9 @@ public class BaseFragment extends Fragment {
 
     @Inject
     protected DiffUtil.ItemCallback<PodcastEntry> mPodcastEntryItemCallback;
+
+    @Inject
+    protected DiffUtil.ItemCallback<FavoriteEntry> mFavoriteEntryItemCallback;
 
     protected MainActivityViewModel mMainActivityViewModel;
 

@@ -37,4 +37,5 @@ public class Constants {
     /** The pending intent id is used to uniquely reference the pending intent */
     public static final int NOTIFICATION_PENDING_INTENT_ID = 0;
 
+    public static final String EXTRA_PODCAST_IMAGE ="extra_podcastImage" ;
 }

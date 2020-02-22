@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -23,48 +25,111 @@ import android.view.View;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
+import com.android.myapplication.coldpod.BaseApplication;
 import com.android.myapplication.coldpod.R;
+import com.android.myapplication.coldpod.ViewModelProviderFactory;
 import com.android.myapplication.coldpod.databinding.ActivityPlayingBinding;
+import com.android.myapplication.coldpod.persistence.FavoriteEntry;
 import com.android.myapplication.coldpod.persistence.Item;
 import com.android.myapplication.coldpod.service.PodcastService;
 import com.android.myapplication.coldpod.utils.Constants;
 
 
+import java.nio.file.attribute.FileAttributeView;
+
+import javax.inject.Inject;
+
 import timber.log.Timber;
 
 public class PlayingActivity extends AppCompatActivity {
-    private static final String TAG = PodcastService.class.getSimpleName();
+    private static final String TAG = "PlayingActivity";
 
 
     private Item mItem;
 
-    /** The MediaBrowser connects to a MediaBrowserService, and upon connecting it creates the
-     * MediaController for the UI*/
+    /**
+     * The MediaBrowser connects to a MediaBrowserService, and upon connecting it creates the
+     * MediaController for the UI
+     */
     private MediaBrowserCompat mMediaBrowser;
 
-    /** This field is used for data binding */
+    /**
+     * This field is used for data binding
+     */
     private ActivityPlayingBinding mBinding;
 
-    public static Intent getInstance(Context context,Item item){
-        Intent intent = new Intent(context,PlayingActivity.class);
-        intent.putExtra(Constants.EXTRA_ITEM,item);
+    private String mPodCastId;
+
+    private PlayingViewModel mViewModel;
+
+    @Inject
+    ViewModelProviderFactory providerFactory;
+
+    private FavoriteEntry mFavoriteEntry;
+    private String mPodcastName;
+    private String mPodcastImage;
+    private String mPodcastId;
+
+    public static Intent getInstance(Context context, Item item, String podId, String podImage, String podName) {
+        Intent intent = new Intent(context, PlayingActivity.class);
+        intent.putExtra(Constants.EXTRA_ITEM, item);
+        intent.putExtra(Constants.EXTRA_PODCAST_ID, podId);
+        intent.putExtra(Constants.EXTRA_PODCAST_NAME, podName);
+        intent.putExtra(Constants.EXTRA_PODCAST_IMAGE, podId);
         return intent;
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(
                 this, R.layout.activity_playing);
-        mItem = getIntent().getParcelableExtra(Constants.EXTRA_ITEM);
+        initFields();
         mBinding.setItem(mItem);
         Log.d(TAG, "playing activity: onCreate...");
+
+        initFavoriteEntry();
+        initDagger();
+
+        initViewModel();
+
         // Create MediaBrowserCompat
         createMediaBrowserCompat();
 
 
         initToolbar();
     }
-    private void initToolbar(){
+
+    private void initFields() {
+        mItem = getIntent().getParcelableExtra(Constants.EXTRA_ITEM);
+        mPodCastId = getIntent().getStringExtra(Constants.EXTRA_PODCAST_ID);
+        mPodcastName = getIntent().getStringExtra(Constants.EXTRA_PODCAST_NAME);
+        mPodcastImage = getIntent().getStringExtra(Constants.EXTRA_PODCAST_IMAGE);
+    }
+
+    private void initFavoriteEntry() {
+        mFavoriteEntry = new FavoriteEntry(mPodcastId,mPodcastName,mPodcastImage,
+                mItem.getTitle(),
+                mItem.getDescription(),
+                mItem.getPubDate(),
+                mItem.getITunesDuration(),
+                mItem.getEnclosure().getUrl(),
+                mItem.getEnclosure().getType(),
+                mItem.getEnclosure().getLength(),
+                mItem.getItemImage().getItemImageHref());
+    }
+
+    private void initDagger() {
+        ((BaseApplication) getApplication()).getAppComponent().getMainComponent().injectPlayingActivity(this);
+    }
+
+    private void initViewModel() {
+        mViewModel = new ViewModelProvider(this, providerFactory).get(PlayingViewModel.class);
+        mViewModel.setItemTitle(mItem.getTitle());
+    }
+
+
+    private void initToolbar() {
         // Set the toolbar as the app bar
         setSupportActionBar(mBinding.playingToolbar);
 
@@ -80,7 +145,7 @@ public class PlayingActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.playing_menu_items,menu);
+        getMenuInflater().inflate(R.menu.playing_menu_items, menu);
         return true;
     }
 
@@ -92,7 +157,7 @@ public class PlayingActivity extends AppCompatActivity {
                 onBackPressed();
                 return true;
             case R.id.action_favorite:
-                //
+                mViewModel.updateFavorite(mFavoriteEntry);
                 Toast.makeText(this, "fav", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.action_share:
@@ -123,6 +188,34 @@ public class PlayingActivity extends AppCompatActivity {
         super.onStart();
         // Connect to the MediaBrowserService
         mMediaBrowser.connect();
+        initObservers();
+    }
+
+
+    private void initObservers() {
+        mViewModel.getFavoriteEntry().observe(this, new Observer<FavoriteEntry>() {
+            @Override
+            public void onChanged(FavoriteEntry favoriteEntry) {
+                invalidateOptionsMenu();
+                if(favoriteEntry!=null){
+                    //the reason for this is to get the auto-generated id,so we can delete it if we want to
+                    mFavoriteEntry = favoriteEntry;
+                }
+                Log.d(TAG, "onChanged: "+favoriteEntry);
+            }
+        });
+
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem item = menu.getItem(0);
+        if (mViewModel.getFavoriteEntry().getValue() != null) {
+            item.setIcon(R.drawable.ic_favorite_full);
+        } else {
+            item.setIcon(R.drawable.ic_favorite_void);
+        }
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -150,7 +243,7 @@ public class PlayingActivity extends AppCompatActivity {
     //these are the callbacks that we receive from the media session
     private final MediaBrowserCompat.ConnectionCallback mConnectionCallbacks =
             new MediaBrowserCompat.ConnectionCallback() {
-               //if connection is successful
+                //if connection is successful
                 @Override
                 public void onConnected() {
                     Log.d(TAG, "Playing Activity: MediaBrowser onConnected: ");
@@ -263,7 +356,6 @@ public class PlayingActivity extends AppCompatActivity {
         // Register a Callback to stay in sync
         mediaController.registerCallback(controllerCallback);
     }
-
 
 
     /**

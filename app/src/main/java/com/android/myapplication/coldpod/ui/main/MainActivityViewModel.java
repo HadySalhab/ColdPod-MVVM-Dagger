@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
+import com.android.myapplication.coldpod.persistence.FavoriteEntry;
 import com.android.myapplication.coldpod.persistence.PodcastEntry;
 import com.android.myapplication.coldpod.repository.MainRepository;
 
@@ -17,9 +18,14 @@ public class MainActivityViewModel extends ViewModel {
     private final MainRepository mMainRepository;
     private final MutableLiveData<Boolean> _navToPodcastsActivity = new MutableLiveData<Boolean>();
     private LiveData<List<PodcastEntry>> mPodcastEntries;
+    private LiveData<List<FavoriteEntry>> mFavoriteEntries;
 
     public LiveData<List<PodcastEntry>> getPodcastEntries() {
         return mPodcastEntries;
+    }
+
+    public LiveData<List<FavoriteEntry>> getFavoriteEntries() {
+        return mFavoriteEntries;
     }
 
     LiveData<Boolean> getNavToPodcastsActivity() {
@@ -28,12 +34,16 @@ public class MainActivityViewModel extends ViewModel {
 
 
     private LiveData<Boolean> isListNullOrEmpty;
+    private LiveData<Boolean> isFavoriteNullOrEmpty;
 
 
     public LiveData<Boolean> getIsListNullOrEmpty() {
         return isListNullOrEmpty;
     }
 
+    public LiveData<Boolean> getIsFavoriteNullOrEmpty() {
+        return isFavoriteNullOrEmpty;
+    }
 
     private final MutableLiveData<Boolean> _isFabVisible = new MutableLiveData<Boolean>();
 
@@ -46,6 +56,7 @@ public class MainActivityViewModel extends ViewModel {
         _navToPodcastsActivity.setValue(false);
         mMainRepository = mainRepository;
         mPodcastEntries = mainRepository.getPodcasts();
+        mFavoriteEntries = mainRepository.getFavorites();
         checkIfNullOrEmpty();
     }
 
@@ -69,6 +80,13 @@ public class MainActivityViewModel extends ViewModel {
         isListNullOrEmpty = Transformations.map(mPodcastEntries, new Function<List<PodcastEntry>, Boolean>() {
             @Override
             public Boolean apply(List<PodcastEntry> input) {
+                return input == null || input.size() == 0;
+            }
+        });
+
+        isFavoriteNullOrEmpty = Transformations.map(mFavoriteEntries, new Function<List<FavoriteEntry>, Boolean>() {
+            @Override
+            public Boolean apply(List<FavoriteEntry> input) {
                 return input == null || input.size() == 0;
             }
         });

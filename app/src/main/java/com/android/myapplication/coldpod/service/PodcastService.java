@@ -43,6 +43,7 @@ import timber.log.Timber;
 
 import static com.android.myapplication.coldpod.utils.Constants.ACTION_RELEASE_OLD_PLAYER;
 import static com.android.myapplication.coldpod.utils.Constants.EXTRA_ITEM;
+import static com.android.myapplication.coldpod.utils.Constants.EXTRA_PODCAST_ID;
 import static com.android.myapplication.coldpod.utils.Constants.FAST_FORWARD_INCREMENT;
 import static com.android.myapplication.coldpod.utils.Constants.NOTIFICATION_PENDING_INTENT_ID;
 import static com.android.myapplication.coldpod.utils.Constants.PLAYBACK_CHANNEL_ID;
@@ -58,6 +59,7 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
     private SimpleExoPlayer mExoPlayer;
     private static final String TAG = PodcastService.class.getSimpleName();
     private Item mItem;
+    private String podcastId;
     private String podCastTitle;
     private String podCastImage;
 
@@ -80,11 +82,12 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
     private PlayerNotificationManager mPlayerNotificationManager;
 
 
-    public static Intent getInstance(Context context, Item item, String podCastImage, String podCastTitle) {
+    public static Intent getInstance(Context context, Item item, String podCastImage, String podCastTitle,String podcastId) {
         Intent serviceIntent = new Intent(context, PodcastService.class);
         serviceIntent.putExtra(EXTRA_ITEM, item);
         serviceIntent.putExtra(EXTRA_PODCAST_TITLE, podCastTitle);
         serviceIntent.putExtra(EXTRA_PODCAST_IMAGE, podCastImage);
+        serviceIntent.putExtra(EXTRA_PODCAST_ID , podcastId);
         serviceIntent.setAction(ACTION_RELEASE_OLD_PLAYER);
         return serviceIntent;
     }
@@ -129,6 +132,9 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
         }
         if (intent.hasExtra(EXTRA_PODCAST_TITLE)) {
             podCastTitle = intent.getStringExtra(EXTRA_PODCAST_TITLE);
+        }
+        if(intent.hasExtra(EXTRA_PODCAST_ID)){
+            podcastId = intent.getStringExtra(EXTRA_PODCAST_ID);
         }
         Log.d(TAG,"OnStartCommand: Extras: item: "+mItem+", podcast image: "+podCastImage+", podcastTitle: "+podCastTitle);
 
@@ -460,7 +466,7 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
     }
 
     private PendingIntent createContentPendingIntent() {
-        Intent intent = PlayingActivity.getInstance(this, mItem);
+        Intent intent = PlayingActivity.getInstance(this, mItem,podcastId,podCastImage,podCastTitle);
         return PendingIntent.getActivity(this, NOTIFICATION_PENDING_INTENT_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 

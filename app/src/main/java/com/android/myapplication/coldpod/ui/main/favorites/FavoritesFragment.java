@@ -13,7 +13,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.android.myapplication.coldpod.R;
+import com.android.myapplication.coldpod.databinding.FragmentFavoritesBinding;
+import com.android.myapplication.coldpod.databinding.FragmentSubscribedBinding;
 import com.android.myapplication.coldpod.ui.main.BaseFragment;
+import com.android.myapplication.coldpod.ui.main.subscribed.SubscribedListAdapter;
+import com.android.myapplication.coldpod.utils.GridAutofitLayoutManager;
+
+import static com.android.myapplication.coldpod.utils.Constants.GRID_AUTO_FIT_COLUMN_WIDTH;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -21,19 +27,36 @@ import com.android.myapplication.coldpod.ui.main.BaseFragment;
 public class FavoritesFragment extends BaseFragment {
     private static final String TAG = "Debug";
 
+    private FavoritesAdapter mAdapter;
+    private FragmentFavoritesBinding binding;
+
 
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_favorites, container, false);
+        binding = FragmentFavoritesBinding.inflate(inflater, container, false);
+        binding.setLifecycleOwner(getViewLifecycleOwner());
+        initRV();
+        return binding.getRoot();
+    }
+
+
+
+    public void initRV() {
+        GridAutofitLayoutManager layoutManager = new GridAutofitLayoutManager(
+                getContext(), GRID_AUTO_FIT_COLUMN_WIDTH);
+        binding.rvFavorites.setLayoutManager(layoutManager);
+        binding.rvFavorites.setHasFixedSize(true);
+        mAdapter = new FavoritesAdapter(mFavoriteEntryItemCallback);
+        binding.rvFavorites.setAdapter(mAdapter);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Log.d(TAG, "onViewCreated: "+ mMainActivityViewModel);
+        binding.setViewModel(mMainActivityViewModel);
     }
 }

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:andorid="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="favItem"
+            type="com.android.myapplication.coldpod.persistence.FavoriteEntry" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageView
+            app:item_image_url="@{favItem.itemImageUrl}"
+            android:id="@+id/iv_episode"
+            android:layout_width="80dp"
+            android:layout_height="80dp" />
+
+        <TextView
+            andorid:text="@{favItem.itemTitle}"
+            android:id="@+id/tv_episode_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/iv_episode"/>
+
+        <TextView
+            android:text="@{favItem.title}"
+            android:id="@+id/tv_podcast_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@+id/iv_episode"
+            app:layout_constraintTop_toBottomOf="@+id/tv_episode_title"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

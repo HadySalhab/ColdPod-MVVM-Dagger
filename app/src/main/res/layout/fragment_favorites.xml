@@ -1,15 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/secondary_color"
-    tools:context=".ui.main.favorites.FavoritesFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <data>
+        <variable
+            name="viewModel"
+            type="com.android.myapplication.coldpod.ui.main.MainActivityViewModel" />
+        <import type="android.view.View"/>
+    </data>
+
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-       />
+        android:background="@color/secondary_color"
+        tools:context=".ui.main.favorites.FavoritesFragment">
 
-</FrameLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_favorites"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:favItems="@{viewModel.favoriteEntries}"
+            />
+
+        <TextView
+            android:id="@+id/tv_empty_favorites"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@color/primary_color"
+            android:paddingStart="32dp"
+            android:paddingEnd="32dp"
+            android:paddingBottom="40dp"
+            android:visibility="@{viewModel.isFavoriteNullOrEmpty ? View.VISIBLE : View.GONE }"
+            android:text="You Have No Favorite Items"
+            android:textSize="18sp" />
+    </FrameLayout>
+</layout>

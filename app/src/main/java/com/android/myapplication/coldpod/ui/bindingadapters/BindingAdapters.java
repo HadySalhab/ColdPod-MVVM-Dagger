@@ -1,6 +1,7 @@
 package com.android.myapplication.coldpod.ui.bindingadapters;
 
 import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.text.Html;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -12,6 +13,7 @@ import androidx.databinding.BindingAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.myapplication.coldpod.R;
+import com.android.myapplication.coldpod.persistence.FavoriteEntry;
 import com.android.myapplication.coldpod.persistence.PodcastEntry;
 import com.android.myapplication.coldpod.network.data.Podcasts;
 import com.android.myapplication.coldpod.network.data.ArtworkImage;
@@ -20,6 +22,7 @@ import com.android.myapplication.coldpod.network.data.Channel;
 import com.android.myapplication.coldpod.persistence.Item;
 import com.android.myapplication.coldpod.network.data.ItemImage;
 import com.android.myapplication.coldpod.ui.details.PodCastDetailAdapter;
+import com.android.myapplication.coldpod.ui.main.favorites.FavoritesAdapter;
 import com.android.myapplication.coldpod.ui.main.subscribed.SubscribedListAdapter;
 import com.android.myapplication.coldpod.ui.podcast_entry.PodCastEntryAdapter;
 import com.android.myapplication.coldpod.ui.podcasts.PodCastListAdapter;
@@ -151,12 +154,29 @@ public class BindingAdapters {
                   .into(imageView);
       }
   }
+  @BindingAdapter("item_image_url")
+  public static void bindItemImageUrl(ImageView imageView , String itemImageUrl){
+      Glide.with(imageView.getContext())
+              .setDefaultRequestOptions(RequestOptions
+                      .placeholderOf(R.drawable.white_background)
+                      .error(R.drawable.logo)
+              )
+              .load(itemImageUrl)
+              .into(imageView);
+  }
 
     @BindingAdapter("items")
     public static void bindItemsToRv(RecyclerView recyclerView, List<Item> items){
         PodCastEntryAdapter podCastEntryAdapter = (PodCastEntryAdapter) recyclerView.getAdapter();
         if(items!=null){
             podCastEntryAdapter.submitList(items);
+        }
+    }
+    @BindingAdapter("favItems")
+    public static void bindFavItemsToRv(RecyclerView recyclerView, List<FavoriteEntry> favItems){
+        FavoritesAdapter podCastEntryAdapter = (FavoritesAdapter) recyclerView.getAdapter();
+        if(favItems!=null){
+            podCastEntryAdapter.submitList(favItems);
         }
     }
 

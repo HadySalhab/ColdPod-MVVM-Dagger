@@ -139,10 +139,10 @@ public class PodCastEntryActivity extends AppCompatActivity implements PodCastEn
 
     @Override
     public void onItemClick(Item item) {
-        startActivity(PlayingActivity.getInstance(this,item));
+        startActivity(PlayingActivity.getInstance(this,item,podCastId,podcastImage,podCastName));
 
         Log.d("test", "onItemClick: "+ mViewModel.dbPodcastEntry.getValue().getTitle());
 
-        startService(PodcastService.getInstance(this,item,podcastImage,podcastTitle));
+        startService(PodcastService.getInstance(this,item,podCastId,podcastImage,podcastTitle));
     }
 }

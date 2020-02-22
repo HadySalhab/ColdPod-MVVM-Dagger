@@ -49,7 +49,6 @@ public class Item implements Parcelable {
     @Element(name = "image", required = false)
     private ItemImage mItemImage;
 
-    private boolean isFavorite;
 
 
     public Item() {

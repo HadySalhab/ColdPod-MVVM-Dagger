@@ -22,6 +22,8 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import java.util.Objects;
+
 /**
  * Defines the schema of a table in room for a single favorite episode.
  */
@@ -30,6 +32,8 @@ public class FavoriteEntry {
 
     @PrimaryKey(autoGenerate = true)
     private int id;
+
+
 
     @ColumnInfo(name = "podcast_id")
     private String podcastId;
@@ -161,5 +165,29 @@ public class FavoriteEntry {
 
     public String getItemImageUrl() {
         return itemImageUrl;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FavoriteEntry that = (FavoriteEntry) o;
+        return id == that.id &&
+                Objects.equals(podcastId, that.podcastId) &&
+                Objects.equals(title, that.title) &&
+                Objects.equals(artworkImageUrl, that.artworkImageUrl) &&
+                Objects.equals(itemTitle, that.itemTitle) &&
+                Objects.equals(itemDescription, that.itemDescription) &&
+                Objects.equals(itemPubDate, that.itemPubDate) &&
+                Objects.equals(itemDuration, that.itemDuration) &&
+                Objects.equals(itemEnclosureUrl, that.itemEnclosureUrl) &&
+                Objects.equals(itemEnclosureType, that.itemEnclosureType) &&
+                Objects.equals(itemEnclosureLength, that.itemEnclosureLength) &&
+                Objects.equals(itemImageUrl, that.itemImageUrl);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, podcastId, title, artworkImageUrl, itemTitle, itemDescription, itemPubDate, itemDuration, itemEnclosureUrl, itemEnclosureType, itemEnclosureLength, itemImageUrl);
     }
 }
