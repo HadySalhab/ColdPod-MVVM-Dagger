@@ -27,10 +27,14 @@ public class PodCastListViewModel extends ViewModel {
     public LiveData<Integer> progress = Transformations.map(_podcasts, new Function<Resource<List<Podcasts>>, Integer>() {
         @Override
         public Integer apply(Resource<List<Podcasts>> input) {
-            if(input.status== Resource.Status.LOADING){
-                return View.VISIBLE;
+            if(input!=null) {
+                if (input.status == Resource.Status.LOADING) {
+                    return View.VISIBLE;
+                }
+                return View.GONE;
+            }else{
+                return View.GONE;
             }
-            return View.GONE;
         }
     });
 

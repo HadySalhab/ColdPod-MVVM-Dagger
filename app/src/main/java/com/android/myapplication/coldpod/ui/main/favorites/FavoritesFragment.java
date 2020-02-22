@@ -6,6 +6,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,8 +33,6 @@ public class FavoritesFragment extends BaseFragment {
     private FragmentFavoritesBinding binding;
 
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -43,10 +43,8 @@ public class FavoritesFragment extends BaseFragment {
     }
 
 
-
     public void initRV() {
-        GridAutofitLayoutManager layoutManager = new GridAutofitLayoutManager(
-                getContext(), GRID_AUTO_FIT_COLUMN_WIDTH);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false);
         binding.rvFavorites.setLayoutManager(layoutManager);
         binding.rvFavorites.setHasFixedSize(true);
         mAdapter = new FavoritesAdapter(mFavoriteEntryItemCallback);
@@ -56,7 +54,7 @@ public class FavoritesFragment extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Log.d(TAG, "onViewCreated: "+ mMainActivityViewModel);
+        Log.d(TAG, "onViewCreated: " + mMainActivityViewModel);
         binding.setViewModel(mMainActivityViewModel);
     }
 }

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.android.myapplication.coldpod.ui.search.SearchViewModel" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_search_results"
+            android:layout_width="match_parent"
+            app:search_results="@{viewModel.results.data}"
+            android:layout_height="match_parent" />
+
+
+        <ProgressBar
+            android:visibility="@{viewModel.progress}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+
+        <include
+            app:network_error_screen="@{viewModel.results.status}"
+            android:id="@+id/layout_error_screen"
+            layout="@layout/error_screen"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content" />
+        <include
+            app:empty_data_screen="@{viewModel.results}"
+            android:id="@+id/layout_empty_screen"
+            layout="@layout/empty_data_screen"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content" />
+
+    </FrameLayout>
+
+</layout>

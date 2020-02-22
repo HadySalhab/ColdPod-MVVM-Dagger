@@ -38,4 +38,10 @@ public class Constants {
     public static final int NOTIFICATION_PENDING_INTENT_ID = 0;
 
     public static final String EXTRA_PODCAST_IMAGE ="extra_podcastImage" ;
+
+    /** URL for search request */
+    public static final String I_TUNES_SEARCH = "https://itunes.apple.com/search";
+
+    /** The parameter value for a search field. The  "podcast" is the media type to search. */
+    public static final String SEARCH_MEDIA_PODCAST = "podcast";
 }

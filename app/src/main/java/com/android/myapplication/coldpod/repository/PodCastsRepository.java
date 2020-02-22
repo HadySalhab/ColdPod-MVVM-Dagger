@@ -4,11 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
 import com.android.myapplication.coldpod.di.main.MainScope;
+import com.android.myapplication.coldpod.network.SearchResponse;
 import com.android.myapplication.coldpod.network.data.Podcasts;
 import com.android.myapplication.coldpod.network.ApiResponse;
 import com.android.myapplication.coldpod.network.data.Feed;
 import com.android.myapplication.coldpod.network.ITunesApi;
 import com.android.myapplication.coldpod.network.ITunesResponse;
+import com.android.myapplication.coldpod.network.data.SearchResult;
 import com.android.myapplication.coldpod.utils.NetworkBoundResource;
 import com.android.myapplication.coldpod.utils.Resource;
 
@@ -54,6 +56,36 @@ public class PodCastsRepository {
             @Override
             protected LiveData<ApiResponse<ITunesResponse>> createCall() {
                 return  mITunesApi.getTopPodcasts(country);
+            }
+        }.getAsLiveData();
+
+    }
+    public LiveData<Resource<List<SearchResult>>>  getResults (String searchUrl,
+                                                                 String country, String media, String term){
+        return new NetworkBoundResource<List<SearchResult>,SearchResponse>(){
+
+            @Override
+            protected void handleApiSuccessResponse(ApiResponse.ApiSuccessResponse response) {
+                SearchResponse searchResponse = (SearchResponse) response.getBody();
+                List<SearchResult> searchResults  = searchResponse.getSearchResults();
+                results.setValue(new Resource<List<SearchResult>>(Resource.Status.SUCCESS,searchResults,null));
+            }
+
+            @Override
+            protected void handleApiEmptyResponse(ApiResponse.ApiEmptyResponse response) {
+                List<SearchResult> searchResults = new ArrayList<>();
+                results.setValue(new Resource<List<SearchResult>>(Resource.Status.ERROR,searchResults,null));
+            }
+
+            @Override
+            protected void handleApiErrorResponse(ApiResponse.ApiErrorResponse response) {
+                results.setValue(new Resource<List<SearchResult>>(Resource.Status.ERROR,null,response.getErrorMessage()));
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<ApiResponse<SearchResponse>> createCall() {
+                return mITunesApi.getSearchResponse(searchUrl,country,media,term);
             }
         }.getAsLiveData();
 

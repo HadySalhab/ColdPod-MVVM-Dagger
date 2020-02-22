@@ -4,7 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:name=".BaseApplication"
@@ -14,11 +14,28 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <activity android:name=".ui.search.SearchActivity"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+        </activity>
+
         <activity
-            android:launchMode="singleTop"
-            android:name=".ui.playing.PlayingActivity"></activity>
+            android:name=".ui.playing.PlayingActivity"
+            android:launchMode="singleTop" />
+
         <activity android:name=".ui.podcast_entry.PodCastEntryActivity" />
-        <activity android:name=".ui.podcasts.PodCastListActivity" />
+
+        <activity
+            android:name=".ui.podcasts.PodCastListActivity">
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+            />
+        </activity>
+
         <activity android:name=".ui.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,7 +43,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".ui.details.PodCastDetailActivity" />
+
         <service
             android:name=".service.PodcastService"
             android:enabled="true"
@@ -35,11 +54,13 @@
                 <action android:name="android.media.browse.MediaBrowserService" />
             </intent-filter>
         </service>
-   <!--     <receiver android:name=".PodcastService$MediaReceiver">
+        <!--
+     <receiver android:name=".PodcastService$MediaReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
-        </receiver>-->
+        </receiver>
+        -->
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

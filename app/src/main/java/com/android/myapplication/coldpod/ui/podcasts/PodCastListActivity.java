@@ -8,6 +8,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DiffUtil;
 
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,7 +16,10 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.SearchView;
 
 import com.android.myapplication.coldpod.BaseApplication;
 import com.android.myapplication.coldpod.R;
@@ -23,6 +27,7 @@ import com.android.myapplication.coldpod.ViewModelProviderFactory;
 import com.android.myapplication.coldpod.databinding.ActivityPodcastListBinding;
 import com.android.myapplication.coldpod.network.data.Podcasts;
 import com.android.myapplication.coldpod.ui.details.PodCastDetailActivity;
+import com.android.myapplication.coldpod.ui.search.SearchActivity;
 import com.android.myapplication.coldpod.utils.GridAutofitLayoutManager;
 
 import javax.inject.Inject;
@@ -98,6 +103,45 @@ public class PodCastListActivity extends AppCompatActivity implements PodCastLis
     public void onItemClick(Podcasts podcasts) {
         Log.d(TAG, "onItemClick: " + podcasts.getId());
         startActivity(PodCastDetailActivity.getInstance(this,podcasts.getId(),podcasts.getName()));
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater =  getMenuInflater();
+        inflater.inflate(R.menu.podcast_search_menu, menu);
+
+        // Associate searchable configuration with the SearchView
+        // Reference: @see "https://developer.android.com/training/search/setup#create-sc"
+        // "https://www.youtube.com/watch?v=9OWmnYPX1uc"
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+
+        // Display a hint text in the search text field.
+        // android:hint attribute in the searchable.xml is not working.
+        // Reference: @see "https://stackoverflow.com/questions/37919328/searchview-hint-not-showing"
+        searchView.setQueryHint("Coldplay...");
+
+        // Set onQueryTextListener
+        // Reference: @see "https://www.youtube.com/watch?v=9OWmnYPX1uc"
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            // Called when the user submits the query
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                // Perform the final search
+                startActivity(SearchActivity.getInstance(PodCastListActivity.this,s));
+                return true;
+            }
+
+            // Called when the query text is changed by the user
+            @Override
+            public boolean onQueryTextChange(String s) {
+                // Called every time the text has changed, even if the user didn't submit
+                return false;
+            }
+        });
+        return true;
     }
 
 

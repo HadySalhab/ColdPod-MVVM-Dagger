@@ -44,4 +44,14 @@ public interface ITunesApi {
             @Url String url
     );
 
+
+    @GET
+    @Json
+    LiveData<ApiResponse<SearchResponse>> getSearchResponse(
+            @Url String searchUrl,
+            @Query("country") String country,
+            @Query("media") String media,
+            @Query("term") String term
+    );
+
 }

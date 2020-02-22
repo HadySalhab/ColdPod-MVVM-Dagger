@@ -1,0 +1,8 @@
+
+
+<!-- Reference: @see "https://developer.android.com/training/search/setup#create-sc"-->
+<searchable xmlns:android="http://schemas.android.com/apk/res/android"
+    android:hint="Coldplay..."
+    android:label="@string/app_name">
+
+</searchable>

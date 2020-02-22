@@ -13,6 +13,8 @@ import androidx.databinding.BindingAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.myapplication.coldpod.R;
+import com.android.myapplication.coldpod.network.SearchResponse;
+import com.android.myapplication.coldpod.network.data.SearchResult;
 import com.android.myapplication.coldpod.persistence.FavoriteEntry;
 import com.android.myapplication.coldpod.persistence.PodcastEntry;
 import com.android.myapplication.coldpod.network.data.Podcasts;
@@ -26,6 +28,7 @@ import com.android.myapplication.coldpod.ui.main.favorites.FavoritesAdapter;
 import com.android.myapplication.coldpod.ui.main.subscribed.SubscribedListAdapter;
 import com.android.myapplication.coldpod.ui.podcast_entry.PodCastEntryAdapter;
 import com.android.myapplication.coldpod.ui.podcasts.PodCastListAdapter;
+import com.android.myapplication.coldpod.ui.search.SearchAdapter;
 import com.android.myapplication.coldpod.utils.Resource;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -98,6 +101,13 @@ public class BindingAdapters {
         PodCastDetailAdapter podCastDetailAdapter = (PodCastDetailAdapter) recyclerView.getAdapter();
         if (items != null) {
             podCastDetailAdapter.submitList(items);
+        }
+    }
+    @BindingAdapter("search_results")
+    public static void bindSearchResults(RecyclerView recyclerView, List<SearchResult> searchResults) {
+        SearchAdapter searchAdapter = (SearchAdapter) recyclerView.getAdapter();
+        if (searchResults != null) {
+            searchAdapter.submitList(searchResults);
         }
     }
 

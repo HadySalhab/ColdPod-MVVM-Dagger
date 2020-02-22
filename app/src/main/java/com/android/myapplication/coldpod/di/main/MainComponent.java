@@ -6,6 +6,7 @@ import com.android.myapplication.coldpod.ui.main.MainActivity;
 import com.android.myapplication.coldpod.ui.playing.PlayingActivity;
 import com.android.myapplication.coldpod.ui.podcast_entry.PodCastEntryActivity;
 import com.android.myapplication.coldpod.ui.podcasts.PodCastListActivity;
+import com.android.myapplication.coldpod.ui.search.SearchActivity;
 
 import dagger.Subcomponent;
 
@@ -21,4 +22,5 @@ public interface MainComponent {
     void injectBaseFragment(BaseFragment baseFragment);
     void injectPodCastEntryActivity(PodCastEntryActivity podCastEntryActivity);
     void injectPlayingActivity(PlayingActivity playingActivity);
+    void injectSearchActivity(SearchActivity searchActivity);
 }

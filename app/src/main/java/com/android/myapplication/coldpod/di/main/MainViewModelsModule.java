@@ -8,6 +8,7 @@ import com.android.myapplication.coldpod.ui.playing.PlayingViewModel;
 import com.android.myapplication.coldpod.ui.podcast_entry.PodCastEntryViewModel;
 import com.android.myapplication.coldpod.ui.podcasts.PodCastListViewModel;
 import com.android.myapplication.coldpod.ui.details.PodCastDetailViewModel;
+import com.android.myapplication.coldpod.ui.search.SearchViewModel;
 
 import dagger.Binds;
 import dagger.Module;
@@ -40,6 +41,11 @@ public abstract class MainViewModelsModule {
     @IntoMap
     @ViewModelKey(PlayingViewModel.class)
     public abstract ViewModel bindPlayingViewModel(PlayingViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SearchViewModel.class)
+    public abstract ViewModel bindSearchViewModel(SearchViewModel viewModel);
 }
 
 
