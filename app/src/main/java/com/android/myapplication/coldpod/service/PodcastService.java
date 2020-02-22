@@ -110,6 +110,15 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG,"Podcast Service onStartCommand is called");
+        // If there are not any pending start commands to be delivered to the service, it will
+        // be called with a null intent object, so you must take care to check for this.
+        // Reference: @see "https://developer.android.com/reference/android/app/Service.html#START_STICKY"
+        // "https://stackoverflow.com/questions/8421430/reasons-that-the-passed-intent-would-be-null-in-onstartcommand"
+        if (intent == null || intent.getAction() == null) {
+            Timber.e("intent in onStartCommand is null");
+            return START_STICKY; //start sticky, wil try to recreate the service as soon as possible, while passing the original intent
+        }
+
         // Check if the old player should be released
 
         //Since onStartCommand is triggered everyTime when startService is called,
@@ -141,7 +150,7 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
         initializePlayer();
         // Initialize PlayerNotificationManager
         initializeNotificationManager(mItem);
-        return super.onStartCommand(intent, flags, startId);
+        return START_STICKY;
     }
 
     /**
