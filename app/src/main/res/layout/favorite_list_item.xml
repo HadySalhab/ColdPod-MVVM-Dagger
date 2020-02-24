@@ -7,10 +7,14 @@
         <variable
             name="favItem"
             type="com.android.myapplication.coldpod.persistence.FavoriteEntry" />
+        <variable
+            name="viewHolder"
+            type="com.android.myapplication.coldpod.ui.main.favorites.FavoritesAdapter.FavoritesViewHolder" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:orientation="vertical"
+        android:onClick="@{()->viewHolder.onFavClick(favItem)}"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <ImageView

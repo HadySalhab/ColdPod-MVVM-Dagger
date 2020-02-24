@@ -116,7 +116,7 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
         // "https://stackoverflow.com/questions/8421430/reasons-that-the-passed-intent-would-be-null-in-onstartcommand"
         if (intent == null || intent.getAction() == null) {
             Timber.e("intent in onStartCommand is null");
-            return START_STICKY; //start sticky, wil try to recreate the service as soon as possible, while passing the original intent
+            return START_STICKY; //start sticky, wil try to recreate the service as soon as possible (if it gets killed by the system), but by passing null intent
         }
 
         // Check if the old player should be released

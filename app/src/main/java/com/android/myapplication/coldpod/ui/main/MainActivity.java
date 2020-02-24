@@ -22,11 +22,17 @@ import androidx.lifecycle.ViewModelProvider;
 import com.android.myapplication.coldpod.BaseApplication;
 import com.android.myapplication.coldpod.R;
 import com.android.myapplication.coldpod.ViewModelProviderFactory;
+import com.android.myapplication.coldpod.network.data.Enclosure;
+import com.android.myapplication.coldpod.network.data.ItemImage;
+import com.android.myapplication.coldpod.persistence.FavoriteEntry;
+import com.android.myapplication.coldpod.persistence.Item;
 import com.android.myapplication.coldpod.persistence.PodcastEntry;
 import com.android.myapplication.coldpod.databinding.ActivityMainBinding;
+import com.android.myapplication.coldpod.service.PodcastService;
 import com.android.myapplication.coldpod.ui.main.downloads.DownloadsFragment;
 import com.android.myapplication.coldpod.ui.main.favorites.FavoritesFragment;
 import com.android.myapplication.coldpod.ui.main.subscribed.SubscribedFragment;
+import com.android.myapplication.coldpod.ui.playing.PlayingActivity;
 import com.android.myapplication.coldpod.ui.podcast_entry.PodCastEntryActivity;
 import com.android.myapplication.coldpod.ui.podcasts.PodCastListActivity;
 import com.google.android.material.navigation.NavigationView;
@@ -36,7 +42,7 @@ import javax.inject.Inject;
 
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
-        SubscribedFragment.Listener {
+        SubscribedFragment.Listener, FavoritesFragment.Listener {
 
 
     ActivityMainBinding mBinding;
@@ -160,8 +166,35 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onPodCastEntryClicked(PodcastEntry podcastEntry) {
-        Intent intent = PodCastEntryActivity.getInstance(this, podcastEntry.getPodcastId(),podcastEntry.getTitle());
+        Intent intent = PodCastEntryActivity.getInstance(this, podcastEntry.getPodcastId(), podcastEntry.getTitle());
         startActivity(intent);
+    }
+
+    @Override
+    public void onFavoriteClick(FavoriteEntry favoriteEntry) {
+        Intent serviceIntent = PodcastService.getInstance(this, getItem(favoriteEntry), favoriteEntry.getArtworkImageUrl(), favoriteEntry.getTitle(), favoriteEntry.getPodcastId());
+        startService(serviceIntent);
+        Intent playingIntent = PlayingActivity.getInstance(this, getItem(favoriteEntry), favoriteEntry.getPodcastId(), favoriteEntry.getArtworkImageUrl(), favoriteEntry.getTitle());
+        startActivity(playingIntent);
+    }
+
+    //creating the dependency of PodCastService and PlayingActivity from the FavoriteEntry
+    private Item getItem(FavoriteEntry favoriteEntry) {
+        String itemTitle = favoriteEntry.getItemTitle();
+        String itemDescription = favoriteEntry.getItemDescription();
+        String iTunesSummary = favoriteEntry.getItemDescription();
+        String pubDate = favoriteEntry.getItemPubDate();
+        String duration = favoriteEntry.getItemDuration();
+
+        String enclosureUrl = favoriteEntry.getItemEnclosureUrl();
+        String enclosureType = favoriteEntry.getItemEnclosureType();
+        String enclosureLength = favoriteEntry.getItemEnclosureLength();
+        Enclosure enclosure = new Enclosure(enclosureUrl, enclosureType, enclosureLength);
+
+        String itemImageUrl = favoriteEntry.getItemImageUrl();
+        ItemImage itemImage = new ItemImage(itemImageUrl);
+
+        return new Item(itemTitle, itemDescription, iTunesSummary, pubDate, duration, enclosure, itemImage);
     }
 }
 

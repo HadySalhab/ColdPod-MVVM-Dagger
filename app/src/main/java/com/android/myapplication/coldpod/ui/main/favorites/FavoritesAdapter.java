@@ -16,9 +16,15 @@ import java.util.List;
 
 public class FavoritesAdapter extends ListAdapter<FavoriteEntry, FavoritesAdapter.FavoritesViewHolder> {
 
+    public interface  Listener {
+        public void onFavoriteClick(FavoriteEntry favoriteEntry);
+    }
+    private Listener mListener;
 
-    protected FavoritesAdapter(@NonNull DiffUtil.ItemCallback<FavoriteEntry> diffCallback) {
+
+    protected FavoritesAdapter(@NonNull DiffUtil.ItemCallback<FavoriteEntry> diffCallback,Listener listener) {
         super(diffCallback);
+        mListener = listener;
     }
 
     @NonNull
@@ -45,6 +51,9 @@ public class FavoritesAdapter extends ListAdapter<FavoriteEntry, FavoritesAdapte
 
         private void bind(FavoriteEntry favoriteEntry) {
             mBinding.setFavItem(favoriteEntry);
+        }
+        private void onFavClick(FavoriteEntry favoriteEntry){
+                mListener.onFavoriteClick(favoriteEntry);
         }
     }
 }

@@ -21,6 +21,14 @@ public class Enclosure implements Parcelable {
     public Enclosure() {
     }
 
+
+    public Enclosure(String url, String type, String length) {
+        mUrl = url;
+        mType = type;
+        mLength = length;
+    }
+
+
     protected Enclosure(Parcel in) {
         mUrl = in.readString();
         mType = in.readString();

@@ -26,6 +26,7 @@ public class Item implements Parcelable {
         return id;
     }
 
+
     @Path("title")
     @Text(required = false)
     private String mTitle;
@@ -52,6 +53,16 @@ public class Item implements Parcelable {
 
 
     public Item() {
+    }
+    public Item(String title, String description, String iTunesSummary, String pubDate,
+                String duration, Enclosure enclosure, ItemImage itemImage) {
+        mTitle = title;
+        mDescription = description;
+        mITunesSummary = iTunesSummary;
+        mPubDate = pubDate;
+        mITunesDuration = duration;
+        mEnclosure = enclosure;
+        mItemImage = itemImage;
     }
 
     public String getTitle() {
