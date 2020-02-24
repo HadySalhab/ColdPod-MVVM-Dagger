@@ -44,4 +44,10 @@ public class Constants {
 
     /** The parameter value for a search field. The  "podcast" is the media type to search. */
     public static final String SEARCH_MEDIA_PODCAST = "podcast";
+
+
+    /** The pubDate pattern */
+    public static final String PUB_DATE_PATTERN = "EEE, d MMM yyyy HH:mm:ss Z";
+    /** The formatted date pattern */
+    public static final String FORMATTED_PATTERN = "MMM d, yyyy";
 }

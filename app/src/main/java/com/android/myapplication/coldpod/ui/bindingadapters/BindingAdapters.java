@@ -1,5 +1,6 @@
 package com.android.myapplication.coldpod.ui.bindingadapters;
 
+import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.text.Html;
@@ -29,13 +30,22 @@ import com.android.myapplication.coldpod.ui.main.subscribed.SubscribedListAdapte
 import com.android.myapplication.coldpod.ui.podcast_entry.PodCastEntryAdapter;
 import com.android.myapplication.coldpod.ui.podcasts.PodCastListAdapter;
 import com.android.myapplication.coldpod.ui.search.SearchAdapter;
+import com.android.myapplication.coldpod.utils.Constants;
 import com.android.myapplication.coldpod.utils.Resource;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
+import timber.log.Timber;
+
+import static com.android.myapplication.coldpod.utils.Constants.FORMATTED_PATTERN;
 import static com.android.myapplication.coldpod.utils.Constants.IMG_HTML_TAG;
+import static com.android.myapplication.coldpod.utils.Constants.PUB_DATE_PATTERN;
 import static com.android.myapplication.coldpod.utils.Constants.REPLACEMENT_EMPTY;
 
 public class BindingAdapters {
@@ -206,4 +216,25 @@ public class BindingAdapters {
         }
     }
 
+    @BindingAdapter("pubDate")
+    public static void bindPubDate(TextView textView , String date){
+        SimpleDateFormat stringToDateFormatter = new SimpleDateFormat(PUB_DATE_PATTERN, Locale.US);
+
+
+        Date currentTime = null;
+        try {
+            currentTime = stringToDateFormatter.parse(date); //converting string to date using the PUB_DATE_PATTERN
+        } catch (ParseException e) { //CATCH in case date format is not the same as PUB_DATE_PATTERN
+            Timber.e("Error formatting date: " + e.getMessage());
+        }
+        if(currentTime!=null){
+            SimpleDateFormat  dateToStringFormatter = new SimpleDateFormat(FORMATTED_PATTERN, Locale.US);
+            String newDateFormatString = dateToStringFormatter.format(currentTime);
+            textView.setText(newDateFormatString);
+        }else{
+            textView.setText(date);
+        }
+
+
+    }
 }
