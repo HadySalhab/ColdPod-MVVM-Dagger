@@ -17,6 +17,7 @@ import com.android.myapplication.coldpod.ViewModelProviderFactory;
 import com.android.myapplication.coldpod.databinding.ActivitySearchBinding;
 import com.android.myapplication.coldpod.network.data.Podcasts;
 import com.android.myapplication.coldpod.network.data.SearchResult;
+import com.android.myapplication.coldpod.ui.details.PodCastDetailActivity;
 import com.android.myapplication.coldpod.ui.podcasts.PodCastListActivity;
 import com.android.myapplication.coldpod.utils.GridAutofitLayoutManager;
 
@@ -106,6 +107,10 @@ public class SearchActivity extends AppCompatActivity implements SearchAdapter.L
 
     @Override
     public void onItemClick(SearchResult item) {
+        //we should navigate to the podcast details (where the user can see all the episodes and
+        // be provided with the option to subscribe
 
+        Intent podcastDetailIntent = PodCastDetailActivity.getInstance(this,String.valueOf(item.getCollectionId()),item.getCollectionName());
+        startActivity(podcastDetailIntent);
     }
 }
