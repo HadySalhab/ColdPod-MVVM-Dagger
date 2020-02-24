@@ -10,15 +10,11 @@
 
     </data>
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <RelativeLayout
         android:fitsSystemWindows="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/ColdPod.Toolbar.ToolbarOverlay">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -26,15 +22,16 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             android:elevation="4dp"
+            android:layout_alignParentTop="true"
+            android:theme="@style/ColdPod.Toolbar.ToolbarOverlay"
             app:popupTheme="@style/ColdPod.Toolbar.PopupOverlay" />
 
-    </com.google.android.material.appbar.AppBarLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/toolbar"
         tools:context=".ui.podcasts.PodCastListFragment"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         >
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_add_podcast"
@@ -48,6 +45,7 @@
         <ProgressBar
             android:visibility="@{viewModel.progress}"
             android:layout_width="wrap_content"
+            android:layout_centerInParent="true"
             android:layout_height="wrap_content"
             android:layout_gravity="center"/>
 
@@ -55,16 +53,16 @@
             app:network_error_screen="@{viewModel.podcasts.status}"
             android:id="@+id/layout_error_screen"
             layout="@layout/error_screen"
-            android:layout_gravity="center"
+            android:layout_centerInParent="true"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content" />
         <include
             app:empty_data_screen="@{viewModel.podcasts}"
             android:id="@+id/layout_empty_screen"
             layout="@layout/empty_data_screen"
-            android:layout_gravity="center"
+            android:layout_centerInParent="true"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content" />
 
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </RelativeLayout>
 </layout>
