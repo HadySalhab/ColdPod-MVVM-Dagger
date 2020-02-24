@@ -1,6 +1,9 @@
 package com.android.myapplication.coldpod.ui.search;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DiffUtil;
@@ -9,6 +12,10 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.android.myapplication.coldpod.BaseApplication;
@@ -36,6 +43,11 @@ public class SearchActivity extends AppCompatActivity implements SearchAdapter.L
     @Inject
     DiffUtil.ItemCallback<SearchResult> mSearchResultItemCallback;
 
+    Toolbar mToolbar;
+    SpannableString mSpannableString;
+    ForegroundColorSpan mForegroundColorSpan;
+
+
 
     private SearchViewModel mSearchViewModel;
     private String mQuery;
@@ -54,9 +66,19 @@ public class SearchActivity extends AppCompatActivity implements SearchAdapter.L
         initDagger();
         mSearchBinding = DataBindingUtil.setContentView(this, R.layout.activity_search);
         mSearchBinding.setLifecycleOwner(this);
+        initToolbar();
         initRV();
         handleIntent(getIntent());
         setupViewModel();
+    }
+    private void initToolbar() {
+        mToolbar = mSearchBinding.toolbar;
+        mSpannableString = new SpannableString(getString(R.string.app_name));
+        mForegroundColorSpan = new ForegroundColorSpan(ContextCompat.getColor(this, (R.color.primary_color)));
+        mSpannableString.setSpan(mForegroundColorSpan, 4, 7, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        this.setSupportActionBar(mToolbar);
+        ((AppCompatActivity) this).getSupportActionBar().setTitle(mSpannableString);
+        ((AppCompatActivity) this).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
 
@@ -112,5 +134,15 @@ public class SearchActivity extends AppCompatActivity implements SearchAdapter.L
 
         Intent podcastDetailIntent = PodCastDetailActivity.getInstance(this,String.valueOf(item.getCollectionId()),item.getCollectionName());
         startActivity(podcastDetailIntent);
+    }
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
