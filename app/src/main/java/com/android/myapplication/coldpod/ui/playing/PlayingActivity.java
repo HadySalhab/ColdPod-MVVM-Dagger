@@ -116,7 +116,7 @@ public class PlayingActivity extends AppCompatActivity {
                 mItem.getEnclosure().getUrl(),
                 mItem.getEnclosure().getType(),
                 mItem.getEnclosure().getLength(),
-                mItem.getItemImage().getItemImageHref());
+                mItem.getItemImages()==null?"":mItem.getItemImages().get(0).getItemImageHref());
     }
 
     private void initDagger() {
@@ -158,11 +158,8 @@ public class PlayingActivity extends AppCompatActivity {
                 return true;
             case R.id.action_favorite:
                 mViewModel.updateFavorite(mFavoriteEntry);
-                Toast.makeText(this, "fav", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.action_share:
-                //
-                Toast.makeText(this, "share", Toast.LENGTH_SHORT).show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

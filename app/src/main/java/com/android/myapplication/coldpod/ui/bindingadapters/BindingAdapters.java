@@ -156,9 +156,10 @@ public class BindingAdapters {
   }
 
   @BindingAdapter("item_image")
-    public static void bindItemImage(ImageView imageView, ItemImage itemImage){
-      if (itemImage != null) {
-          String itemImageUrl = itemImage.getItemImageHref();
+    public static void bindItemImage(ImageView imageView, List<ItemImage> itemImages){
+
+      if (itemImages != null) {
+          String itemImageUrl = itemImages.get(0).getItemImageHref();
           // Use Glide library to upload the artwork
           Glide.with(imageView.getContext())
                   .setDefaultRequestOptions(RequestOptions

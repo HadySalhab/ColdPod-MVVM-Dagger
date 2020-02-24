@@ -37,6 +37,9 @@ import com.android.myapplication.coldpod.ui.podcast_entry.PodCastEntryActivity;
 import com.android.myapplication.coldpod.ui.podcasts.PodCastListActivity;
 import com.google.android.material.navigation.NavigationView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 
 
@@ -193,8 +196,10 @@ public class MainActivity extends AppCompatActivity implements
 
         String itemImageUrl = favoriteEntry.getItemImageUrl();
         ItemImage itemImage = new ItemImage(itemImageUrl);
+        List<ItemImage> itemImages = new ArrayList<>();
+        itemImages.add(itemImage);
 
-        return new Item(itemTitle, itemDescription, iTunesSummary, pubDate, duration, enclosure, itemImage);
+        return new Item(itemTitle, itemDescription, iTunesSummary, pubDate, duration, enclosure, itemImages);
     }
 }
 

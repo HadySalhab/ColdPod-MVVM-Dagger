@@ -10,10 +10,13 @@ import com.android.myapplication.coldpod.network.data.Enclosure;
 import com.android.myapplication.coldpod.network.data.ItemImage;
 
 import org.simpleframework.xml.Element;
+import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Path;
 import org.simpleframework.xml.Root;
 import org.simpleframework.xml.Text;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -47,22 +50,22 @@ public class Item implements Parcelable {
     @Element(name = "enclosure", required = false)
     private Enclosure mEnclosure;
 
-    @Element(name = "image", required = false)
-    private ItemImage mItemImage;
+    @ElementList(inline = true, name = "image", required = false)
+    private List<ItemImage> mItemImages;
 
 
 
     public Item() {
     }
     public Item(String title, String description, String iTunesSummary, String pubDate,
-                String duration, Enclosure enclosure, ItemImage itemImage) {
+                String duration, Enclosure enclosure, List<ItemImage> itemImages) {
         mTitle = title;
         mDescription = description;
         mITunesSummary = iTunesSummary;
         mPubDate = pubDate;
         mITunesDuration = duration;
         mEnclosure = enclosure;
-        mItemImage = itemImage;
+        mItemImages = itemImages;
     }
 
     public String getTitle() {
@@ -132,11 +135,11 @@ public class Item implements Parcelable {
         mEnclosure = enclosure;
     }
 
-    public ItemImage getItemImage() {
-        return mItemImage;
+    public List<ItemImage> getItemImages() {
+        return mItemImages;
     }
-    public void setItemImage(ItemImage itemImage) {
-        mItemImage = itemImage;
+    public void setItemImages(List<ItemImage> itemImages) {
+        mItemImages = itemImages;
     }
     protected Item(Parcel in) {
         mTitle = in.readString();
@@ -145,7 +148,10 @@ public class Item implements Parcelable {
         mPubDate = in.readString();
         mITunesDuration = in.readString();
         mEnclosure = (Enclosure) in.readValue(Enclosure.class.getClassLoader());
-        mItemImage = (ItemImage) in.readValue(ItemImage.class.getClassLoader());
+        if (in.readByte() == 0x01) {
+            mItemImages = new ArrayList<>();
+            in.readList(mItemImages, ItemImage.class.getClassLoader());
+        }
     }
 
     public static final Creator<Item> CREATOR = new Creator<Item>() {
@@ -172,7 +178,12 @@ public class Item implements Parcelable {
         dest.writeString(mPubDate);
         dest.writeString(mITunesDuration);
         dest.writeValue(mEnclosure);
-        dest.writeValue(mItemImage);
+        if (mItemImages == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(mItemImages);
+        }
     }
 }
 
