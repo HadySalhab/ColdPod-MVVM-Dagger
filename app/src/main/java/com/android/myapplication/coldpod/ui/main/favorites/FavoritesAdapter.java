@@ -54,7 +54,7 @@ public class FavoritesAdapter extends ListAdapter<FavoriteEntry, FavoritesAdapte
             mBinding.setViewHolder(this);
             mBinding.executePendingBindings();
         }
-        private void onFavClick(FavoriteEntry favoriteEntry){
+        public void onFavClick(FavoriteEntry favoriteEntry){
                 mListener.onFavoriteClick(favoriteEntry);
         }
     }
