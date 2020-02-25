@@ -206,7 +206,7 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
             mExoPlayer.addListener(this);
 
             // Prepare the MediaSource
-            Uri mediaUri = Uri.parse(mItem.getEnclosure().getUrl());
+            Uri mediaUri = Uri.parse(mItem.getEnclosures().get(0).getUrl());
             MediaSource mediaSource = buildMediaSource(mediaUri);
             //start buffering
             mExoPlayer.prepare(mediaSource);

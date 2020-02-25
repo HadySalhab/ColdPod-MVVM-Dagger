@@ -138,9 +138,19 @@ public class BindingAdapters {
         }
     }
 
-    @BindingAdapter("empty_data_screen")
-    public static void bindEmptyDataScreenVisibility(View view, Resource resource){
-        if(resource.status == Resource.Status.SUCCESS && resource.data==null){
+    @BindingAdapter("empty_data_screen_search")
+    public static void bindSearchEmptyData(View view, Resource resource){
+        List<SearchResult> searchResults = (List<SearchResult>) resource.data;
+        if(resource.status == Resource.Status.SUCCESS && searchResults.isEmpty()){
+            view.setVisibility(View.VISIBLE);
+        }else{
+            view.setVisibility(View.GONE);
+        }
+    }
+    @BindingAdapter("empty_data_screen_podcasts")
+    public static void bindPodCastsEmptyData(View view, Resource resource){
+        List<Podcasts> podcasts = (List<Podcasts>) resource.data;
+        if(resource.status == Resource.Status.SUCCESS && podcasts.isEmpty()){
             view.setVisibility(View.VISIBLE);
         }else{
             view.setVisibility(View.GONE);

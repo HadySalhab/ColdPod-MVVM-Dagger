@@ -47,8 +47,8 @@ public class Item implements Parcelable {
     @Element(name = "duration", required = false)
     private String mITunesDuration;
 
-    @Element(name = "enclosure", required = false)
-    private Enclosure mEnclosure;
+    @ElementList(inline = true, name = "enclosure", required = false)
+    private List<Enclosure> mEnclosures;
 
     @ElementList(inline = true, name = "image", required = false)
     private List<ItemImage> mItemImages;
@@ -58,13 +58,13 @@ public class Item implements Parcelable {
     public Item() {
     }
     public Item(String title, String description, String iTunesSummary, String pubDate,
-                String duration, Enclosure enclosure, List<ItemImage> itemImages) {
+                String duration, List<Enclosure> enclosures , List<ItemImage> itemImages) {
         mTitle = title;
         mDescription = description;
         mITunesSummary = iTunesSummary;
         mPubDate = pubDate;
         mITunesDuration = duration;
-        mEnclosure = enclosure;
+        mEnclosures = enclosures;
         mItemImages = itemImages;
     }
 
@@ -83,12 +83,12 @@ public class Item implements Parcelable {
                 Objects.equals(mITunesSummary, item.mITunesSummary) &&
                 Objects.equals(mPubDate, item.mPubDate) &&
                 Objects.equals(mITunesDuration, item.mITunesDuration) &&
-                Objects.equals(mEnclosure, item.mEnclosure);
+                Objects.equals(mEnclosures, item.mEnclosures);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, mTitle, mDescription, mITunesSummary, mPubDate, mITunesDuration, mEnclosure);
+        return Objects.hash(id, mTitle, mDescription, mITunesSummary, mPubDate, mITunesDuration, mEnclosures);
     }
 
     public void setTitle(String title) {
@@ -127,12 +127,12 @@ public class Item implements Parcelable {
         mITunesDuration = iTunesDuration;
     }
 
-    public Enclosure getEnclosure() {
-        return mEnclosure;
+    public List<Enclosure> getEnclosures() {
+        return mEnclosures;
     }
 
-    public void setEnclosure(Enclosure enclosure) {
-        mEnclosure = enclosure;
+    public void setEnclosures(List<Enclosure> enclosures) {
+        mEnclosures = enclosures;
     }
 
     public List<ItemImage> getItemImages() {
@@ -147,8 +147,10 @@ public class Item implements Parcelable {
         mITunesSummary = in.readString();
         mPubDate = in.readString();
         mITunesDuration = in.readString();
-        mEnclosure = (Enclosure) in.readValue(Enclosure.class.getClassLoader());
         if (in.readByte() == 0x01) {
+            mEnclosures = new ArrayList<>();
+            in.readList(mEnclosures, Enclosure.class.getClassLoader());
+        }        if (in.readByte() == 0x01) {
             mItemImages = new ArrayList<>();
             in.readList(mItemImages, ItemImage.class.getClassLoader());
         }
@@ -177,7 +179,12 @@ public class Item implements Parcelable {
         dest.writeString(mITunesSummary);
         dest.writeString(mPubDate);
         dest.writeString(mITunesDuration);
-        dest.writeValue(mEnclosure);
+        if (mEnclosures == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(mEnclosures);
+        }
         if (mItemImages == null) {
             dest.writeByte((byte) (0x00));
         } else {

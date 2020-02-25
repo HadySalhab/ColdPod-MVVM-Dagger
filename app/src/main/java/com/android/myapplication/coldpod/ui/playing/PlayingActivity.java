@@ -113,9 +113,9 @@ public class PlayingActivity extends AppCompatActivity {
                 mItem.getDescription(),
                 mItem.getPubDate(),
                 mItem.getITunesDuration(),
-                mItem.getEnclosure().getUrl(),
-                mItem.getEnclosure().getType(),
-                mItem.getEnclosure().getLength(),
+                mItem.getEnclosures().get(0).getUrl(),
+                mItem.getEnclosures().get(0).getType(),
+                mItem.getEnclosures().get(0).getLength(),
                 mItem.getItemImages()==null?"":mItem.getItemImages().get(0).getItemImageHref());
     }
 

@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_width="wrap_content" />
         <include
-            app:empty_data_screen="@{viewModel.results}"
+            app:empty_data_screen_search="@{viewModel.results}"
             android:id="@+id/layout_empty_screen"
             layout="@layout/empty_data_screen"
             android:layout_centerInParent="true"
