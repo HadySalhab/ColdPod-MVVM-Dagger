@@ -38,8 +38,12 @@
                 android:id="@+id/tv_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAlignment="center"
+                android:padding="16dp"
                 android:text="@{podCast.name}"
+                android:textAlignment="center"
+                android:textStyle="bold"
+                android:maxLines="2"
+                android:ellipsize="end"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/iv_artwork" />
