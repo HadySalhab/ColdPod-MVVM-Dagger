@@ -230,24 +230,24 @@ public class BindingAdapters {
 
     @BindingAdapter("pubDate")
     public static void bindPubDate(TextView textView , String date){
-        SimpleDateFormat stringToDateFormatter = new SimpleDateFormat(PUB_DATE_PATTERN, Locale.US);
+        if(date!=null){
+            SimpleDateFormat stringToDateFormatter = new SimpleDateFormat(PUB_DATE_PATTERN, Locale.US);
 
 
-        Date currentTime = null;
-        try {
-            currentTime = stringToDateFormatter.parse(date); //converting string to date using the PUB_DATE_PATTERN
-        } catch (ParseException e) { //CATCH in case date format is not the same as PUB_DATE_PATTERN
-            Timber.e("Error formatting date: " + e.getMessage());
+            Date currentTime = null;
+            try {
+                currentTime = stringToDateFormatter.parse(date); //converting string to date using the PUB_DATE_PATTERN
+            } catch (ParseException e) { //CATCH in case date format is not the same as PUB_DATE_PATTERN
+                Timber.e("Error formatting date: " + e.getMessage());
+            }
+            if(currentTime!=null){
+                SimpleDateFormat  dateToStringFormatter = new SimpleDateFormat(FORMATTED_PATTERN, Locale.US);
+                String newDateFormatString = dateToStringFormatter.format(currentTime);
+                textView.setText(newDateFormatString);
+            }else{
+                textView.setText(date);
+            }
         }
-        if(currentTime!=null){
-            SimpleDateFormat  dateToStringFormatter = new SimpleDateFormat(FORMATTED_PATTERN, Locale.US);
-            String newDateFormatString = dateToStringFormatter.format(currentTime);
-            textView.setText(newDateFormatString);
-        }else{
-            textView.setText(date);
-        }
-
-
     }
 
     @BindingAdapter("subscribe_button")

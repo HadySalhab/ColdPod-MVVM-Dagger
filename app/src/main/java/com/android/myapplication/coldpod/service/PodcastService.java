@@ -237,7 +237,9 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
     public void onTaskRemoved(Intent rootIntent) {
         Log.d(TAG, "onTaskRemoved: ");
         super.onTaskRemoved(rootIntent);
-        mExoPlayer.stop(true);
+        if (mExoPlayer != null) {
+            mExoPlayer.stop(true);
+        }
         stopSelf();
     }
 
