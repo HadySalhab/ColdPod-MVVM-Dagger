@@ -8,6 +8,7 @@
             name="viewModel"
             type="com.android.myapplication.coldpod.ui.details.PodCastDetailViewModel" />
         <import type="com.android.myapplication.coldpod.network.data.Channel"/>
+        <import type="android.view.View"/>
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -74,6 +75,7 @@
                         android:layout_height="wrap_content"
                         android:text="@{viewModel.subscriptionButtonText}"
                         android:onClick="@{()->viewModel.onSubscribeClicked()}"
+                        app:subscribe_button="@{viewModel.mResourceChannel}"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/tv_author" />
 
@@ -136,6 +138,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"/>
+        <include
+            android:id="@+id/layout_error_screen"
+            layout="@layout/error_screen"
+            android:layout_gravity="center"
+            android:visibility="@{viewModel.networkError}"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

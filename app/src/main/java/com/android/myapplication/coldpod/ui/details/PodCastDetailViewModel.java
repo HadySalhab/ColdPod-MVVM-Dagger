@@ -49,6 +49,12 @@ public class PodCastDetailViewModel extends ViewModel {
         return progress;
     }
 
+    private MediatorLiveData<Integer> networkError = new MediatorLiveData<>();
+
+    public LiveData<Integer> getNetworkError() {
+        return networkError;
+    }
+
     /*
      * get rssFeed Url when id is given...
      * */
@@ -66,9 +72,11 @@ public class PodCastDetailViewModel extends ViewModel {
     public final LiveData<Resource<Channel>> mResourceChannel = Transformations.switchMap(feedURL, new Function<Resource<String>, LiveData<Resource<Channel>>>() {
         @Override
         public LiveData<Resource<Channel>> apply(Resource<String> input) {
-            if (input != null && input.status == Resource.Status.SUCCESS && input.data != null) {
-                Log.d(TAG, "apply: " + input.data);
-                return repository.getRssfeed(input.data);
+            if(input!=null) {
+                if (input.status == Resource.Status.SUCCESS && input.data != null) {
+                    Log.d(TAG, "apply: " + input.data);
+                    return repository.getRssfeed(input.data);
+                }
             }
             return AbsentLiveData.create();
         }
@@ -78,17 +86,26 @@ public class PodCastDetailViewModel extends ViewModel {
      * Progress will be displayed to getFeedUrl request
      * when feedUrl is given , register to getPodCast request...
      * */
-    public void checkLoadingStatus() {
+    private void checkLoadingStatus() {
         progress.addSource(feedURL, new Observer<Resource<String>>() {
             @Override
             public void onChanged(Resource<String> resource) {
                 if (resource != null) {
+                    Log.d(TAG, "feedUrl !=NULL");
+                    //in networkBoundResource status is always loading until we reach success or error state
                     progress.setValue(View.VISIBLE);
+                    //When its not loading anymore, it means either success or error,
+                    //if error, it means that we weren't able to retrieve the feedURl
+                    //which will lead to absent livedata value for channelResource-> which will hide the loading status
+                    //if success, means we retrieved the feedURl, but we still need to track the channel request
                     if (resource.status != Resource.Status.LOADING) {
+                        Log.d(TAG, "feedUrl NOT LOADING");
                         progress.removeSource(feedURL);
                         keepCheckingLoadingStatus();
                     }
                 } else {
+                    Log.d(TAG, "feedUrl == LOADING");
+
                     progress.removeSource(feedURL);
                     progress.setValue(View.GONE);
                 }
@@ -97,27 +114,79 @@ public class PodCastDetailViewModel extends ViewModel {
     }
 
 
+
+
     /*
      * FeedUrl is ready at this moment...
      * keep loading until we get the podCasts from the api...
      * */
-    public void keepCheckingLoadingStatus() {
+    private void keepCheckingLoadingStatus() {
         progress.addSource(mResourceChannel, new Observer<Resource<Channel>>() {
             @Override
             public void onChanged(Resource<Channel> channelResource) {
+                //channel can be absent (null)  if input == null || input.status != Resource.Status.SUCCESS || input.data == null
                 if (channelResource != null) {
-                    progress.setValue(View.VISIBLE);
+                    //at this stage, we have the feedUrl , so we can track the request of channel
+                    Log.d(TAG, "channelResource != NULL");
+                    //progress.setValue(View.VISIBLE);  <-- no need, since at the moment progress bar will be visible when we tracked feedUrl
+                    //if Success or Error is reached ->hide the loading status
                     if (channelResource.status != Resource.Status.LOADING) {
+                        Log.d(TAG, "channelResource IS  LOADING");
                         progress.removeSource(mResourceChannel);
                         progress.setValue(View.GONE);
                     }
-                } else {
-                    progress.removeSource(mResourceChannel);
-                    progress.setValue(View.GONE);
                 }
             }
         });
     }
+
+
+
+    private void checkNetworkState(){
+        networkError.addSource(feedURL, new Observer<Resource<String>>() {
+            @Override
+            public void onChanged(Resource<String> resource) {
+                if (resource != null) {
+                    networkError.setValue(View.GONE); //when we start the request we want it to be gone
+                    if(resource.status == Resource.Status.ERROR){
+                        networkError.removeSource(feedURL);
+                        networkError.setValue(View.VISIBLE);
+                        Log.d(TAG, "feedUrl : status error");
+                    }else{
+                        // loading or success
+                        //for loading we dont want to do anything , it would  have visibility gone anyway
+                        //but when we reach success we have to track channel request
+                        if(resource.status == Resource.Status.SUCCESS){
+                            networkError.removeSource(feedURL);
+                            Log.d(TAG, "feedUrl : status success");
+
+                            trackChannelRequestNetworkState();
+                        }
+                    }
+                } else {
+                    networkError.removeSource(feedURL);
+                    networkError.setValue(View.VISIBLE);
+                    Log.d(TAG, "feedUrl : = null");
+                }
+            }
+        });
+    }
+
+    private void trackChannelRequestNetworkState(){
+        networkError.addSource(mResourceChannel, new Observer<Resource<Channel>>() {
+            @Override
+            public void onChanged(Resource<Channel> channelResource) {
+                if(channelResource !=null){
+                    if(channelResource.status == Resource.Status.ERROR){
+                        networkError.removeSource(mResourceChannel);
+                        networkError.setValue(View.VISIBLE);
+                        Log.d(TAG, "mResourceChannel : status error");
+                    }
+                }
+            }
+        });
+    }
+
 
 
     /*
@@ -142,6 +211,7 @@ public class PodCastDetailViewModel extends ViewModel {
         Log.d(TAG, "setPodCastId: " + podCastId);
         _podcastId.setValue(podCastId);
         checkLoadingStatus();
+        checkNetworkState();
 
         dbPodCast = repository.getPodcastByPodcastId(podCastId);
         checkSubscription();

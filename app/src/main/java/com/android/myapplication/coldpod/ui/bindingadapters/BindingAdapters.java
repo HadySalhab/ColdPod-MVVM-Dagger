@@ -7,6 +7,7 @@ import android.text.Html;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -248,4 +249,18 @@ public class BindingAdapters {
 
 
     }
-}
+
+    @BindingAdapter("subscribe_button")
+    public static void bindSubscribeButton(Button button , Resource resource){
+        if(resource!=null) {
+            if (resource.status == Resource.Status.SUCCESS && resource.data != null){
+                button.setVisibility(View.VISIBLE);
+
+            }else{
+                button.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    }
+
