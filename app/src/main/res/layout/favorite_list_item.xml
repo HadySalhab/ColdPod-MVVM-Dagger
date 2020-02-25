@@ -15,29 +15,44 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:orientation="vertical"
         android:onClick="@{()->viewHolder.onFavClick(favItem)}"
+        android:paddingBottom="16dp"
+        android:background="@android:color/white"
+        android:layout_marginBottom="@dimen/medium_margin"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
+
         <ImageView
-            app:item_image_url="@{favItem.itemImageUrl}"
             android:id="@+id/iv_episode"
             android:layout_width="80dp"
-            android:layout_height="80dp" />
+            android:layout_height="80dp"
+            android:layout_marginStart="@dimen/medium_margin"
+            android:layout_marginTop="@dimen/medium_margin"
+            app:item_image_url="@{favItem.itemImageUrl}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            andorid:text="@{favItem.itemTitle}"
             android:id="@+id/tv_episode_title"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/iv_episode"/>
+            android:layout_marginTop="@dimen/medium_margin"
+            android:layout_marginStart="@dimen/medium_margin"
+            android:layout_marginEnd="@dimen/medium_margin"
+            andorid:text="@{favItem.itemTitle}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/iv_episode"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:text="@{favItem.title}"
             android:id="@+id/tv_podcast_title"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/medium_margin"
+            android:layout_marginEnd="@dimen/medium_margin"
+            android:text="@{favItem.title}"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/iv_episode"
-            app:layout_constraintTop_toBottomOf="@+id/tv_episode_title"/>
+            app:layout_constraintTop_toBottomOf="@+id/tv_episode_title" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -48,14 +48,7 @@
             app:layout_constraintTop_toBottomOf="@+id/iv_now_episode"
             tools:text="title" />
 
-        <SeekBar
-            android:id="@+id/seek_bar"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="48dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_now_title" />
+
 
         <ImageButton
             android:id="@+id/ib_rewind"
