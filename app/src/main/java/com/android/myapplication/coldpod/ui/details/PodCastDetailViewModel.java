@@ -132,7 +132,7 @@ public class PodCastDetailViewModel extends ViewModel {
                     //if Success or Error is reached ->hide the loading status
                     if (channelResource.status != Resource.Status.LOADING) {
                         Log.d(TAG, "channelResource IS  LOADING");
-                        progress.removeSource(mResourceChannel);
+                        progress.removeSource(mResourceChannel); // no need the source anymore since we reached success or loading state
                         progress.setValue(View.GONE);
                     }
                 }
@@ -181,6 +181,8 @@ public class PodCastDetailViewModel extends ViewModel {
                         networkError.removeSource(mResourceChannel);
                         networkError.setValue(View.VISIBLE);
                         Log.d(TAG, "mResourceChannel : status error");
+                    }else if (channelResource.status == Resource.Status.SUCCESS){
+                        networkError.removeSource(mResourceChannel); //visibility is Gone by default
                     }
                 }
             }

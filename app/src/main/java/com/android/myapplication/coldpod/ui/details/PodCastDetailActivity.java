@@ -4,6 +4,9 @@ package com.android.myapplication.coldpod.ui.details;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,6 +14,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -75,7 +79,6 @@ public class PodCastDetailActivity extends AppCompatActivity {
     private void initToolbar() {
         setSupportActionBar(mBinding.toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void initAdapter() {
@@ -127,13 +130,13 @@ public class PodCastDetailActivity extends AppCompatActivity {
     }
     private void initCollapsingToolbar(){
         mBinding.collapsingToolbar.setCollapsedTitleTextColor(getResources().getColor(R.color.black_color));
+
         mBinding.appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
 
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                 int scrollRange = appBarLayout.getTotalScrollRange();
                 if (verticalOffset == 0) {
-                    // When a CollapsingToolbarLayout is expanded, hide the title
                     mBinding.collapsingToolbar.setTitle(" ");
                 } else if (Math.abs(verticalOffset) >= scrollRange) {
                     // When a CollapsingToolbarLayout is fully collapsed, show the title
@@ -141,7 +144,6 @@ public class PodCastDetailActivity extends AppCompatActivity {
                         mBinding.collapsingToolbar.setTitle(podCastName);
                     }
                 } else {
-                    // Otherwise, hide the title
                     mBinding.collapsingToolbar.setTitle(" ");
                 }
             }

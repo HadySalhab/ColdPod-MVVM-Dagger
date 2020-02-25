@@ -32,6 +32,7 @@
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:paddingBottom="16dp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
@@ -40,6 +41,7 @@
                         android:layout_width="160dp"
                         android:layout_height="160dp"
                         app:artwork="@{viewModel.dbPodcastEntry.artworkImageUrl}"
+                        android:layout_marginTop="70dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -48,7 +50,9 @@
                         android:id="@+id/tv_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/medium_margin"
                         android:text="@{viewModel.dbPodcastEntry.title}"
+                        android:layout_marginTop="@dimen/medium_margin"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/iv_artwork"
                         tools:text="The Joe Rogan Experience" />
@@ -57,6 +61,7 @@
                         android:id="@+id/tv_author"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/medium_margin"
                         android:text="@{viewModel.dbPodcastEntry.author}"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/tv_title"
@@ -79,9 +84,11 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_detail"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="@dimen/medium_margin"
+            android:layout_marginEnd="@dimen/medium_margin"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/secondary_color"
             app:items="@{viewModel.dbPodcastEntry.items}"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
