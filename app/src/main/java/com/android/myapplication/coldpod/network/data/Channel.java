@@ -12,7 +12,7 @@ import org.simpleframework.xml.Path;
 
 import java.util.List;
 
-
+//strict = false, means that we don't mind skipping some elements provided in the XML inside this root
 @Root(name = "channel", strict = false)
 public class Channel {
 

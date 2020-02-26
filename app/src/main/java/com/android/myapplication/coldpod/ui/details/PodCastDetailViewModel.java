@@ -180,7 +180,7 @@ public class PodCastDetailViewModel extends ViewModel {
                     if(channelResource.status == Resource.Status.ERROR){
                         networkError.removeSource(mResourceChannel);
                         networkError.setValue(View.VISIBLE);
-                        Log.d(TAG, "mResourceChannel : status error");
+                        Log.d(TAG, "mResourceChannel : status error"+channelResource.message);
                     }else if (channelResource.status == Resource.Status.SUCCESS){
                         networkError.removeSource(mResourceChannel); //visibility is Gone by default
                     }

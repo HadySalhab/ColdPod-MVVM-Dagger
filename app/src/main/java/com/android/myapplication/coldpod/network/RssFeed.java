@@ -1,4 +1,4 @@
-package com.android.myapplication.coldpod.network.data;
+package com.android.myapplication.coldpod.network;
 
 import com.android.myapplication.coldpod.network.data.Channel;
 

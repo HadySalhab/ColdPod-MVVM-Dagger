@@ -13,7 +13,7 @@ import com.android.myapplication.coldpod.network.data.Channel;
 import com.android.myapplication.coldpod.network.ITunesApi;
 import com.android.myapplication.coldpod.network.LookupResponse;
 import com.android.myapplication.coldpod.network.data.LookupResult;
-import com.android.myapplication.coldpod.network.data.RssFeed;
+import com.android.myapplication.coldpod.network.RssFeed;
 import com.android.myapplication.coldpod.utils.AppExecutors;
 import com.android.myapplication.coldpod.utils.NetworkBoundResource;
 import com.android.myapplication.coldpod.utils.Resource;

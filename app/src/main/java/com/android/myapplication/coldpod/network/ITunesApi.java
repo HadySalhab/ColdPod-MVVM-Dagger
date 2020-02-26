@@ -2,8 +2,6 @@ package com.android.myapplication.coldpod.network;
 
 import androidx.lifecycle.LiveData;
 
-import com.android.myapplication.coldpod.network.data.RssFeed;
-
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 

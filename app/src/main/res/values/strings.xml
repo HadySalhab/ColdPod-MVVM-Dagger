@@ -18,4 +18,5 @@
     <string name="playing_menu_items_favorite">Favorite</string>
     <string name="playing_menu_items_share">Share</string>
     <string name="action_search">Search</string>
+    <string name="share_episode">Share PodCast Episode</string>
 </resources>

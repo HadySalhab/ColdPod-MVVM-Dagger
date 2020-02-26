@@ -3,6 +3,7 @@ package com.android.myapplication.coldpod.ui.playing;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ShareCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -40,6 +41,8 @@ import java.nio.file.attribute.FileAttributeView;
 import javax.inject.Inject;
 
 import timber.log.Timber;
+
+import static com.android.myapplication.coldpod.utils.Constants.SHARE_INTENT_TYPE_TEXT;
 
 public class PlayingActivity extends AppCompatActivity {
     private static final String TAG = "PlayingActivity";
@@ -160,10 +163,24 @@ public class PlayingActivity extends AppCompatActivity {
                 mViewModel.updateFavorite(mFavoriteEntry);
                 return true;
             case R.id.action_share:
+                shareItem();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+    private void shareItem(){
+        String shareText = "Checkout: " + mPodcastName + " " +
+                mItem.getTitle() + " " +
+                mItem.getEnclosures().get(0).getUrl();
+        // Create a share intent
+        Intent shareIntent = ShareCompat.IntentBuilder.from(PlayingActivity.this)
+                .setType(SHARE_INTENT_TYPE_TEXT)
+                .setText(shareText)
+                .setChooserTitle(getString(R.string.share_episode))
+                .createChooserIntent();
+        shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+        startActivity(shareIntent);
     }
 
     /**

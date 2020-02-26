@@ -30,11 +30,11 @@ public class Item implements Parcelable {
     }
 
 
-    @Path("title")
+    @Path("title") //this is not the only way , we could have added @Element
     @Text(required = false)
     private String mTitle;
 
-    @Path("description")
+    @Path("description")//this is not the only way , we could have added @Element
     @Text(required = false)
     private String mDescription;
 
