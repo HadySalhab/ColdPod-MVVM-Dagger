@@ -42,12 +42,20 @@
                     android:paddingBottom="16dp">
 
                     <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:background="@drawable/scrim_gradient"
+                        app:layout_constraintBottom_toTopOf="@+id/bt_subscribe"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
                         android:id="@+id/iv_artwork"
                         android:layout_width="160dp"
                         android:layout_height="160dp"
+                        android:layout_marginStart="24dp"
                         android:layout_marginTop="70dp"
                         android:scaleType="centerCrop"
-                        android:layout_marginStart="@dimen/medium_margin"
                         app:layout_collapseMode="parallax"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
@@ -58,7 +66,7 @@
                         style="@style/Base.TextAppearance.AppCompat.Subhead"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="@dimen/medium_margin"
                         android:text="@{((Channel)viewModel.mResourceChannel.data).title}"
                         app:layout_constraintStart_toStartOf="@+id/iv_artwork"
                         app:layout_constraintTop_toBottomOf="@+id/iv_artwork"
@@ -69,7 +77,10 @@
                         style="@style/Base.TextAppearance.AppCompat.Body1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
                         android:text="@{((Channel)viewModel.mResourceChannel.data).iTunesAuthor}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="@+id/tv_title"
                         app:layout_constraintTop_toBottomOf="@+id/tv_title"
                         tools:text="MSNBC, Rachel Maddow" />
@@ -91,19 +102,24 @@
                         android:id="@+id/tv_category"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
                         app:categories="@{((Channel)viewModel.mResourceChannel.data).categories}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="@+id/tv_author"
                         app:layout_constraintTop_toBottomOf="@+id/tv_author"
                         tools:text="News &amp; Politics" />
-
+<!--
                     <TextView
                         android:id="@+id/tv_language"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@{((Channel)viewModel.mResourceChannel.data).language}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="@+id/tv_category"
                         app:layout_constraintTop_toBottomOf="@+id/tv_category"
-                        tools:text="en" />
+                        tools:text="en" />-->
 
                     <TextView
                         android:id="@+id/tv_description"
@@ -124,8 +140,6 @@
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?android:attr/actionBarSize"
-                    style="@style/ColdPod.Toolbar"
-                    android:background="@color/secondary_color"
                     app:popupTheme="@style/ColdPod.Toolbar.PopupOverlay"
                     app:layout_collapseMode="pin" />
 
