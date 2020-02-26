@@ -10,4 +10,8 @@
     <color name="color_start_gradient">#00000000</color>
     <color name="color_center_gradient">#20000000</color>
     <color name="color_end_gradient">#40000000</color>
+
+    <color name="color_start_gradient_playing">#00000000</color>
+    <color name="color_center_gradient_playing">#49C72727</color>
+    <color name="color_end_gradient_playing">#AEC72727</color>
 </resources>
