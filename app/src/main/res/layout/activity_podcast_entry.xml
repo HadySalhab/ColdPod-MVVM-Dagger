@@ -37,23 +37,32 @@
                     android:layout_height="match_parent">
 
                     <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:background="@drawable/scrim_gradient"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
                         android:id="@+id/iv_artwork"
                         android:layout_width="160dp"
                         android:layout_height="160dp"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="72dp"
                         app:artwork="@{viewModel.dbPodcastEntry.artworkImageUrl}"
-                        android:layout_marginTop="70dp"
-                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
                         android:id="@+id/tv_title"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/medium_margin"
-                        android:text="@{viewModel.dbPodcastEntry.title}"
                         android:layout_marginTop="@dimen/medium_margin"
-                        app:layout_constraintStart_toStartOf="parent"
+                        android:layout_marginEnd="16dp"
+                        android:text="@{viewModel.dbPodcastEntry.title}"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="@+id/iv_artwork"
                         app:layout_constraintTop_toBottomOf="@+id/iv_artwork"
                         tools:text="The Joe Rogan Experience" />
 
@@ -61,9 +70,8 @@
                         android:id="@+id/tv_author"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/medium_margin"
                         android:text="@{viewModel.dbPodcastEntry.author}"
-                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/tv_title"
                         app:layout_constraintTop_toBottomOf="@+id/tv_title"
                         tools:text="Joe Rogan" />
 

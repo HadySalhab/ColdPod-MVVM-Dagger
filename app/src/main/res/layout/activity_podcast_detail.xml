@@ -64,10 +64,13 @@
                     <TextView
                         android:id="@+id/tv_title"
                         style="@style/Base.TextAppearance.AppCompat.Subhead"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/medium_margin"
+                        android:layout_marginEnd="16dp"
+
                         android:text="@{((Channel)viewModel.mResourceChannel.data).title}"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="@+id/iv_artwork"
                         app:layout_constraintTop_toBottomOf="@+id/iv_artwork"
                         tools:text="Bag Man" />
@@ -75,12 +78,12 @@
                     <TextView
                         android:id="@+id/tv_author"
                         style="@style/Base.TextAppearance.AppCompat.Body1"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="16dp"
+
                         android:text="@{((Channel)viewModel.mResourceChannel.data).iTunesAuthor}"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="@+id/tv_title"
                         app:layout_constraintTop_toBottomOf="@+id/tv_title"
                         tools:text="MSNBC, Rachel Maddow" />
@@ -100,22 +103,20 @@
 
                     <TextView
                         android:id="@+id/tv_category"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="16dp"
                         app:categories="@{((Channel)viewModel.mResourceChannel.data).categories}"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="@+id/tv_author"
                         app:layout_constraintTop_toBottomOf="@+id/tv_author"
                         tools:text="News &amp; Politics" />
+
                     <TextView
                         android:id="@+id/tv_language"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:text="@{((Channel)viewModel.mResourceChannel.data).language}"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="@+id/tv_category"
                         app:layout_constraintTop_toBottomOf="@+id/tv_category"
                         tools:text="en" />
