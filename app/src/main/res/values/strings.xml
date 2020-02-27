@@ -24,4 +24,6 @@
     <string name="snackbar_subscribed">Subscribed</string>
     <string name="snackbar_removed">Unsubscribed</string>
     <string name="snackbar_action_go">Check</string>
+    <string name="toast_fav">Added to Favorites</string>
+    <string name="toast_removed_fav">Removed from Favorites</string>
 </resources>

@@ -19,7 +19,9 @@ import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,7 +35,10 @@ import com.android.myapplication.coldpod.databinding.ActivityPlayingBinding;
 import com.android.myapplication.coldpod.persistence.FavoriteEntry;
 import com.android.myapplication.coldpod.persistence.Item;
 import com.android.myapplication.coldpod.service.PodcastService;
+import com.android.myapplication.coldpod.ui.details.PodCastDetailActivity;
+import com.android.myapplication.coldpod.ui.main.MainActivity;
 import com.android.myapplication.coldpod.utils.Constants;
+import com.google.android.material.snackbar.Snackbar;
 
 
 import java.nio.file.attribute.FileAttributeView;
@@ -216,6 +221,17 @@ public class PlayingActivity extends AppCompatActivity {
                     mFavoriteEntry = favoriteEntry;
                 }
                 Log.d(TAG, "onChanged: "+favoriteEntry);
+            }
+        });
+        mViewModel.getToastMessage().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                if(!TextUtils.isEmpty(s)){
+                   Toast t =  Toast.makeText(PlayingActivity.this,s,Toast.LENGTH_SHORT);
+                   t.setGravity(Gravity.CENTER,0,0);
+                   t.show();
+                    mViewModel.resetToast(); //reset the channel so we dont get the snackbar again if we rotate
+                }
             }
         });
 

@@ -10,7 +10,12 @@
             type="com.android.myapplication.coldpod.persistence.Item" />
     </data>
 
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/coordinator"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constaint_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -105,5 +110,6 @@
             app:layout_constraintGuide_percent="0.5" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </layout>
