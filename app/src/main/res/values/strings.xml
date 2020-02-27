@@ -19,4 +19,9 @@
     <string name="playing_menu_items_share">Share</string>
     <string name="action_search">Search</string>
     <string name="share_episode">Share PodCast Episode</string>
+
+    <!-- Snackbar messages -->
+    <string name="snackbar_subscribed">Subscribed</string>
+    <string name="snackbar_removed">Unsubscribed</string>
+    <string name="snackbar_action_go">Check Subscription</string>
 </resources>
