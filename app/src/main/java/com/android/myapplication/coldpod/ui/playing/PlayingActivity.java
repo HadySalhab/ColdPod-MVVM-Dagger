@@ -82,8 +82,8 @@ public class PlayingActivity extends AppCompatActivity {
         Intent intent = new Intent(context, PlayingActivity.class);
         intent.putExtra(Constants.EXTRA_ITEM, item);
         intent.putExtra(Constants.EXTRA_PODCAST_ID, podId);
+        intent.putExtra(Constants.EXTRA_PODCAST_IMAGE, podImage);
         intent.putExtra(Constants.EXTRA_PODCAST_NAME, podName);
-        intent.putExtra(Constants.EXTRA_PODCAST_IMAGE, podId);
         return intent;
     }
 
@@ -111,8 +111,8 @@ public class PlayingActivity extends AppCompatActivity {
     private void initFields() {
         mItem = getIntent().getParcelableExtra(Constants.EXTRA_ITEM);
         mPodCastId = getIntent().getStringExtra(Constants.EXTRA_PODCAST_ID);
-        mPodcastName = getIntent().getStringExtra(Constants.EXTRA_PODCAST_NAME);
         mPodcastImage = getIntent().getStringExtra(Constants.EXTRA_PODCAST_IMAGE);
+        mPodcastName = getIntent().getStringExtra(Constants.EXTRA_PODCAST_NAME);
     }
 
     private void initFavoriteEntry() {

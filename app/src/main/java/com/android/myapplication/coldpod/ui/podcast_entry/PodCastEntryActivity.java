@@ -143,6 +143,6 @@ public class PodCastEntryActivity extends AppCompatActivity implements PodCastEn
 
         Log.d("test", "onItemClick: "+ mViewModel.dbPodcastEntry.getValue().getTitle());
 
-        startService(PodcastService.getInstance(this,item,podCastId,podcastImage,podcastTitle));
+        startService(PodcastService.getInstance(this,item,podCastId,podcastTitle,podcastImage));
     }
 }
