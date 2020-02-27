@@ -83,6 +83,7 @@ public class PodCastDetailViewModel extends AndroidViewModel {
             if(input!=null) {
                 if (input.status == Resource.Status.SUCCESS && input.data != null) {
                     Log.d(TAG, "apply: " + input.data);
+
                     return repository.getRssfeed(input.data);
                 }
             }
