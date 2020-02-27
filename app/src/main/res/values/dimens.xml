@@ -7,4 +7,9 @@
     <dimen name="small_padding">8dp</dimen>
     <dimen name="headline_size">12sp</dimen>
     <dimen name="medium_margin">16dp</dimen>
+
+    <!-- Snackbar messages -->
+    <string name="snackbar_subscribed">Subscribed</string>
+    <string name="snackbar_removed">Unsubscribed</string>
+    <string name="snackbar_action_go">Check Subscription</string>
 </resources>

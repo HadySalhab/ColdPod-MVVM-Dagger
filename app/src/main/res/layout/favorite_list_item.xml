@@ -12,6 +12,13 @@
             type="com.android.myapplication.coldpod.ui.main.favorites.FavoritesAdapter.FavoritesViewHolder" />
     </data>
 
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:padding="8dp"
+        >
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:orientation="vertical"
         android:onClick="@{()->viewHolder.onFavClick(favItem)}"
@@ -26,13 +33,14 @@
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_marginStart="@dimen/medium_margin"
-            android:layout_marginTop="@dimen/medium_margin"
+            android:layout_marginTop="16dp"
             app:item_image_url="@{favItem.itemImageUrl}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tv_episode_title"
+            android:textColor="@color/primary_color"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/medium_margin"
@@ -43,17 +51,51 @@
             app:layout_constraintStart_toEndOf="@+id/iv_episode"
             app:layout_constraintTop_toTopOf="parent" />
 
+
+
+
         <TextView
-            android:id="@+id/tv_podcast_title"
+            android:id="@+id/tv_description"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/medium_margin"
+            android:ellipsize="end"
+            android:maxLines="2"
+            app:item_description="@{favItem.itemDescription}"
             android:layout_marginEnd="@dimen/medium_margin"
-            android:text="@{favItem.title}"
+            android:layout_marginStart="@dimen/medium_margin"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/iv_episode"
             app:layout_constraintTop_toBottomOf="@+id/tv_episode_title" />
 
+        <TextView
+            android:id="@+id/tv_pub_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:pubDate="@{favItem.itemPubDate}"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="@dimen/medium_margin"
+            android:layout_marginStart="@dimen/medium_margin"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/iv_episode"
+            app:layout_constraintTop_toBottomOf="@+id/tv_description"
+            app:layout_constraintVertical_bias="1" />
+
+
+        <TextView
+            android:id="@+id/tv_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{favItem.itemDuration}"
+            android:layout_marginTop="2dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginEnd="@dimen/medium_margin"
+            android:layout_marginStart="@dimen/medium_margin"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_description"
+            app:layout_constraintVertical_bias="1"
+            />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
 </layout>
