@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.RemoteException;
@@ -26,6 +27,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.myapplication.coldpod.BaseApplication;
@@ -48,6 +50,7 @@ import javax.inject.Inject;
 import timber.log.Timber;
 
 import static com.android.myapplication.coldpod.utils.Constants.SHARE_INTENT_TYPE_TEXT;
+import static com.android.myapplication.coldpod.utils.Constants.TYPE_AUDIO;
 
 public class PlayingActivity extends AppCompatActivity {
     private static final String TAG = "PlayingActivity";
@@ -106,7 +109,17 @@ public class PlayingActivity extends AppCompatActivity {
 
 
         initToolbar();
+        handleEnclosureType();
     }
+    private void handleEnclosureType() {
+        String enclosureType = mItem.getEnclosures().get(0).getType();
+        if (!enclosureType.equals(TYPE_AUDIO)) {
+            String snackMessage = getString(R.string.snackbar_support_audio);
+            Snackbar snackbar = Snackbar.make(mBinding.coordinator, snackMessage, Snackbar.LENGTH_LONG);
+            snackbar.show();
+        }
+    }
+
 
     private void initFields() {
         mItem = getIntent().getParcelableExtra(Constants.EXTRA_ITEM);

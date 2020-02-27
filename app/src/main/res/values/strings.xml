@@ -26,4 +26,6 @@
     <string name="snackbar_action_go">Check</string>
     <string name="toast_fav">Added to Favorites</string>
     <string name="toast_removed_fav">Removed from Favorites</string>
+    <string name="snackbar_support_audio">Sorry, coldPod only supports audio podCasts</string>
+
 </resources>

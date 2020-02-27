@@ -52,4 +52,6 @@ public class Constants {
     public static final String FORMATTED_PATTERN = "MMM d, yyyy";
 
     public static final String SHARE_INTENT_TYPE_TEXT = "text/plain";
+
+    public static final String TYPE_AUDIO = "audio/mpeg";
 }
