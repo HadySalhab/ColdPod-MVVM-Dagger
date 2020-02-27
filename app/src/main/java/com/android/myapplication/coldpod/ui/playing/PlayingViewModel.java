@@ -42,12 +42,12 @@ public class PlayingViewModel extends ViewModel {
         toast.setValue("");
 
     }
-    public void setItemTitle(String itemTitle){
-        executeQuery(itemTitle);
+    public void setEnclosureUrl(String enclosureUrl){
+        executeQuery(enclosureUrl);
     }
 
-    private void executeQuery(String itemTitle){
-     mFavoriteEntryLiveData = mMainRepository.getFavoriteEpisodeByItemTitle(itemTitle);
+    private void executeQuery(String enclosureUrl){
+     mFavoriteEntryLiveData = mMainRepository.getFavByEnclosureUrl(enclosureUrl);
     }
 
     public void updateFavorite(FavoriteEntry fav){

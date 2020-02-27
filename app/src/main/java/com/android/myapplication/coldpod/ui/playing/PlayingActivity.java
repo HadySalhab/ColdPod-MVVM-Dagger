@@ -133,7 +133,7 @@ public class PlayingActivity extends AppCompatActivity {
 
     private void initViewModel() {
         mViewModel = new ViewModelProvider(this, providerFactory).get(PlayingViewModel.class);
-        mViewModel.setItemTitle(mItem.getTitle());
+        mViewModel.setEnclosureUrl(mItem.getEnclosures().get(0).getUrl());
     }
 
 

@@ -41,8 +41,8 @@ public class MainRepository {
         });
 
     }
-    public LiveData<FavoriteEntry> getFavoriteEpisodeByItemTitle(String itemTitle) {
-        return mPodCastDao.loadFavoriteEpisodeByItemTitle(itemTitle);
+    public LiveData<FavoriteEntry> getFavByEnclosureUrl(String enclosureUrl) {
+        return mPodCastDao.loadFavByEnclosureUrl(enclosureUrl);
     }
 
     public LiveData<List<FavoriteEntry>> getFavorites() {
