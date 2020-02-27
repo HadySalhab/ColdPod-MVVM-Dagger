@@ -1,9 +1,11 @@
 package com.android.myapplication.coldpod.ui.details;
 
+import android.app.Application;
 import android.util.Log;
 import android.view.View;
 
 import androidx.arch.core.util.Function;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -11,6 +13,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
+import com.android.myapplication.coldpod.R;
 import com.android.myapplication.coldpod.persistence.PodcastEntry;
 import com.android.myapplication.coldpod.network.data.ArtworkImage;
 import com.android.myapplication.coldpod.network.data.Channel;
@@ -25,7 +28,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 
-public class PodCastDetailViewModel extends ViewModel {
+public class PodCastDetailViewModel extends AndroidViewModel {
 
 
     private boolean isSubscribed = false; //default value
@@ -33,12 +36,17 @@ public class PodCastDetailViewModel extends ViewModel {
     private final PodCastDetailRepository repository;
     private LiveData<PodcastEntry> dbPodCast;
     public LiveData<String> subscriptionButtonText;
+    private final Application mApp;
 
     /*
      * when changed will fire the requests...
      * */
     private final MutableLiveData<String> _podcastId = new MutableLiveData<>();
 
+    private final MutableLiveData<String> snackBar = new MutableLiveData<>();
+    final LiveData<String> getSnackBar(){
+        return snackBar;
+    }
 
     /*
      * will handle the progress bar visibility
@@ -195,8 +203,11 @@ public class PodCastDetailViewModel extends ViewModel {
      * Constructor...
      * */
     @Inject
-    public PodCastDetailViewModel(PodCastDetailRepository repository) {
+    public PodCastDetailViewModel(PodCastDetailRepository repository, Application app) {
+        super(app);
         this.repository = repository;
+        mApp = app;
+        snackBar.setValue("");
     }
 
 
@@ -246,12 +257,16 @@ public class PodCastDetailViewModel extends ViewModel {
         if (podcastEntry != null) {
             if (!isSubscribed) {
                 repository.insertPodcast(podcastEntry);
-                Log.d(TAG, "onSubscribeClicked: " + podcastEntry);
+                snackBar.setValue(mApp.getString(R.string.snackbar_subscribed));
             } else {
                 podcastEntry = dbPodCast.getValue();
                 repository.remove(podcastEntry);
+                snackBar.setValue(mApp.getString(R.string.snackbar_removed));
             }
         }
+    }
+    public void resetSnackBarEvent(){
+        snackBar.setValue("");
     }
 
 

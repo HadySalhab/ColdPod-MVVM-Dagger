@@ -23,5 +23,5 @@
     <!-- Snackbar messages -->
     <string name="snackbar_subscribed">Subscribed</string>
     <string name="snackbar_removed">Unsubscribed</string>
-    <string name="snackbar_action_go">Check Subscription</string>
+    <string name="snackbar_action_go">Check</string>
 </resources>

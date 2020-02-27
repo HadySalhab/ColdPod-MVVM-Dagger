@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.MenuItem;
@@ -27,7 +28,9 @@ import com.android.myapplication.coldpod.R;
 import com.android.myapplication.coldpod.ViewModelProviderFactory;
 import com.android.myapplication.coldpod.databinding.ActivityPodcastDetailBinding;
 import com.android.myapplication.coldpod.persistence.Item;
+import com.android.myapplication.coldpod.ui.main.MainActivity;
 import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.snackbar.Snackbar;
 
 import javax.inject.Inject;
 
@@ -115,6 +118,7 @@ public class PodCastDetailActivity extends AppCompatActivity {
                 }
             }
         });
+        subscribeObserver();
     }
 
     @Override
@@ -145,6 +149,29 @@ public class PodCastDetailActivity extends AppCompatActivity {
                     }
                 } else {
                     mBinding.collapsingToolbar.setTitle(" ");
+                }
+            }
+        });
+    }
+    private void subscribeObserver(){
+        mPodCastDetailViewModel.getSnackBar().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                if(!TextUtils.isEmpty(s)){
+                    Snackbar snackbar = Snackbar.make(mBinding.coordinator,s,Snackbar.LENGTH_LONG);
+                    //set action only if the user subscribes to the podcast
+                    if(s.equals(getString(R.string.snackbar_subscribed))) {
+                        snackbar.setAction(getString(R.string.snackbar_action_go), new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(PodCastDetailActivity.this, MainActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                startActivity(intent);
+                            }
+                        });
+                    }
+                    snackbar.show();
+                    mPodCastDetailViewModel.resetSnackBarEvent(); //reset the channel so we dont get the snackbar again if we rotate
                 }
             }
         });
