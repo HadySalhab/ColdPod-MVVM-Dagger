@@ -243,6 +243,8 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
             mExoPlayer.stop(true);
         }
         stopSelf();
+        // Allow the notification to be swipe dismissed when task removed
+        mPlayerNotificationManager.setOngoing(false);
     }
 
 
@@ -469,6 +471,9 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
         mPlayerNotificationManager.setRewindIncrementMs(REWIND_INCREMENT);
         // Omit the stop action
         mPlayerNotificationManager.setStopAction(null);
+
+        // Allow the notification to be swipe dismissed when pausing state is reached
+        mPlayerNotificationManager.setOngoing(false); //dismissible notification
     }
 
 
