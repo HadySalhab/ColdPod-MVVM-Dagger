@@ -67,7 +67,7 @@ public class PodCastListActivity extends AppCompatActivity implements PodCastLis
         mBinding.setViewModel(mPodCastListViewModel);
         initRV();
         initToolbar();
-        mPodCastListViewModel.getPodCasts("us");
+        mPodCastListViewModel.getPodCasts(getString(R.string.country));
     }
 
     private void initToolbar(){

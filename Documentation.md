@@ -98,3 +98,33 @@ _DETAILS ON HOW TO PARSE XML TO POJO, PLEASE REFER TO THE FOLLOWING LINK_
         - length
 
 ---
+
+### _persistence_
+
+Database contains two entites:
+
+1. Subscribed Podcast (PodcastEntry)
+1. Favorites Podcast Episodes (FavortieEntry)
+
+Whenever the user subscribes to a podcast it will be added to the PodCastEntry entity.
+
+Whenever the user add podcast episode as a favorite, it will be added to the FavoriteEntry table
+
+---
+
+### _repository_
+
+Coldpod contains 3 repositories:
+
+1. MainRepository
+1. PodCastDetailRepository
+1. PodCastsRepository
+
+**PodCastsRepository** is responsible for fetching the list of PodCasts from the network using the following two request `getTopPodcasts(..)` ,
+`getSearchResponse(..)`
+
+**PodCastDetailRepository** is responsible for fetching podcast details and episodes from the network using the following `getLookResponse(..)` , `getRssFeed(..)`.
+
+This repository fetch the database for podCastEntry using the id to toggle the Subscribe button text if the podcast exist in the db
+
+**MainRepository** : this repository does not deal with the network, it is only responsible to fetch the database for subscribed podcasts and favorite episodes
