@@ -33,6 +33,7 @@ import com.android.myapplication.coldpod.utils.GridAutofitLayoutManager;
 import javax.inject.Inject;
 
 import static com.android.myapplication.coldpod.utils.Constants.GRID_AUTO_FIT_COLUMN_WIDTH;
+import static com.android.myapplication.coldpod.utils.Constants.STATE_SEARCH_QUERY;
 
 public class PodCastListActivity extends AppCompatActivity implements PodCastListAdapter.Listener {
     private static final String TAG = "PodCastListActivity";
@@ -41,6 +42,8 @@ public class PodCastListActivity extends AppCompatActivity implements PodCastLis
     Toolbar mToolbar;
     SpannableString mSpannableString;
     ForegroundColorSpan mForegroundColorSpan;
+    private String mSearchQuery;
+    private SearchView mSearchView;
 
     private PodCastListAdapter mPodCastListAdapter;
 
@@ -58,6 +61,9 @@ public class PodCastListActivity extends AppCompatActivity implements PodCastLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            mSearchQuery = savedInstanceState.getString(STATE_SEARCH_QUERY); //get previous query
+        }
         mBinding = DataBindingUtil.setContentView(this,R.layout.activity_podcast_list);
         ((BaseApplication) getApplication()).getAppComponent()
                 .getMainComponent()
@@ -115,17 +121,24 @@ public class PodCastListActivity extends AppCompatActivity implements PodCastLis
         // Reference: @see "https://developer.android.com/training/search/setup#create-sc"
         // "https://www.youtube.com/watch?v=9OWmnYPX1uc"
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        mSearchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        mSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
+        // If the search query exists, set the query manually.
+        if (mSearchQuery != null) {
+            mSearchView.setIconified(true);
+            mSearchView.onActionViewExpanded();
+            mSearchView.setQuery(mSearchQuery,false);
+            mSearchView.setFocusable(true);
+        }
         // Display a hint text in the search text field.
         // android:hint attribute in the searchable.xml is not working.
         // Reference: @see "https://stackoverflow.com/questions/37919328/searchview-hint-not-showing"
-        searchView.setQueryHint("Coldplay...");
+        mSearchView.setQueryHint(getString(R.string.podcast_search_hint));
 
         // Set onQueryTextListener
         // Reference: @see "https://www.youtube.com/watch?v=9OWmnYPX1uc"
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             // Called when the user submits the query
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -142,6 +155,14 @@ public class PodCastListActivity extends AppCompatActivity implements PodCastLis
             }
         });
         return true;
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        // Get the query string and store it to our bundle
+        mSearchQuery = mSearchView.getQuery().toString();
+        outState.putString(STATE_SEARCH_QUERY, mSearchQuery);
+        super.onSaveInstanceState(outState);
     }
 
 

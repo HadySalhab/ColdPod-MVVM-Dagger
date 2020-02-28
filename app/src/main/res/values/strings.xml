@@ -29,5 +29,6 @@
     <string name="toast_fav">Added to Favorites</string>
     <string name="toast_removed_fav">Removed from Favorites</string>
     <string name="snackbar_support_audio">Sorry, coldPod only supports audio podCasts</string>
+    <string name="podcast_search_hint">Strange Love...</string>
 
 </resources>

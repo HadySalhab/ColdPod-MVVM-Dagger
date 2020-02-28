@@ -54,4 +54,6 @@ public class Constants {
     public static final String SHARE_INTENT_TYPE_TEXT = "text/plain";
 
     public static final String TYPE_AUDIO = "audio/mpeg";
+
+    public static final String STATE_SEARCH_QUERY = "state_search_query";
 }
