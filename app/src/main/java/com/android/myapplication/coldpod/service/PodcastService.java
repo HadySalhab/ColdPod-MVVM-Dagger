@@ -12,6 +12,7 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,6 +24,7 @@ import com.android.myapplication.coldpod.ui.playing.PlayingActivity;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
+import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.LoadControl;
 import com.google.android.exoplayer2.Player;
@@ -345,6 +347,8 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
             mExoPlayer.seekTo(Math.min(mExoPlayer.getCurrentPosition() + FAST_FORWARD_INCREMENT, duration));
         }
 
+
+
         @Override
         public void onStop() {
             // onStop() callback should call stopSelf().
@@ -364,6 +368,11 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
         }
     }
 
+
+    @Override
+    public void onPlayerError(ExoPlaybackException error) {
+        Toast.makeText(this, getString(R.string.toast_source_error), Toast.LENGTH_SHORT).show();
+    }
 
     //this will be called everyTime the state of the player is changed
     @Override
