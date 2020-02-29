@@ -2,9 +2,12 @@ package com.android.myapplication.coldpod.service;
 
 import android.app.Notification;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
@@ -82,6 +85,25 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
      * the player state
      */
     private PlayerNotificationManager mPlayerNotificationManager;
+
+    private boolean mAudioNoisyReceiverRegistered;
+    private final IntentFilter mAudioNoisyIntentFilter =
+            new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
+    //anonymous brodCast receiver, that will receive ACTION_AUDIO_BECOMING_NOISY event, defined in the intent filter above
+    //we will stop/pause the player when it happens
+    private final BroadcastReceiver mAudioNoisyReceiver =
+            new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    if (AudioManager.ACTION_AUDIO_BECOMING_NOISY.equals(intent.getAction())) {
+                        Timber.d("Headphones disconnected.");
+                        // Pause the playback
+                        if (mExoPlayer != null && mExoPlayer.getPlayWhenReady()) {
+                            mExoPlayer.setPlayWhenReady(false);
+                        }
+                    }
+                }
+            };
 
 
     public static Intent getInstance(Context context, Item item, String podCastImage, String podCastTitle,String podcastId) {
@@ -325,6 +347,8 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
             if (mExoPlayer != null) {
                 mExoPlayer.setPlayWhenReady(true);
             }
+            // Register the receiver when you begin playback
+            registerAudioNoisyReceiver();
         }
 
         @Override
@@ -367,6 +391,7 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
             //REMOVE THE NOTIFICATION
             stopForeground(true);
             Log.d(TAG, "onStop: ");
+            unregisterAudioNoisyReceiver();
         }
     }
 
@@ -497,6 +522,26 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
     private PendingIntent createContentPendingIntent() {
         Intent intent = PlayingActivity.getInstance(this, mItem,podcastId,podCastImage,podCastTitle);
         return PendingIntent.getActivity(this, NOTIFICATION_PENDING_INTENT_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
+
+
+    /*
+     * register the broadcast dynamically, using the actual broadcast receiver object and the intent filter for the intent its willing to receive
+     * */
+
+    private void registerAudioNoisyReceiver() {
+        if (!mAudioNoisyReceiverRegistered) {
+            registerReceiver(mAudioNoisyReceiver, mAudioNoisyIntentFilter);
+            mAudioNoisyReceiverRegistered = true;
+        }
+    }
+
+    private void unregisterAudioNoisyReceiver() {
+        if (mAudioNoisyReceiverRegistered) {
+            unregisterReceiver(mAudioNoisyReceiver);
+            mAudioNoisyReceiverRegistered = false;
+        }
     }
 
 }
