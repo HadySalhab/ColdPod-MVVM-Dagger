@@ -330,7 +330,10 @@ public class PlayingActivity extends AppCompatActivity {
                 PlaybackStateCompat pbState = MediaControllerCompat.getMediaController(PlayingActivity.this).getPlaybackState();
                 if (pbState != null) {
                     MediaControllerCompat.TransportControls controls = MediaControllerCompat.getMediaController(PlayingActivity.this).getTransportControls();
+
+                    //we don't update the ui here, we update the ui, when we receive the callback of the player state being changed
                     if (pbState.getState() == PlaybackStateCompat.STATE_PLAYING || pbState.getState() == PlaybackStateCompat.STATE_BUFFERING) {
+
                         controls.pause();
 
                     } else {

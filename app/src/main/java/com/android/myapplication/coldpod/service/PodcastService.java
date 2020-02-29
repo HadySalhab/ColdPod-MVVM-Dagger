@@ -401,6 +401,7 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
     }
 
     //this will be called everyTime the state of the player is changed
+    //we should update the PlayBackState, which media browser will receive via callback
     @Override
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
         if (playbackState == Player.STATE_IDLE) {
