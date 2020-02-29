@@ -19,19 +19,25 @@ import javax.inject.Inject;
 
 public class PlayingViewModel extends ViewModel {
     private final MainRepository mMainRepository;
-
-
     private final Application mApp;
     private static final String TAG = "PlayingViewModel";
 
-     private LiveData<FavoriteEntry> mFavoriteEntryLiveData;
+    private LiveData<FavoriteEntry> mFavoriteEntryLiveData;
+
     public LiveData<FavoriteEntry> getFavoriteEntry() {
         return mFavoriteEntryLiveData;
     }
 
     private final MutableLiveData<String> toast = new MutableLiveData<>();
-    final LiveData<String> getToastMessage(){
+
+    final LiveData<String> getToastMessage() {
         return toast;
+    }
+
+    private final MutableLiveData<Integer> progressVis = new MutableLiveData<>();
+
+    public final LiveData<Integer> getProgressVis() {
+        return progressVis;
     }
 
 
@@ -42,33 +48,38 @@ public class PlayingViewModel extends ViewModel {
         toast.setValue("");
 
     }
-    public void setEnclosureUrl(String enclosureUrl){
+
+    public void setEnclosureUrl(String enclosureUrl) {
         executeQuery(enclosureUrl);
     }
 
-    private void executeQuery(String enclosureUrl){
-     mFavoriteEntryLiveData = mMainRepository.getFavByEnclosureUrl(enclosureUrl);
+    private void executeQuery(String enclosureUrl) {
+        mFavoriteEntryLiveData = mMainRepository.getFavByEnclosureUrl(enclosureUrl);
     }
 
-    public void updateFavorite(FavoriteEntry fav){
-        Log.d(TAG, "updateFavorite: "+fav.getTitle());
+    public void updateFavorite(FavoriteEntry fav) {
+        Log.d(TAG, "updateFavorite: " + fav.getTitle());
 
-        if(mFavoriteEntryLiveData.getValue()!=null){
+        if (mFavoriteEntryLiveData.getValue() != null) {
             Log.d(TAG, "updateFavorite: delete");
             mMainRepository.deletFavorite(fav);
             toast.setValue(mApp.getString(R.string.toast_removed_fav));
-        }else{
+        } else {
             Log.d(TAG, "updateFavorite: insert");
-           mMainRepository.insertFavoriteEpisode(fav);
+            mMainRepository.insertFavoriteEpisode(fav);
             toast.setValue(mApp.getString(R.string.toast_fav));
         }
 
 
     }
-    public void resetToast(){
+
+    public void resetToast() {
         toast.setValue("");
     }
 
+    public void setProgressVis(int visibility) {
+        progressVis.setValue(visibility);
+    }
 
 
 }

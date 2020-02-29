@@ -1,17 +1,8 @@
 package com.android.myapplication.coldpod.ui.playing;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ShareCompat;
-import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.RemoteException;
@@ -26,9 +17,15 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.SeekBar;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ShareCompat;
+import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.android.myapplication.coldpod.BaseApplication;
 import com.android.myapplication.coldpod.R;
@@ -37,13 +34,8 @@ import com.android.myapplication.coldpod.databinding.ActivityPlayingBinding;
 import com.android.myapplication.coldpod.persistence.FavoriteEntry;
 import com.android.myapplication.coldpod.persistence.Item;
 import com.android.myapplication.coldpod.service.PodcastService;
-import com.android.myapplication.coldpod.ui.details.PodCastDetailActivity;
-import com.android.myapplication.coldpod.ui.main.MainActivity;
 import com.android.myapplication.coldpod.utils.Constants;
 import com.google.android.material.snackbar.Snackbar;
-
-
-import java.nio.file.attribute.FileAttributeView;
 
 import javax.inject.Inject;
 
@@ -111,6 +103,7 @@ public class PlayingActivity extends AppCompatActivity {
         initToolbar();
         handleEnclosureType();
     }
+
     private void handleEnclosureType() {
         String enclosureType = mItem.getEnclosures().get(0).getType();
         if (!enclosureType.contains(TYPE_AUDIO)) {
@@ -129,7 +122,7 @@ public class PlayingActivity extends AppCompatActivity {
     }
 
     private void initFavoriteEntry() {
-        mFavoriteEntry = new FavoriteEntry(mPodcastId,mPodcastName,mPodcastImage,
+        mFavoriteEntry = new FavoriteEntry(mPodcastId, mPodcastName, mPodcastImage,
                 mItem.getTitle(),
                 mItem.getDescription(),
                 mItem.getPubDate(),
@@ -137,7 +130,7 @@ public class PlayingActivity extends AppCompatActivity {
                 mItem.getEnclosures().get(0).getUrl(),
                 mItem.getEnclosures().get(0).getType(),
                 mItem.getEnclosures().get(0).getLength(),
-                mItem.getItemImages()==null?"":mItem.getItemImages().get(0).getItemImageHref());
+                mItem.getItemImages() == null ? "" : mItem.getItemImages().get(0).getItemImageHref());
     }
 
     private void initDagger() {
@@ -147,6 +140,8 @@ public class PlayingActivity extends AppCompatActivity {
     private void initViewModel() {
         mViewModel = new ViewModelProvider(this, providerFactory).get(PlayingViewModel.class);
         mViewModel.setEnclosureUrl(mItem.getEnclosures().get(0).getUrl());
+        mBinding.setLifecycleOwner(this);
+        mBinding.setViewModel(mViewModel);
     }
 
 
@@ -187,7 +182,8 @@ public class PlayingActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-    private void shareItem(){
+
+    private void shareItem() {
         String shareText = "Checkout: " + mPodcastName + " " +
                 mItem.getTitle() + " " +
                 mItem.getEnclosures().get(0).getUrl();
@@ -229,20 +225,20 @@ public class PlayingActivity extends AppCompatActivity {
             @Override
             public void onChanged(FavoriteEntry favoriteEntry) {
                 invalidateOptionsMenu();
-                if(favoriteEntry!=null){
+                if (favoriteEntry != null) {
                     //the reason for this is to get the auto-generated id,so we can delete it if we want to
                     mFavoriteEntry = favoriteEntry;
                 }
-                Log.d(TAG, "onChanged: "+favoriteEntry);
+                Log.d(TAG, "onChanged: " + favoriteEntry);
             }
         });
         mViewModel.getToastMessage().observe(this, new Observer<String>() {
             @Override
             public void onChanged(String s) {
-                if(!TextUtils.isEmpty(s)){
-                   Toast t =  Toast.makeText(PlayingActivity.this,s,Toast.LENGTH_SHORT);
-                   t.setGravity(Gravity.CENTER,0,0);
-                   t.show();
+                if (!TextUtils.isEmpty(s)) {
+                    Toast t = Toast.makeText(PlayingActivity.this, s, Toast.LENGTH_SHORT);
+                    t.setGravity(Gravity.CENTER, 0, 0);
+                    t.show();
                     mViewModel.resetToast(); //reset the channel so we dont get the snackbar again if we rotate
                 }
             }
@@ -326,24 +322,21 @@ public class PlayingActivity extends AppCompatActivity {
             };
 
     void buildTransportControls() {
+
         // Attach a listener to the play/pause button
         mBinding.ibPlayPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "PlayingActivity: playPause ");
-                int pbState = MediaControllerCompat.getMediaController(PlayingActivity.this)
-                        .getPlaybackState().getState();
+                PlaybackStateCompat pbState = MediaControllerCompat.getMediaController(PlayingActivity.this).getPlaybackState();
+                if (pbState != null) {
+                    MediaControllerCompat.TransportControls controls = MediaControllerCompat.getMediaController(PlayingActivity.this).getTransportControls();
+                    if (pbState.getState() == PlaybackStateCompat.STATE_PLAYING || pbState.getState() == PlaybackStateCompat.STATE_BUFFERING) {
+                        controls.pause();
 
-                if (pbState == PlaybackStateCompat.STATE_PLAYING) {
-                    MediaControllerCompat.getMediaController(PlayingActivity.this)
-                            .getTransportControls().pause();
-                    Log.d(TAG, "PlayingActivity: pause ");
+                    } else {
+                        controls.play();
 
-                } else {
-                    MediaControllerCompat.getMediaController(PlayingActivity.this)
-                            .getTransportControls().play();
-                    Log.d(TAG, "PlayingActivity: play ");
-
+                    }
                 }
             }
         });
@@ -373,11 +366,9 @@ public class PlayingActivity extends AppCompatActivity {
         MediaMetadataCompat metadata = mediaController.getMetadata();
         PlaybackStateCompat pbState = mediaController.getPlaybackState();
 
-        if (pbState.getState() == PlaybackStateCompat.STATE_PLAYING) {
-            mBinding.ibPlayPause.setImageResource(R.drawable.exo_controls_pause);
-        } else {
-            mBinding.ibPlayPause.setImageResource(R.drawable.exo_controls_play);
-        }
+
+        //initial UI state
+        updateUIState(pbState);
 
 
         // Register a Callback to stay in sync
@@ -397,12 +388,44 @@ public class PlayingActivity extends AppCompatActivity {
         @Override
         public void onPlaybackStateChanged(PlaybackStateCompat state) {
             super.onPlaybackStateChanged(state);
-            Log.d(TAG, "PlayActivity onPlaybackStateChanged: ");
-            if (state.getState() == PlaybackStateCompat.STATE_PLAYING) {
-                mBinding.ibPlayPause.setImageResource(R.drawable.exo_controls_pause);
-            } else {
-                mBinding.ibPlayPause.setImageResource(R.drawable.exo_controls_play);
-            }
+            //everyTime the media session notifies the media browser that the player state have changed.
+            //we should update the ui
+            updateUIState(state);
         }
     };
+
+    private void updateUIState(PlaybackStateCompat pbState) {
+        if (pbState == null) {
+            return;
+        }
+        switch (pbState.getState()) {
+            case PlaybackStateCompat.STATE_PLAYING:
+                hideLoading();
+                mBinding.ibPlayPause.setImageResource(R.drawable.exo_controls_pause);
+                // Create and execute a periodic action to update the SeekBar progress
+                break;
+            case PlaybackStateCompat.STATE_PAUSED:
+                hideLoading();
+                mBinding.ibPlayPause.setImageResource(R.drawable.exo_controls_play);
+                // Cancel the future returned by scheduleAtFixedRate() to stop the SeekBar from progressing
+                break;
+            case PlaybackStateCompat.STATE_NONE:
+            case PlaybackStateCompat.STATE_STOPPED:
+                hideLoading();
+                mBinding.ibPlayPause.setImageResource(R.drawable.exo_controls_play);
+                break;
+            case PlaybackStateCompat.STATE_BUFFERING:
+                showLoading();
+                mBinding.ibPlayPause.setImageResource(R.drawable.exo_controls_play);
+                break;
+            default:
+                Timber.d("Unhandled state " + pbState.getState());
+        }
+    }
+    private void hideLoading(){
+        mViewModel.setProgressVis(View.GONE);
+    }
+    private void showLoading(){
+        mViewModel.setProgressVis(View.VISIBLE);
+    }
 }

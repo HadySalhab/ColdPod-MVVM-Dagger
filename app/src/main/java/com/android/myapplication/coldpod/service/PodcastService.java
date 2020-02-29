@@ -106,12 +106,12 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
             };
 
 
-    public static Intent getInstance(Context context, Item item, String podCastImage, String podCastTitle,String podcastId) {
+    public static Intent getInstance(Context context, Item item, String podCastImage, String podCastTitle, String podcastId) {
         Intent serviceIntent = new Intent(context, PodcastService.class);
         serviceIntent.putExtra(EXTRA_ITEM, item);
         serviceIntent.putExtra(EXTRA_PODCAST_TITLE, podCastTitle);
         serviceIntent.putExtra(EXTRA_PODCAST_IMAGE, podCastImage);
-        serviceIntent.putExtra(EXTRA_PODCAST_ID , podcastId);
+        serviceIntent.putExtra(EXTRA_PODCAST_ID, podcastId);
         serviceIntent.setAction(ACTION_RELEASE_OLD_PLAYER);
         return serviceIntent;
     }
@@ -120,7 +120,7 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d(TAG,"Podcast Service is created");
+        Log.d(TAG, "Podcast Service is created");
         // Initialize the media session
         initializeMediaSession();
         // Create an instance of com.google.android.exoplayer2.audio.AudioAttributes
@@ -133,7 +133,7 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
     //we have to check whether extras are being passed, in order to avoid overriding previous data
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(TAG,"Podcast Service onStartCommand is called");
+        Log.d(TAG, "Podcast Service onStartCommand is called");
         // If there are not any pending start commands to be delivered to the service, it will
         // be called with a null intent object, so you must take care to check for this.
         // Reference: @see "https://developer.android.com/reference/android/app/Service.html#START_STICKY"
@@ -166,10 +166,10 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
         if (intent.hasExtra(EXTRA_PODCAST_TITLE)) {
             podCastTitle = intent.getStringExtra(EXTRA_PODCAST_TITLE);
         }
-        if(intent.hasExtra(EXTRA_PODCAST_ID)){
+        if (intent.hasExtra(EXTRA_PODCAST_ID)) {
             podcastId = intent.getStringExtra(EXTRA_PODCAST_ID);
         }
-        Log.d(TAG,"OnStartCommand: Extras: item: "+mItem+", podcast image: "+podCastImage+", podcastTitle: "+podCastTitle);
+        Log.d(TAG, "OnStartCommand: Extras: item: " + mItem + ", podcast image: " + podCastImage + ", podcastTitle: " + podCastTitle);
 
         initializePlayer();
         // Initialize PlayerNotificationManager
@@ -181,7 +181,7 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
      * Initialize the media session.
      */
     private void initializeMediaSession() {
-        Log.d(TAG,"initialize media Session");
+        Log.d(TAG, "initialize media Session");
         // Create a MediaSessionCompat
         mMediaSession = new MediaSessionCompat(PodcastService.this, TAG);
 
@@ -250,7 +250,7 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
      * @param mediaUri
      */
     private MediaSource buildMediaSource(Uri mediaUri) {
-        Log.d(TAG," BUILDING MEDIA SOURCE");
+        Log.d(TAG, " BUILDING MEDIA SOURCE");
         String userAgent = Util.getUserAgent(this, getString(R.string.app_name));
         DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(
                 this, userAgent);
@@ -374,7 +374,6 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
         }
 
 
-
         @Override
         public void onStop() {
             // onStop() callback should call stopSelf().
@@ -404,20 +403,41 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
     //this will be called everyTime the state of the player is changed
     @Override
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-        if (playbackState == Player.STATE_READY && playWhenReady) {
-            // When ExoPlayer is playing, update the PlaybackState
-            mStateBuilder.setState(PlaybackStateCompat.STATE_PLAYING,
-                    mExoPlayer.getCurrentPosition(), 1f);
-
-            Timber.d("onPlayerStateChanged: we are playing");
-        } else if (playbackState == Player.STATE_READY) {
-            // When ExoPlayer is paused, update the PlaybackState
+        if (playbackState == Player.STATE_IDLE) {
+            // When there is nothing to play, update the state to paused
             mStateBuilder.setState(PlaybackStateCompat.STATE_PAUSED,
                     mExoPlayer.getCurrentPosition(), 1f);
-
+        } else if (playbackState == Player.STATE_BUFFERING) {
+            // When ExoPlayer is buffering, not being able to play immediately,
+            // update the state to buffering.
+            mStateBuilder.setState(PlaybackStateCompat.STATE_BUFFERING,
+                    mExoPlayer.getCurrentPosition(), 1f);
+        } else if (playbackState == Player.STATE_READY && playWhenReady) {
+            // When ExoPlayer is playing, update the state to playing that indicates this item is
+            // currently playing.
+            mStateBuilder.setState(PlaybackStateCompat.STATE_PLAYING,
+                    mExoPlayer.getCurrentPosition(), 1f);
+            // Register the receiver when you begin playback
+            registerAudioNoisyReceiver();
+            Timber.d("onPlayerStateChanged: we are playing");
+        } else if (playbackState == Player.STATE_READY) {
+            // When ExoPlayer is paused, update the state to paused that indicates this item is
+            // currently paused.
+            mStateBuilder.setState(PlaybackStateCompat.STATE_PAUSED,
+                    mExoPlayer.getCurrentPosition(), 1f);
+            // Unregister the receiver when you stop
+            unregisterAudioNoisyReceiver();
             Timber.d("onPlayerStateChanged: we are paused");
+        } else if (playbackState == Player.STATE_ENDED) {
+            // When ExoPlayer finished playing, update the state to paused
+            mStateBuilder.setState(PlaybackStateCompat.STATE_PAUSED,
+                    mExoPlayer.getCurrentPosition(), 1f);
+        } else {
+            // Update the state to the default state that indicates that the performer has no content to play.
+            mStateBuilder.setState(PlaybackStateCompat.STATE_NONE,
+                    mExoPlayer.getCurrentPosition(), 1f);
         }
-        mMediaSession.setPlaybackState(mStateBuilder.build()); //this will notify back the media browser
+        mMediaSession.setPlaybackState(mStateBuilder.build());
     }
 
 
@@ -520,7 +540,7 @@ public class PodcastService extends MediaBrowserServiceCompat implements Player.
     }
 
     private PendingIntent createContentPendingIntent() {
-        Intent intent = PlayingActivity.getInstance(this, mItem,podcastId,podCastImage,podCastTitle);
+        Intent intent = PlayingActivity.getInstance(this, mItem, podcastId, podCastImage, podCastTitle);
         return PendingIntent.getActivity(this, NOTIFICATION_PENDING_INTENT_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
