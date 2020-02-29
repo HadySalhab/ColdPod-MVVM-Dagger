@@ -9,9 +9,5 @@
             android:id="@+id/drawer_nav_favorites"
             android:icon="@drawable/ic_favorite"
             android:title="@string/drawer_nav_favorite" />
-        <item
-            android:id="@+id/drawer_nav_downloads"
-            android:icon="@drawable/ic_file_download"
-            android:title="@string/drawer_nav_downloads" />
     </group>
 </menu>

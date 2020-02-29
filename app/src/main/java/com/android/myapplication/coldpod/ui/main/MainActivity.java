@@ -29,7 +29,6 @@ import com.android.myapplication.coldpod.persistence.Item;
 import com.android.myapplication.coldpod.persistence.PodcastEntry;
 import com.android.myapplication.coldpod.databinding.ActivityMainBinding;
 import com.android.myapplication.coldpod.service.PodcastService;
-import com.android.myapplication.coldpod.ui.main.downloads.DownloadsFragment;
 import com.android.myapplication.coldpod.ui.main.favorites.FavoritesFragment;
 import com.android.myapplication.coldpod.ui.main.subscribed.SubscribedFragment;
 import com.android.myapplication.coldpod.ui.playing.PlayingActivity;
@@ -133,9 +132,6 @@ public class MainActivity extends AppCompatActivity implements
                 break;
             case R.id.drawer_nav_favorites:
                 performTransaction(new FavoritesFragment());
-                break;
-            case R.id.drawer_nav_downloads:
-                performTransaction(new DownloadsFragment());
                 break;
             default:
                 performTransaction(new SubscribedFragment());
