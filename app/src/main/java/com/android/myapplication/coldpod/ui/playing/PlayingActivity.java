@@ -113,7 +113,7 @@ public class PlayingActivity extends AppCompatActivity {
     }
     private void handleEnclosureType() {
         String enclosureType = mItem.getEnclosures().get(0).getType();
-        if (!enclosureType.equals(TYPE_AUDIO)) {
+        if (!enclosureType.contains(TYPE_AUDIO)) {
             String snackMessage = getString(R.string.snackbar_support_audio);
             Snackbar snackbar = Snackbar.make(mBinding.coordinator, snackMessage, Snackbar.LENGTH_LONG);
             snackbar.show();
